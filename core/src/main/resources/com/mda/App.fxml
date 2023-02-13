@@ -21,7 +21,7 @@
       <Button fx:id="button_send" layoutX="504.0" layoutY="347.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="68.0" text="Send" />
       <ScrollPane fx:id="scroll_pane" layoutX="19.0" layoutY="14.0" prefHeight="315.0" prefWidth="563.0">
          <content>
-            <VBox fx:id="vbox_message" prefHeight="313.0" prefWidth="561.0" />
+            <VBox fx:id="vbox_message" prefHeight="300.0" prefWidth="550.0" />
          </content>
       </ScrollPane>
    </children>

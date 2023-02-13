@@ -12,14 +12,9 @@ public class App extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
-        //Group group = new Group();
         Parent root = FXMLLoader.load(getClass().getResource("App.fxml"));
         Scene scene = new Scene(root);
 
-        //stage.setTitle("Multi-modal Digital Assistant");
-        //stage.setResizable(false);
-        //stage.setWidth(1280);
-        //stage.setHeight(720);
         stage.setScene(scene);
         stage.show();
     }

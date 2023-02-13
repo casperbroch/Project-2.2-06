@@ -22,6 +22,8 @@ import javafx.scene.text.TextFlow;
 
 public class Controller implements Initializable {
 
+    private Connection conn = new Connection();
+
     @FXML
     private Button button_send;
     @FXML
@@ -39,6 +41,8 @@ public class Controller implements Initializable {
                 scroll_pane.setVvalue((Double) newValue);
             }
         });
+
+        conn.sendMessage(vbox_message);
 
         button_send.setOnAction(new EventHandler<ActionEvent>() {
             public void handle(ActionEvent event) {
@@ -76,7 +80,7 @@ public class Controller implements Initializable {
                         "-fx-background-radius: 20px;");
                     
         TextFlow.setPadding(new Insets(5,10,5,10));
-        text.setFill(Color.color(0.934,0.945,0.996));
+        text.setFill(Color.color(0,0,0));
 
         hBox.getChildren().add(TextFlow);
         vbox.getChildren().add(hBox);
