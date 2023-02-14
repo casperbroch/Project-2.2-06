@@ -14,6 +14,9 @@ import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
+import javafx.scene.control.ScrollPane.ScrollBarPolicy;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -21,9 +24,6 @@ import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 
 public class Controller implements Initializable {
-
-    private Connection conn = new Connection();
-
     @FXML
     private Button button_send;
     @FXML
@@ -35,6 +35,9 @@ public class Controller implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+
+        scroll_pane.setHbarPolicy(ScrollBarPolicy.NEVER);
+        scroll_pane.setVbarPolicy(ScrollBarPolicy.NEVER);
         
         vbox_message.heightProperty().addListener(new ChangeListener<Number>() {
             public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
@@ -42,34 +45,58 @@ public class Controller implements Initializable {
             }
         });
 
-        conn.sendMessage(vbox_message);
-
         button_send.setOnAction(new EventHandler<ActionEvent>() {
             public void handle(ActionEvent event) {
                 String message = text_field.getText();
                 if (!message.isEmpty()) {
-                    HBox hBox = new HBox();
-                    hBox.setAlignment(Pos.CENTER_RIGHT);
-                    hBox.setPadding(new Insets(5,5,5,10));
+                    addUMessage(message, vbox_message);
+                    Connection conn = new Connection();
+                    conn.sendMessage("A response after you pressed the 'send' button.");
+                }
+            }
+        });
 
-                    Text text = new Text(message);
-                    TextFlow TextFlow = new TextFlow(text);
-                    TextFlow.setStyle("-fx-color: rgb(239,242,255);" +
-                                    "-fx-background-color: rgb(15,125,242);" +
-                                    " -fx-background-radius: 20px;");
-                    
-                    TextFlow.setPadding(new Insets(5,10,5,10));
-                    text.setFill(Color.color(0.934,0.945,0.996));
-
-                    hBox.getChildren().add(TextFlow);
-                    vbox_message.getChildren().add(hBox);
+        text_field.setOnKeyPressed(new EventHandler<KeyEvent>() {
+            @Override
+            public void handle(KeyEvent ke) {
+                if (ke.getCode().equals(KeyCode.ENTER)) {
+                    String message = text_field.getText();
+                    if (!message.isEmpty()) {
+                        addUMessage(message, vbox_message);
+                        Connection conn = new Connection();
+                        conn.sendMessage("A response after you pressed 'enter'.");
+                    }
                 }
             }
         });
 
     }
 
-    public static void addMessage(String message, VBox vbox) {
+    public VBox getvBox() {
+        return vbox_message;
+    }
+
+    public void addUMessage(String message, VBox vbox) {
+        HBox hBox = new HBox();
+        hBox.setAlignment(Pos.CENTER_RIGHT);
+        hBox.setPadding(new Insets(5,5,5,10));
+
+        Text text = new Text(message);
+        TextFlow TextFlow = new TextFlow(text);
+        TextFlow.setStyle("-fx-color: rgb(239,242,255);" +
+                        "-fx-background-color: rgb(15,125,242);" +
+                        " -fx-background-radius: 20px;");
+                    
+        TextFlow.setPadding(new Insets(5,10,5,10));
+        text.setFill(Color.color(0.934,0.945,0.996));
+
+        hBox.getChildren().add(TextFlow);
+        vbox.getChildren().add(hBox);
+
+        text_field.clear();
+    }
+
+    public static void addBMessage(String message, VBox vbox) {
         HBox hBox = new HBox();
         hBox.setAlignment(Pos.CENTER_LEFT);
         hBox.setPadding(new Insets(5,5,5,10));

@@ -10,13 +10,24 @@ import javafx.stage.Stage;
 
 public class App extends Application {
 
+    private static Controller controller;
+
     @Override
     public void start(Stage stage) throws Exception {
-        Parent root = FXMLLoader.load(getClass().getResource("App.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("App.fxml"));
+        Parent root = loader.load();
         Scene scene = new Scene(root);
 
+        controller = loader.getController();
+
         stage.setScene(scene);
+        stage.setTitle("Multi-modal Digital Assistant");
         stage.show();
+
+    }
+
+    public static Controller getController() {
+        return controller;
     }
 
     public static void main(String[] args) {
