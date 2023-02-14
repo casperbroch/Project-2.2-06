@@ -45,6 +45,7 @@ public class Controller implements Initializable {
             }
         });
 
+
         button_send.setOnAction(new EventHandler<ActionEvent>() {
             public void handle(ActionEvent event) {
                 String message = text_field.getText();
@@ -70,6 +71,7 @@ public class Controller implements Initializable {
             }
         });
 
+        addBMessage("Hello! how can I assist you?", vbox_message);
     }
 
     public VBox getvBox() {

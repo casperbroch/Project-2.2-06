@@ -5,6 +5,8 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Group;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 
 
@@ -20,6 +22,8 @@ public class App extends Application {
 
         controller = loader.getController();
 
+        Image image = new Image(getClass().getResourceAsStream("logoicon.png"));
+        stage.getIcons().add(image);        
         stage.setScene(scene);
         stage.setTitle("Multi-modal Digital Assistant");
         stage.show();
