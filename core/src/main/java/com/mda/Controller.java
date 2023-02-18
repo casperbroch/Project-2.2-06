@@ -12,11 +12,14 @@ import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
+import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ScrollPane.ScrollBarPolicy;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -24,6 +27,9 @@ import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 
 public class Controller implements Initializable {
+
+    private static boolean DARKMODE=false;
+
     @FXML
     private Button button_send;
     @FXML
@@ -32,9 +38,25 @@ public class Controller implements Initializable {
     private VBox vbox_message;
     @FXML
     private ScrollPane scroll_pane;
+    @FXML
+    private AnchorPane anchor_pane;
+    @FXML
+    private Label label1;
+    @FXML 
+    private Label label2;
+    @FXML
+    private Button dm_button;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+
+        if(DARKMODE) {
+            anchor_pane.setStyle("-fx-background-color: rgb(16,16,18);");
+            scroll_pane.setStyle("-fx-background-color: rgb(21,21,24);"+" -fx-background: rgb(21,21,24);");
+
+            label1.setTextFill(Color.color(1, 1, 1));
+            label2.setTextFill(Color.color(1, 1, 1));
+        }
 
         scroll_pane.setHbarPolicy(ScrollBarPolicy.NEVER);
         scroll_pane.setVbarPolicy(ScrollBarPolicy.NEVER);
@@ -54,6 +76,12 @@ public class Controller implements Initializable {
                     Connection conn = new Connection();
                     conn.sendMessage("A response after you pressed the 'send' button.");
                 }
+            }
+        });
+
+        dm_button.setOnAction(new EventHandler<ActionEvent>() {
+            public void handle(ActionEvent event) {
+                
             }
         });
 
@@ -105,11 +133,17 @@ public class Controller implements Initializable {
 
         Text text = new Text(message);
         TextFlow TextFlow = new TextFlow(text);
-        TextFlow.setStyle("-fx-background-color: rgb(233,233,235);" +
-                        "-fx-background-radius: 20px;");
+        if(DARKMODE) {
+            TextFlow.setStyle("-fx-background-color: rgb(81,81,81);" +
+            "-fx-background-radius: 20px;");
+            text.setFill(Color.color(1,1,1));
+        } else {
+            TextFlow.setStyle("-fx-background-color: rgb(233,233,235);" +
+            "-fx-background-radius: 20px;");
+            text.setFill(Color.color(0,0,0));
+        }
                     
         TextFlow.setPadding(new Insets(5,10,5,10));
-        text.setFill(Color.color(0,0,0));
 
         hBox.getChildren().add(TextFlow);
         vbox.getChildren().add(hBox);
