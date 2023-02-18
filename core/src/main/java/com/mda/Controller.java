@@ -1,6 +1,7 @@
 package com.mda;
 
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 import javafx.beans.value.ChangeListener;
@@ -17,6 +18,8 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ScrollPane.ScrollBarPolicy;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
@@ -28,7 +31,9 @@ import javafx.scene.text.TextFlow;
 
 public class Controller implements Initializable {
 
-    private static boolean DARKMODE=false;
+    private static boolean DARKMODE = true;
+    private static ArrayList<HBox> hboxlist = new ArrayList<>();
+    private static ArrayList<Text> textlist = new ArrayList<>();
 
     @FXML
     private Button button_send;
@@ -51,11 +56,9 @@ public class Controller implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
 
         if(DARKMODE) {
-            anchor_pane.setStyle("-fx-background-color: rgb(16,16,18);");
-            scroll_pane.setStyle("-fx-background-color: rgb(21,21,24);"+" -fx-background: rgb(21,21,24);");
-
-            label1.setTextFill(Color.color(1, 1, 1));
-            label2.setTextFill(Color.color(1, 1, 1));
+            setDarkMode();
+        } else {
+            setLightMode();
         }
 
         scroll_pane.setHbarPolicy(ScrollBarPolicy.NEVER);
@@ -81,7 +84,13 @@ public class Controller implements Initializable {
 
         dm_button.setOnAction(new EventHandler<ActionEvent>() {
             public void handle(ActionEvent event) {
-                
+                if(!DARKMODE) {
+                    setDarkMode();
+                    DARKMODE=true;
+                } else {
+                    setLightMode();
+                    DARKMODE=false;
+                }
             }
         });
 
@@ -133,6 +142,7 @@ public class Controller implements Initializable {
 
         Text text = new Text(message);
         TextFlow TextFlow = new TextFlow(text);
+
         if(DARKMODE) {
             TextFlow.setStyle("-fx-background-color: rgb(81,81,81);" +
             "-fx-background-radius: 20px;");
@@ -146,8 +156,62 @@ public class Controller implements Initializable {
         TextFlow.setPadding(new Insets(5,10,5,10));
 
         hBox.getChildren().add(TextFlow);
+
+        hboxlist.add(hBox);
+        textlist.add(text);
+
         vbox.getChildren().add(hBox);
     }
 
+    public void setDarkMode() {
+        // Set Anchor Pane dark
+        anchor_pane.setStyle("-fx-background-color: rgb(16,16,18);");
+
+        // Set Scroll Pane dark
+        scroll_pane.setStyle("-fx-background-color: rgb(21,21,24);"+" -fx-background: rgb(21,21,24);");
+
+        // Recolour the label text
+        label1.setTextFill(Color.color(1, 1, 1));
+        label2.setTextFill(Color.color(1, 1, 1));
+
+        for(int i=0; i<hboxlist.size(); i++) {
+            hboxlist.get(i).getChildren().get(0).setStyle("-fx-background-color: rgb(81,81,81);" +
+                                                                "-fx-background-radius: 20px;");
+            textlist.get(i).setFill(Color.color(1,1,1));
+        }
+
+        Image img = new Image(getClass().getResourceAsStream("dmicon2.png"));
+        ImageView iv = new ImageView(img);
+        iv.setFitHeight(50);
+        iv.setFitWidth(50);
+        dm_button.setGraphic(iv);
+        dm_button.setStyle("-fx-background-color: rgb(16,16,18)");
+    }
+
+    public void setLightMode() {
+        // Set Anchor Pane light
+        anchor_pane.setStyle("-fx-background-color: rgb(255,255,255);");
+
+        // Set Scroll Pane light
+        scroll_pane.setStyle("-fx-background-color: rgb(200,200,200);"+" -fx-background: rgb(255,255,255);");
+
+        // Recolour the label text
+        label1.setTextFill(Color.color(0, 0, 0));
+        label2.setTextFill(Color.color(0, 0, 0));
+
+        for(int i=0; i<hboxlist.size(); i++) {
+            hboxlist.get(i).getChildren().get(0).setStyle("-fx-background-color: rgb(233,233,235);" +
+                                                                "-fx-background-radius: 20px;");
+            textlist.get(i).setFill(Color.color(0,0,0));
+        }
+
+        Image img = new Image(getClass().getResourceAsStream("dmicon.png"));
+        ImageView iv = new ImageView(img);
+        iv.setFitHeight(50);
+        iv.setFitWidth(50);
+        dm_button.setGraphic(iv);
+        dm_button.setStyle("-fx-background-color: rgb(255,255,255)");
+    
+    }
     
 }

@@ -31,6 +31,6 @@
             <Insets bottom="5.0" left="10.0" right="10.0" top="5.0" />
          </padding>
       </Label>
-      <Button fx:id="dm_button" layoutX="821.0" layoutY="43.0" mnemonicParsing="false" text="Test" />
+      <Button fx:id="dm_button" layoutX="863.0" layoutY="23.0" mnemonicParsing="false" />
    </children>
 </AnchorPane>

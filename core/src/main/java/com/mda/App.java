@@ -20,7 +20,7 @@ public class App extends Application {
 
         controller = loader.getController();
 
-        Image image = new Image(getClass().getResourceAsStream("logoicon.png"));
+        Image image = new Image(getClass().getResourceAsStream("icon.png"));
         stage.getIcons().add(image);        
         stage.setScene(scene);
         stage.setTitle("Multi-modal Digital Assistant");
