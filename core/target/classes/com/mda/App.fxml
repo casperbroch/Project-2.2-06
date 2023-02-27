@@ -6,16 +6,17 @@
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
 <AnchorPane fx:id="anchor_pane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="960.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mda.Controller">
    <children>
-      <TextField fx:id="text_field" layoutX="29.0" layoutY="671.0" prefHeight="26.0" prefWidth="799.0" />
+      <TextField fx:id="text_field" layoutX="17.0" layoutY="671.0" prefHeight="26.0" prefWidth="811.0" />
       <Button fx:id="button_send" layoutX="863.0" layoutY="671.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="68.0" text="Send" />
-      <ScrollPane fx:id="scroll_pane" layoutX="19.0" layoutY="92.0" prefHeight="561.0" prefWidth="922.0">
+      <ScrollPane fx:id="scroll_pane" layoutX="19.0" layoutY="92.0" prefHeight="544.0" prefWidth="922.0">
          <content>
-            <VBox fx:id="vbox_message" prefHeight="562.0" prefWidth="920.0" />
+            <VBox fx:id="vbox_message" prefHeight="546.0" prefWidth="920.0" />
          </content>
       </ScrollPane>
       <Label fx:id="label1" layoutX="29.0" layoutY="14.0" prefHeight="34.0" prefWidth="902.0" text="Multi-modal Digital Assistant">
@@ -32,5 +33,24 @@
          </padding>
       </Label>
       <Button fx:id="dm_button" layoutX="863.0" layoutY="14.0" mnemonicParsing="false" />
+      <HBox fx:id="suggestbox" layoutX="205.0" layoutY="640.0" prefHeight="26.0" prefWidth="451.0">
+         <children>
+            <Button fx:id="suggest1" minWidth="150.0" mnemonicParsing="false" text="Button">
+               <padding>
+                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+               </padding>
+            </Button>
+            <Button fx:id="suggest2" minWidth="150.0" mnemonicParsing="false" text="Button">
+               <padding>
+                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+               </padding>
+            </Button>
+            <Button fx:id="suggest3" minWidth="150.0" mnemonicParsing="false" text="Button">
+               <padding>
+                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+               </padding>
+            </Button>
+         </children>
+      </HBox>
    </children>
 </AnchorPane>

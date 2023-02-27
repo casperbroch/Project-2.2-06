@@ -31,7 +31,7 @@ import javafx.scene.text.TextFlow;
 
 public class Controller implements Initializable {
 
-    private static boolean DARKMODE = true;
+    private static boolean DARKMODE = false;
     private static ArrayList<HBox> hboxlist = new ArrayList<>();
     private static ArrayList<Text> textlist = new ArrayList<>();
 
@@ -51,12 +51,24 @@ public class Controller implements Initializable {
     private Label label2;
     @FXML
     private Button dm_button;
+    @FXML
+    private Button suggest1;
+    @FXML
+    private Button suggest2;
+    @FXML
+    private Button suggest3;
+    @FXML 
+    private HBox suggestbox;
+
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
+        suggestbox.setVisible(false);
+
         if(DARKMODE) {
             setDarkMode();
+            
         } else {
             setLightMode();
         }
@@ -66,6 +78,7 @@ public class Controller implements Initializable {
         
         vbox_message.heightProperty().addListener(new ChangeListener<Number>() {
             public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+                suggestbox.setVisible(false);
                 scroll_pane.setVvalue((Double) newValue);
             }
         });
@@ -73,6 +86,7 @@ public class Controller implements Initializable {
 
         button_send.setOnAction(new EventHandler<ActionEvent>() {
             public void handle(ActionEvent event) {
+                suggestbox.setVisible(false);
                 String message = text_field.getText();
                 if (!message.isEmpty()) {
                     addUMessage(message, vbox_message);
@@ -94,19 +108,60 @@ public class Controller implements Initializable {
             }
         });
 
+        suggest1.setOnAction(new EventHandler<ActionEvent>() {
+            public void handle(ActionEvent event) {
+                text_field.appendText(suggest1.getText());
+            }
+        });
+        suggest2.setOnAction(new EventHandler<ActionEvent>() {
+            public void handle(ActionEvent event) {
+                text_field.appendText(suggest2.getText());
+            }
+        });
+        suggest3.setOnAction(new EventHandler<ActionEvent>() {
+            public void handle(ActionEvent event) {
+                text_field.appendText(suggest3.getText());
+            }
+        });
+
         text_field.setOnKeyPressed(new EventHandler<KeyEvent>() {
             @Override
             public void handle(KeyEvent ke) {
                 if (ke.getCode().equals(KeyCode.ENTER)) {
+                    suggestbox.setVisible(false);
                     String message = text_field.getText();
                     if (!message.isEmpty()) {
                         addUMessage(message, vbox_message);
                         Connection conn = new Connection();
-                        conn.sendMessage("A response after you pressed 'enter'.");
+                        conn.sendMessage("A response after you pressed 'enter'. For the message you wrote: "+message);
                     }
                 }
+
+                String input = text_field.getText() + ke.getText();
+                if(!input.isEmpty() && !ke.getCode().equals(KeyCode.ENTER) && !input.substring(input.length()-1).equals(" ")) {
+                    String word = new String();
+                    for(int i=input.length()-1; i>=0; i--) {
+                        if(input.substring(i,i+1).equals(" ")) {
+                            word = input.substring(i,input.length());
+                            break;
+                        }
+                    }
+                    if(word.isEmpty()) {
+                        word = input;
+                    }
+                    suggest1.setText(word+ "1");
+                    suggest2.setText(word + "2");
+                    suggest3.setText(word + "3");
+
+                    suggestbox.setVisible(true);
+                } else {
+                    suggestbox.setVisible(false);
+                }
+                
             }
         });
+
+        
 
         addBMessage("Hello! how can I assist you?", vbox_message);
     }
@@ -164,6 +219,7 @@ public class Controller implements Initializable {
     }
 
     public void setDarkMode() {
+        suggestbox.setVisible(false);
         // Set Anchor Pane dark
         anchor_pane.setStyle("-fx-background-color: rgb(16,16,18);");
 
@@ -189,6 +245,7 @@ public class Controller implements Initializable {
     }
 
     public void setLightMode() {
+        suggestbox.setVisible(false);
         // Set Anchor Pane light
         anchor_pane.setStyle("-fx-background-color: rgb(255,255,255);");
 
