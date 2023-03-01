@@ -74,7 +74,7 @@ public class skillEditor {
             sb.insert(i, '<');
             sb.insert(i+holder.length()+1, '>');
         }
-        br.write("\nQuestion " + sb.toString());
+        br.write("\nQuestion  " + sb.toString());
     }
 
     public void addSlot(ArrayList<ArrayList<String>>  slots, ArrayList<String> placeHolders) throws IOException{
@@ -110,13 +110,13 @@ public class skillEditor {
         writer.write("Slot  <DAY>  Thursday\n"); 
         writer.write("Slot  <DAY>  Friday\n"); 
         writer.write("Slot  <DAY>  Saturday\n"); 
-        writer.write("Slot  <TIME> 9\n"); 
-        writer.write("Slot  <TIME> 11\n"); 
-        writer.write("Slot  <TIME> 13\n"); 
-        writer.write("Slot  <TIME> 15\n"); 
+        writer.write("Slot  <TIME>  9\n"); 
+        writer.write("Slot  <TIME>  11\n"); 
+        writer.write("Slot  <TIME>  13\n"); 
+        writer.write("Slot  <TIME>  15\n"); 
         writer.write("Action  <DAY>  Saturday  There are no lectures on Saturday\n"); 
         writer.write("Action  <DAY>  Monday <TIME> 9  We start the week with math\n"); 
         writer.write("Action  <DAY>  Monday <TIME> 11  On Monday noon we have Theoratical Computer Science\n"); 
-        writer.write("Action  I have no idea\n"); 
+        writer.write("Action  I have no idea"); 
     }
 }

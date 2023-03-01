@@ -11,26 +11,25 @@ import java.io.BufferedReader;
 public class skillScanner {
 
     File file; 
-    FileReader fileReader; 
     String fileName;
 
     public skillScanner() throws FileNotFoundException{
         file = new File("core/src/main/java/com/mda/Engine/skills.txt");
-        fileReader = new FileReader(file); 
         fileName = "core/src/main/java/com/mda/Engine/skills.txt";
     }
 
-    public void main(String[] args) {
+    public static void main(String[] args) throws FileNotFoundException {
         Scanner scanSkill = new Scanner(System.in);
         System.out.println("Please type the prototype sentence: ");
         String sentence = scanSkill.nextLine();
         sentence = "Question  " + sentence;
-        isSentencePresent(fileName, sentence);
+        skillScanner test = new skillScanner();
+        test.scanSkill(sentence);
         scanSkill.close();
     }
 
     private boolean isSlotAvailable(int startLine, String slot) {
-        try(BufferedReader reader = new BufferedReader(fileReader)){ 
+        try(BufferedReader reader = new BufferedReader(new FileReader(file))){ 
             String line = "";
             int lineNumber = 0;
             while ((line = reader.readLine()) != null) {
@@ -39,10 +38,9 @@ public class skillScanner {
                     continue;
                 }
                 if (!line.startsWith("Action")) {
-                    if (line.equalsIgnoreCase(slot)) {
+                    if (slot.equalsIgnoreCase(line)) {
                         return true;
                     }
-                    System.out.println(line);
                 }
                 if (line.startsWith("Action")) {
                     break;
@@ -55,8 +53,8 @@ public class skillScanner {
         return false;
     }
 
-    private boolean isSentencePresent(String fileName, String sentence) {
-        try (BufferedReader reader = new BufferedReader(fileReader)) {
+    private boolean scanSkill(String sentence) {
+        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
             String line;
             String match;
             String[] lineAdapt;
@@ -73,8 +71,6 @@ public class skillScanner {
                         lineAdapted = sentence.replaceAll("\\p{Punct}", "").split("\\s+");
                         for (int index = 0; index < lineAdapted.length; index++) {
                             if(match.substring(1, match.length() - 1).equals(lineAdapt[index])){
-                                System.out.println(match.substring(1, match.length() - 1));
-                                System.out.println(lineAdapted[index]);
                                 String temp = "Slot  <" + match.substring(1, match.length() - 1) + ">  " + lineAdapted[index];
                                 if(!isSlotAvailable(lineNumber+1,temp)){
                                     System.out.println("Question found but slot not available!");
@@ -83,6 +79,7 @@ public class skillScanner {
                             }
                         }
                     }
+                    System.out.println("Success! Working on getting action..");
                     // getAction()
                     return true;
                 }
@@ -95,6 +92,8 @@ public class skillScanner {
     }
 
     private boolean matches(String template, String input) {
+        template = template.toLowerCase();
+        input = input.toLowerCase();
         String[] slots = template.split("\\<.+?\\>");
         StringBuilder sloted = new StringBuilder();
         for (String slot : slots) {
