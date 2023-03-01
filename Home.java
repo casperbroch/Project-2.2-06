@@ -10,7 +10,7 @@ public class Home extends Node{
     Home() {
         // Home is the root node; think: homepage
         super("home", null);
-        Calendar2 calendar = new Calendar2(this);
+        Calendar calendar = new Calendar(this);
         this.addChild(calendar);
         scanner = new Scanner(System.in);
     }
