@@ -106,7 +106,7 @@ public class skillEditor {
         writer.write("Question  Which lectures are there on <DAY> at <TIME>\n");
         writer.write("Slot  <DAY>  Monday\n");
         writer.write("Slot  <DAY>  Tuesday\n");
-        writer.write("Slot  <DAY>  Wednesday Slot\n"); 
+        writer.write("Slot  <DAY>  Wednesday\n"); 
         writer.write("Slot  <DAY>  Thursday\n"); 
         writer.write("Slot  <DAY>  Friday\n"); 
         writer.write("Slot  <DAY>  Saturday\n"); 
