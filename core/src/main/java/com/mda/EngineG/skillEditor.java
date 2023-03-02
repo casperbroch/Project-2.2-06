@@ -1,4 +1,4 @@
-package com.mda.Engine;
+package com.mda.EngineG;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -19,7 +19,7 @@ public class skillEditor {
     }
 
     public void setUp() throws IOException{
-        file = new File("src\\main\\java\\com\\mda\\Engine\\skills.txt");
+        file = new File("core\\src\\main\\java\\com\\mda\\EngineG\\skills.txt");
         writer = new FileWriter(file, true); 
         br = new BufferedWriter(writer);
         addDefaultSkills();
@@ -74,7 +74,7 @@ public class skillEditor {
             sb.insert(i, '<');
             sb.insert(i+holder.length()+1, '>');
         }
-        br.write("\nQuestion " + sb.toString());
+        br.write("\nQuestion  " + sb.toString());
     }
 
     public void addSlot(ArrayList<ArrayList<String>>  slots, ArrayList<String> placeHolders) throws IOException{
@@ -106,17 +106,17 @@ public class skillEditor {
         writer.write("Question  Which lectures are there on <DAY> at <TIME>\n");
         writer.write("Slot  <DAY>  Monday\n");
         writer.write("Slot  <DAY>  Tuesday\n");
-        writer.write("Slot  <DAY>  Wednesday Slot\n"); 
+        writer.write("Slot  <DAY>  Wednesday\n"); 
         writer.write("Slot  <DAY>  Thursday\n"); 
         writer.write("Slot  <DAY>  Friday\n"); 
         writer.write("Slot  <DAY>  Saturday\n"); 
-        writer.write("Slot  <TIME> 9\n"); 
-        writer.write("Slot  <TIME> 11\n"); 
-        writer.write("Slot  <TIME> 13\n"); 
-        writer.write("Slot  <TIME> 15\n"); 
+        writer.write("Slot  <TIME>  9\n"); 
+        writer.write("Slot  <TIME>  11\n"); 
+        writer.write("Slot  <TIME>  13\n"); 
+        writer.write("Slot  <TIME>  15\n"); 
         writer.write("Action  <DAY>  Saturday  There are no lectures on Saturday\n"); 
         writer.write("Action  <DAY>  Monday <TIME> 9  We start the week with math\n"); 
         writer.write("Action  <DAY>  Monday <TIME> 11  On Monday noon we have Theoratical Computer Science\n"); 
-        writer.write("Action  I have no idea\n"); 
+        writer.write("Action  I have no idea"); 
     }
 }
