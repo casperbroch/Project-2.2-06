@@ -38,6 +38,7 @@ public class Controller implements Initializable {
     private static boolean DARKMODE = false;
     private static ArrayList<HBox> hboxlist = new ArrayList<>();
     private static ArrayList<Text> textlist = new ArrayList<>();
+    private int wordlength=0;
 
     @FXML
     private Button button_send;
@@ -124,18 +125,24 @@ public class Controller implements Initializable {
 
         suggest1.setOnAction(new EventHandler<ActionEvent>() {
             public void handle(ActionEvent event) {
+                text_field.deleteText(text_field.getLength()-wordlength, text_field.getLength());
+                text_field.appendText(" ");
                 text_field.appendText(suggest1.getText());
             }
         });
 
         suggest2.setOnAction(new EventHandler<ActionEvent>() {
             public void handle(ActionEvent event) {
+                text_field.deleteText(text_field.getLength()-wordlength, text_field.getLength());
+                text_field.appendText(" ");
                 text_field.appendText(suggest2.getText());
             }
         });
 
         suggest3.setOnAction(new EventHandler<ActionEvent>() {
             public void handle(ActionEvent event) {
+                text_field.deleteText(text_field.getLength()-wordlength, text_field.getLength());
+                text_field.appendText(" ");
                 text_field.appendText(suggest3.getText());
             }
         });
@@ -166,6 +173,7 @@ public class Controller implements Initializable {
                     if(word.isEmpty()) {
                         word = input;
                     }
+                    wordlength = word.length();
 
                     suggest1.setVisible(false);
                     suggest2.setVisible(false);
