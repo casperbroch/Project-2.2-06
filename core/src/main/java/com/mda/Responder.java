@@ -8,9 +8,14 @@ public class Responder {
 
     // TODO: Make some switch statement for stemming and getting states
 
-    String getResponse(String message) {
+    String getSkills(String message) {
         // TODO: Linking to txt files to extract (question) format in first line
-        return ("Welcome to the " + message + " app! What would you like to do?");
+        return ("Welcome to the " + message + " app! Would you like to add or search for information?");
+    }
+
+    String getActions(String message) {
+        // TODO: Linking to txt files to extract (question) format in first line
+        return ("Welcome to the " + message + " app! Would you like to add or search for information?");
     }
 
 

@@ -141,24 +141,38 @@ public class Controller implements Initializable {
                     if (!message.isEmpty()) {
                         addUMessage(message, vbox_message);
                         // Shuts the program off and ignores case
-                        if(message.compareToIgnoreCase("quit") == 0) {
+                        if(message.toLowerCase().contains("quit")) {
                             System.exit(0);
                         }
-
-                        // Meaning user is looking at the default options (i.e., which skills to access)
-                        if(state == -1) {
-                            for (int i = 0; i < skills.size(); i++) {
-                                if(message.compareToIgnoreCase(skills.get(i)) == 0) {
-                                    state = i;
-                                    message = responder.getResponse(message);
-                                    break;
+                        switch(state) {
+                            // Meaning user is looking at the default options (i.e., which skills to access)
+                            case -1:
+                                for (int i = 0; i < skills.size(); i++) {
+                                    if(message.compareToIgnoreCase(skills.get(i)) == 0) {
+                                        // Directed to a specific skill
+                                        state = 0;
+                                        message = responder.getSkills(message);
+                                        break;
+                                    }
+                                    if(i == skills.size() - 1)
+                                        message = "Sorry, I do not have that skill. Please try again.";
                                 }
-                                if(i == skills.size() - 1)
-                                    message = "Sorry, I do not have that skill. Please try again.";
-                            }
-                        } else {
-                            message = responder.getResponse(message);
-                        }
+                                break;
+                            case 0:
+                                // Meaning user is looking at a specific skill
+                                if(message.toLowerCase().contains("add")) {
+                                    message = "Placeholder 1: I do something.";
+                                    state = 1;
+                                } else if(message.toLowerCase().contains("search")) {
+                                    message = "Placeholder 2: I do something.";
+                                    state = 2;
+                                } else {
+                                    message = "Invalid action. Please try again.";
+                                }
+                                break;
+                            case 1:
+                                break;
+                        }  
                         
 
 

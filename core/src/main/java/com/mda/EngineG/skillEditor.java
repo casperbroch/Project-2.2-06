@@ -19,7 +19,7 @@ public class skillEditor {
     }
 
     public void setUp() throws IOException{
-        file = new File("core\\src\\main\\java\\com\\mda\\EngineG\\skills.txt");
+        file = new File("src\\main\\java\\com\\mda\\EngineG\\skills.txt");
         writer = new FileWriter(file, true); 
         br = new BufferedWriter(writer);
         addDefaultSkills();
