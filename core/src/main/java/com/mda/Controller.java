@@ -4,6 +4,8 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 
+import com.mda.EngineG.skillScanner;
+
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
@@ -34,6 +36,7 @@ public class Controller implements Initializable {
     private static boolean DARKMODE = false;
     private static ArrayList<HBox> hboxlist = new ArrayList<>();
     private static ArrayList<Text> textlist = new ArrayList<>();
+    private skillScanner sc;
 
     @FXML
     private Button button_send;
@@ -63,7 +66,6 @@ public class Controller implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-
         suggestbox.setVisible(false);
 
         if(DARKMODE) {
@@ -133,7 +135,7 @@ public class Controller implements Initializable {
                     if (!message.isEmpty()) {
                         addUMessage(message, vbox_message);
                         Connection conn = new Connection();
-                        conn.sendMessage("A response after you pressed 'enter'. For the message you wrote: "+message);
+                        sc.scanSkill(message,conn);
                     }
                 }
 
@@ -161,9 +163,11 @@ public class Controller implements Initializable {
             }
         });
 
-        
-
+        // SETTING UP LOGIC FOR ENGINE HERE
+        sc = new skillScanner();
         addBMessage("Hello! how can I assist you?", vbox_message);
+        addBMessage( "Please type the prototype sentence: ", vbox_message);
+
     }
 
     public VBox getvBox() {

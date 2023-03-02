@@ -6,6 +6,9 @@ import java.io.IOException;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import com.mda.Connection;
+
 import java.io.BufferedReader;
 
 public class skillScanner {
@@ -13,19 +16,19 @@ public class skillScanner {
     File file; 
     String fileName;
 
-    public skillScanner() throws FileNotFoundException{
+    public skillScanner() {
         file = new File("core\\src\\main\\java\\com\\mda\\EngineG\\skills.txt");
         fileName = "core\\src\\main\\java\\com\\mda\\EngineG\\skills.txt";
     }
 
-    public static void main(String[] args) throws FileNotFoundException {
-        Scanner scanSkill = new Scanner(System.in);
-        System.out.println("Please type the prototype sentence: ");
-        String sentence = scanSkill.nextLine();
-        sentence = "Question  " + sentence;
-        skillScanner test = new skillScanner();
-        test.scanSkill(sentence);
-        scanSkill.close();
+    public static void main(String[] args) {
+        // Scanner scanSkill = new Scanner(System.in);
+        // System.out.println("Please type the prototype sentence: ");
+        // String sentence = scanSkill.nextLine();
+        // sentence = "Question  " + sentence;
+        // skillScanner test = new skillScanner();
+        // test.scanSkill(sentence);
+        // scanSkill.close();
     }
 
     private boolean isSlotAvailable(int startLine, String slot) {
@@ -53,7 +56,8 @@ public class skillScanner {
         return false;
     }
 
-    private boolean scanSkill(String sentence) {
+    public boolean scanSkill(String sentence, Connection conn) {
+        sentence = "Question  " + sentence;
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
             String line;
             String match;
@@ -74,12 +78,15 @@ public class skillScanner {
                                 String temp = "Slot  <" + match.substring(1, match.length() - 1) + ">  " + lineAdapted[index];
                                 if(!isSlotAvailable(lineNumber+1,temp)){
                                     System.out.println("Question found but slot not available!");
+                                    conn.sendMessage("Question found but slot not available!");
                                     return false;
                                 }
                             }
                         }
                     }
                     System.out.println("Success! Working on getting action..");
+                    conn.sendMessage("Success! Working on getting action..");
+
                     // getAction()
                     return true;
                 }
@@ -88,6 +95,8 @@ public class skillScanner {
             e.printStackTrace();
         }
         System.out.println("Question not found!");
+        conn.sendMessage("Question not found!");
+
         return false;
     }
 
