@@ -1,4 +1,4 @@
-package com.mda.Engine;
+package com.mda.EngineG;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -14,8 +14,8 @@ public class skillScanner {
     String fileName;
 
     public skillScanner() throws FileNotFoundException{
-        file = new File("core/src/main/java/com/mda/Engine/skills.txt");
-        fileName = "core/src/main/java/com/mda/Engine/skills.txt";
+        file = new File("core\\src\\main\\java\\com\\mda\\EngineG\\skills.txt");
+        fileName = "core\\src\\main\\java\\com\\mda\\EngineG\\skills.txt";
     }
 
     public static void main(String[] args) throws FileNotFoundException {

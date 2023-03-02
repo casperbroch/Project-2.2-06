@@ -4,35 +4,34 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
-import java.io.IOException;
 
-/**
- * JavaFX App
- */
 public class App extends Application {
 
-    private static Scene scene;
+    private static Controller controller;
 
     @Override
-    public void start(Stage stage) throws IOException {
-        scene = new Scene(loadFXML("primary"), 640, 480);
+    public void start(Stage stage) throws Exception {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("App.fxml"));
+        Parent root = loader.load();
+        Scene scene = new Scene(root);        
+
+        controller = loader.getController();
+
+        Image image = new Image(getClass().getResourceAsStream("icon.png"));
+        stage.getIcons().add(image);        
         stage.setScene(scene);
+        stage.setTitle("Multi-modal Digital Assistant");
         stage.show();
     }
 
-    static void setRoot(String fxml) throws IOException {
-        scene.setRoot(loadFXML(fxml));
-    }
-
-    private static Parent loadFXML(String fxml) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource(fxml + ".fxml"));
-        return fxmlLoader.load();
+    public static Controller getController() {
+        return controller;
     }
 
     public static void main(String[] args) {
-        launch();
+        launch(args);
     }
-
 }
