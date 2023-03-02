@@ -31,6 +31,9 @@ import javafx.scene.text.TextFlow;
 
 public class Controller implements Initializable {
 
+    private int state = -1;
+    private Responder responder = new Responder();
+    private ArrayList<String> skills = new ArrayList<String>();
     private static boolean DARKMODE = false;
     private static ArrayList<HBox> hboxlist = new ArrayList<>();
     private static ArrayList<Text> textlist = new ArrayList<>();
@@ -64,6 +67,11 @@ public class Controller implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
+        // TODO: Change + connect to txt files
+        skills.add("calendar");
+        skills.add("weather");
+        skills.add("web search");
+
         suggestbox.setVisible(false);
 
         if(DARKMODE) {
@@ -84,17 +92,17 @@ public class Controller implements Initializable {
         });
 
 
-        button_send.setOnAction(new EventHandler<ActionEvent>() {
-            public void handle(ActionEvent event) {
-                suggestbox.setVisible(false);
-                String message = text_field.getText();
-                if (!message.isEmpty()) {
-                    addUMessage(message, vbox_message);
-                    Connection conn = new Connection();
-                    conn.sendMessage("A response after you pressed the 'send' button.");
-                }
-            }
-        });
+        // button_send.setOnAction(new EventHandler<ActionEvent>() {
+        //     public void handle(ActionEvent event) {
+        //         suggestbox.setVisible(false);
+        //         String message = text_field.getText();
+        //         if (!message.isEmpty()) {
+        //             addUMessage(message, vbox_message);
+        //             Connection conn = new Connection();
+        //             conn.sendMessage("A response after you pressed the 'send' button.");
+        //         }
+        //     }
+        // });
 
         dm_button.setOnAction(new EventHandler<ActionEvent>() {
             public void handle(ActionEvent event) {
@@ -132,8 +140,31 @@ public class Controller implements Initializable {
                     String message = text_field.getText();
                     if (!message.isEmpty()) {
                         addUMessage(message, vbox_message);
+                        // Shuts the program off and ignores case
+                        if(message.compareToIgnoreCase("quit") == 0) {
+                            System.exit(0);
+                        }
+
+                        // Meaning user is looking at the default options (i.e., which skills to access)
+                        if(state == -1) {
+                            for (int i = 0; i < skills.size(); i++) {
+                                if(message.compareToIgnoreCase(skills.get(i)) == 0) {
+                                    state = i;
+                                    message = responder.getResponse(message);
+                                    break;
+                                }
+                                if(i == skills.size() - 1)
+                                    message = "Sorry, I do not have that skill. Please try again.";
+                            }
+                        } else {
+                            message = responder.getResponse(message);
+                        }
+                        
+
+
+
                         Connection conn = new Connection();
-                        conn.sendMessage("A response after you pressed 'enter'. For the message you wrote: "+message);
+                        conn.sendMessage(message);
                     }
                 }
 
@@ -161,9 +192,10 @@ public class Controller implements Initializable {
             }
         });
 
-        
-
-        addBMessage("Hello! how can I assist you?", vbox_message);
+        String greeting = String.join(" app, ", skills);
+        // TODO: Implement adding new skills
+        greeting = ("Hello! How can I assist you? Would you like to access your " + greeting + " app, or quit? You can also create new skills!");
+        addBMessage(greeting, vbox_message);
     }
 
     public VBox getvBox() {
