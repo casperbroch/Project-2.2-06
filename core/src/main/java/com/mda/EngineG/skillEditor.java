@@ -19,10 +19,16 @@ public class skillEditor {
     }
 
     public void setUp() throws IOException{
-        file = new File("core\\src\\main\\java\\com\\mda\\EngineG\\skills.txt");
+        String os = System.getProperty("os.name").toLowerCase();
+        if (os.contains("win")){
+            file = new File("core\\src\\main\\java\\com\\mda\\EngineG\\skills.txt");
+        }
+        else if (os.contains("os x")){
+            file = new File("core/src/main/java/com/mda/EngineG/skills.txt");
+        }   
         writer = new FileWriter(file, true); 
         br = new BufferedWriter(writer);
-        addDefaultSkills();
+        //addDefaultSkills();
         addNewSkill();
         br.close();
         writer.close();
@@ -34,13 +40,14 @@ public class skillEditor {
         prototype = scanSkill.nextLine();
         System.out.println("Please type the slots you wish to set as placeholders: (separated by a coma) ");
 
-        ArrayList<String> placeHolders = new ArrayList<>(Arrays.asList(scanSkill.nextLine().split("\\P{L}+"))); 
+        ArrayList<String> placeHolders = new ArrayList<>(Arrays.asList(scanSkill.nextLine().split("[^a-zA-Z0-9]+"))); 
         ArrayList<ArrayList<String>> values = new ArrayList<ArrayList<String>> (); 
         ArrayList<slot> slotVals = new ArrayList<>(); 
 
         for (String slot : placeHolders) {
             System.out.println("Please type the values for place holder <" + slot.toUpperCase() + ">. (separated by a coma)");
-            ArrayList<String> placeValues = new ArrayList<>(Arrays.asList(scanSkill.nextLine().split("\\P{L}+"))); 
+            ArrayList<String> placeValues = new ArrayList<>(Arrays.asList(scanSkill.nextLine().split("[^a-zA-Z0-9]+"))); 
+
             for (String vals : placeValues) {
                 slot slotObject = new slot(slot, vals); 
                 slotVals.add(slotObject);
@@ -54,7 +61,7 @@ public class skillEditor {
         addingAction = true;
         while (addingAction) {
             System.out.println("Choose the holder values you would like to add actions for: (separated by a coma / To quit type 'quit')");
-            ArrayList<String> actionValues = new ArrayList<>(Arrays.asList(scanSkill.nextLine().split("\\P{L}+"))); 
+            ArrayList<String> actionValues = new ArrayList<>(Arrays.asList(scanSkill.nextLine().split("[^a-zA-Z0-9]+"))); 
 
             if(actionValues.get(0).equalsIgnoreCase("quit")){
                 addingAction = false; 
@@ -73,6 +80,8 @@ public class skillEditor {
             int i = sb.indexOf(holder);
             sb.insert(i, '<');
             sb.insert(i+holder.length()+1, '>');
+            String substr = sb.substring(i, i+holder.length()+1);
+            sb.replace(i, i+holder.length()+1, substr.toUpperCase());
         }
         br.write("\nQuestion  " + sb.toString());
     }
@@ -80,7 +89,7 @@ public class skillEditor {
     public void addSlot(ArrayList<ArrayList<String>>  slots, ArrayList<String> placeHolders) throws IOException{
         for(int i = 0; i < placeHolders.size() ;i++){
             for(Object val : slots.get(i)){
-                br.write("\nSlot  <" + placeHolders.get(i).toString() + ">  "+ val);
+                br.write("\nSlot  <" + placeHolders.get(i).toString().toUpperCase() + ">  "+ val);
             }
         }
     }
@@ -92,12 +101,12 @@ public class skillEditor {
         for(int i = 0; i < actionValues.size(); i++){                       
             for (slot sl : slotVals) {
                 if(sl.getParent().equals(actionValues.get(i).toString())){
-                    sb.append("  <" + sl.getSlot() + ">  "); 
+                    sb.append("  <" + sl.getSlot().toUpperCase() + ">  "); 
                 }
             }
             sb.append(actionValues.get(i).toString());                      
         }
-        sb.append(" " + action);
+        sb.append("  " + action);
         br.write(sb.toString());
     }
 
@@ -115,8 +124,8 @@ public class skillEditor {
         writer.write("Slot  <TIME>  13\n"); 
         writer.write("Slot  <TIME>  15\n"); 
         writer.write("Action  <DAY>  Saturday  There are no lectures on Saturday\n"); 
-        writer.write("Action  <DAY>  Monday <TIME> 9  We start the week with math\n"); 
-        writer.write("Action  <DAY>  Monday <TIME> 11  On Monday noon we have Theoratical Computer Science\n"); 
+        writer.write("Action  <DAY>  Monday  <TIME>  9  We start the week with math\n"); 
+        writer.write("Action  <DAY>  Monday  <TIME>  11  On Monday noon we have Theoratical Computer Science\n"); 
         writer.write("Action  I have no idea"); 
     }
 }

@@ -3,6 +3,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -12,10 +13,17 @@ public class skillScanner {
 
     File file; 
     String fileName;
+    String output = "";
 
     public skillScanner() throws FileNotFoundException{
-        file = new File("core\\src\\main\\java\\com\\mda\\EngineG\\skills.txt");
-        fileName = "core\\src\\main\\java\\com\\mda\\EngineG\\skills.txt";
+        String os = System.getProperty("os.name").toLowerCase();
+        if (os.contains("win")){
+            file = new File("core\\src\\main\\java\\com\\mda\\EngineG\\skills.txt");
+            fileName = "core\\src\\main\\java\\com\\mda\\EngineG\\skills.txt";
+        } else if (os.contains("os x")){
+            file = new File("core/src/main/java/com/mda/EngineG/skills.txt");
+            fileName = "core/src/main/java/com/mda/EngineG/skills.txt";
+        }     
     }
 
     public static void main(String[] args) throws FileNotFoundException {
@@ -55,13 +63,17 @@ public class skillScanner {
 
     private boolean scanSkill(String sentence) {
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+            ArrayList<String> action = new ArrayList<>();
+            action.add("Action ");
             String line;
             String match;
             String[] lineAdapt;
             String[] lineAdapted;
             int lineNumber = 0;
+            int actionLineNumber = 0; 
             while ((line = reader.readLine()) != null) {
                 lineNumber++;
+                actionLineNumber = lineNumber;
                 if (matches(line, sentence)) {
                     Pattern pattern = Pattern.compile("\\<.+?\\>");
                     Matcher matcher = pattern.matcher(line);
@@ -73,14 +85,16 @@ public class skillScanner {
                             if(match.substring(1, match.length() - 1).equals(lineAdapt[index])){
                                 String temp = "Slot  <" + match.substring(1, match.length() - 1) + ">  " + lineAdapted[index];
                                 if(!isSlotAvailable(lineNumber+1,temp)){
-                                    System.out.println("Question found but slot not available!");
+                                    getAction(actionLineNumber+1, action);
+                                    System.out.println(output);
                                     return false;
                                 }
+                                action.add("<" + match.substring(1, match.length() - 1) + ">  " + lineAdapted[index] + " ");
                             }
                         }
                     }
-                    System.out.println("Success! Working on getting action..");
-                    // getAction()
+                    getAction(actionLineNumber, action);
+                    System.out.println(output);
                     return true;
                 }
             }
@@ -102,17 +116,56 @@ public class skillScanner {
         return input.matches(sloted.toString());
     }
 
-    /*  ----------------------------- To complete ----------------------------- 
-    private boolean getAction() {
-        String filePath = "core/src/main/java/com/mda/Engine/skills.txt";
+    private String getAction(int startLine, ArrayList<String> actionList) {
         try {
-            BufferedReader reader = new BufferedReader(new FileReader(filePath));
+            BufferedReader reader = new BufferedReader(new FileReader(fileName));
+            String line = "";
+            String returnLine = "";
+            int lineNumber = 0;
+            StringBuilder builder = new StringBuilder();
+            for (String str : actionList) {
+                builder.append(str);
+                builder.append(" ");
+            }
+            String action = builder.toString();
+            action = action.toLowerCase();
+            while ((line = reader.readLine()) != null) {
+                lineNumber++;
+                if (lineNumber < startLine) {
+                    continue;
+                }
+                returnLine = line;
+                line = line.toLowerCase();
+                if (line.startsWith(action)) {
+                    if(line.startsWith(action + "<")){
+                        continue;
+                    } 
+                    output = returnLine.substring(action.length());
+                    return returnLine.substring(action.length());
+                }
+                if (line.startsWith("Question")) {
+                    if(actionList.size() == 1){
+                        return "Action for that input not found.";
+                    }
+                    actionList.remove(actionList.size() - 1);
+                    getAction(startLine, actionList);
+                }
+            }
             reader.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return false;
+        actionList.remove(actionList.size() - 1);
+        getAction(startLine, actionList);
+        return "Error ocurred, please try again.";
     }
-    + Consider several actions for the same input.
-     ------------------------------------------------------------------------- */
+
+    public String getOutput(){
+        return this.output;
+    }
 }
+
+
+// Can add: 1) same questions 2x or more in one text file. 
+//          2) different answer for same parameters
+//          3) Order matters when inputing actions (care)
