@@ -1,0 +1,4 @@
+addBMessage = add bot's message
+addUMessage = add user's message
+text_field.getText = retrieve whatever was entered in text_field
+conn.sendMessage = another class that essentially sends the text as the bot's response

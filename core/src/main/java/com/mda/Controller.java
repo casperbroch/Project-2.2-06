@@ -1,8 +1,10 @@
 package com.mda;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -20,7 +22,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
-import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ScrollPane.ScrollBarPolicy;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -35,6 +36,18 @@ import javafx.scene.text.TextFlow;
 
 public class Controller implements Initializable {
 
+    // Important vars for the skill editor
+    SkillScanner skillScanner = new SkillScanner();
+    SkillEditor skillEditor = new SkillEditor();
+    String prototype;
+    String valueSlots;
+    ArrayList<String> placeHolders;
+    ArrayList<ArrayList<String>> values;
+    ArrayList<Slot> slotVals;
+    int slotIndex = 0;
+    String response;
+    String slot;
+    private String message;
     private Responder responder = new Responder();
     private int state = -1;
     private ArrayList<String> skills = new ArrayList<String>();
@@ -82,9 +95,6 @@ public class Controller implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-
-        
-        // TODO: Change + connect to txt files
         skills.add("calendar");
         skills.add("weather");
         skills.add("web search");
@@ -108,18 +118,16 @@ public class Controller implements Initializable {
             }
         });
 
-
-        // button_send.setOnAction(new EventHandler<ActionEvent>() {
-        //     public void handle(ActionEvent event) {
-        //         suggestbox.setVisible(false);
-        //         String message = text_field.getText();
-        //         if (!message.isEmpty()) {
-        //             addUMessage(message, vbox_message);
-        //             Connection conn = new Connection();
-        //             conn.sendMessage("A response after you pressed the 'send' button.");
-        //         }
-        //     }
-        // });
+        // TODO: Duplicate of typing ENTER
+        button_send.setOnAction(new EventHandler<ActionEvent>() {
+            public void handle(ActionEvent event) {
+                suggestbox.setVisible(false);
+                String message = text_field.getText();
+                if (!message.isEmpty()) {
+                    addUMessage(message, vbox_message);
+                }
+            }
+        });
 
         dm_button.setOnAction(new EventHandler<ActionEvent>() {
             public void handle(ActionEvent event) {
@@ -158,108 +166,173 @@ public class Controller implements Initializable {
         });
 
         text_field.setOnKeyPressed(new EventHandler<KeyEvent>() {
+            // Program jumps to this method anything ANY key is typed into the chat
             @Override
-            public void handle(KeyEvent ke) {
+            public void handle(KeyEvent ke) {   
                 if (ke.getCode().equals(KeyCode.ENTER)) {
-                    suggestbox.setVisible(false);
-                    String message = text_field.getText();
-                    if (!message.isEmpty()) {
-                        addUMessage(message, vbox_message);
-                        // Shuts the program off and ignores case
-                        if(message.toLowerCase().contains("quit")) {
-                            System.exit(0);
-                        }
-                        switch(state) {
-                            // Meaning user is looking at the default options (i.e., which skills to access)
-                            case -1:
-                                for (int i = 0; i < skills.size(); i++) {
-                                    if(message.compareToIgnoreCase(skills.get(i)) == 0) {
-                                        // Directed to a specific skill
-                                        state = 0;
-                                        message = responder.getSkills(message);
-                                        break;
-                                    }
-                                    if(i == skills.size() - 1)
-                                        message = "Sorry, I do not have that skill. Please try again.";
-                                }
-                                break;
-                            case 0:
-                                // Meaning user is looking at a specific skill
-                                if(message.toLowerCase().contains("add")) {
-                                    message = "Placeholder 1: I do something.";
-                                    state = 1;
-                                } else if(message.toLowerCase().contains("search")) {
-                                    message = "Placeholder 2: I do something.";
-                                    state = 2;
-                                } else {
-                                    message = "Invalid action. Please try again.";
-                                }
-                                break;
-                            case 1:
-                                break;
-                        }  
-                        
+                    message = text_field.getText();
+                    addUMessage(message, vbox_message);
 
-
-
-                        Connection conn = new Connection();
-                        conn.sendMessage(message);
+                    // Shuts the program off and ignores case
+                    if(message.toLowerCase().contains("quit")) {
+                        System.exit(0);
                     }
-                }
 
-                String input = text_field.getText() + ke.getText();
-                if(!input.isEmpty() && !ke.getCode().equals(KeyCode.ENTER) && !input.substring(input.length()-1).equals(" ")) {
-                    String word = new String();
-                    for(int i=input.length()-1; i>=0; i--) {
-                        if(input.substring(i,i+1).equals(" ")) {
-                            word = input.substring(i,input.length());
+                    if(message.equalsIgnoreCase("add")) {
+                        state = 1;
+                    } else if(message.equalsIgnoreCase("retrieve")) {
+                        state = 6;
+                    }
+
+                    // Response generator
+                    switch(state) {
+                        case 0: // Main greeting; what the user actually wants to do
+                            for (int i = 0; i < skills.size(); i++) {
+                                if(message.compareToIgnoreCase(skills.get(i)) == 0) {
+                                    // Directed to a specific skill
+                                    state = 0;
+                                    response = responder.getSkills(message);
+                                    break;
+                                }
+                                if(i == skills.size() - 1)
+                                response = "Sorry, I do not have that skill. Please try again.";
+                            }
                             break;
+                        case 1: // Creating a skill with a prototype sentence (format)
+                            try {
+                                skillEditor.setUp();
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                            response = "Please type the prototype sentence: ";
+                            state = 2;
+                            break;
+                        case 2: // Which slots in the prototype sentence the user can change
+                            prototype = message;
+                            response = "Please type the slots you wish to set as placeholders: (separated by a coma) ";
+                            state = 3;
+                            break;
+                        case 3: // Creating a list of slots/placeholders (ex: DAY, TIME)
+                            placeHolders = new ArrayList<>(Arrays.asList(message.split("[^a-zA-Z0-9]+"))); 
+                            values = new ArrayList<ArrayList<String>>(); 
+                            slotVals = new ArrayList<>();
+                            state = 4;
+                        case 5: // Getting all the possible values for a slot as a list
+                            ArrayList<String> placeValues = new ArrayList<>(Arrays.asList(message.split("[^a-zA-Z0-9]+"))); 
+                            for (String vals : placeValues) {
+                                Slot slotObject = new Slot(slot, vals); 
+                                slotVals.add(slotObject);
+                            }
+                            if(slotIndex != 0)
+                                values.add(placeValues);
+                            state = 4;
+                        case 4: // Getting possible values for a slot (ex: Mon, Tues, Wed for DAY)
+                            if(slotIndex < placeHolders.size()) {
+                                slot = placeHolders.get(slotIndex);
+                                slotIndex++;
+                                response = "Please type the values for place holder <" + slot.toUpperCase() + ">. (separated by a coma)";
+                                state = 5;
+                                break;
+                            } else { // Adding the information to the text file once all slots have been looped through
+                                // Reset slotIndex
+                                slotIndex = 0;
+                                try {
+                                    skillEditor.addQuestion(prototype, placeHolders);
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+                                try {
+                                    skillEditor.addSlot(values, placeHolders);
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+                                response = "Skill added!";
+                                state = -1; // Goes to home page
+                                break;
+                            }
+                        case 6:
+                            response = "Please type the prototype sentence: ";
+                            state = 7;
+                            break;
+                        case 7:
+                            String sentence = "Question  " + message;
+                            try {
+                                skillScanner.setUp();
+                            } catch (FileNotFoundException e) {
+                                e.printStackTrace();
+                            }
+                            response = skillScanner.scanSkill(sentence);
+                            state = -1;
+                            break;
+
+
+                            // Add more cases/functionalities here
+
+
+
                         }
+
+
+
+                        addBMessage(response, vbox_message);
                     }
 
-                    if(word.isEmpty()) {
-                        word = input;
-                    }
-                    wordlength = word.length();
-
-                    suggest1.setVisible(false);
-                    suggest2.setVisible(false);
-                    suggest3.setVisible(false);
-
-                    try {
-                        List<String>  suggestedwords = suggestwords(word);
-                        if(suggestedwords!=null) {
-                            if(suggestedwords.size()>0) {
-                                suggest1.setText(suggestedwords.get(0));
-                                suggest1.setVisible(true);
-                            } 
-                            if(suggestedwords.size()>1) {
-                                suggest2.setText(suggestedwords.get(1));
-                                suggest2.setVisible(true);
-                            } 
-                            if(suggestedwords.size()>2) {
-                                suggest3.setText(suggestedwords.get(2));
-                                suggest3.setVisible(true);
+                    String input = text_field.getText() + ke.getText();
+                    if(!input.isEmpty() && !ke.getCode().equals(KeyCode.ENTER) && !input.substring(input.length()-1).equals(" ")) {
+                        String word = new String();
+                        for(int i=input.length()-1; i>=0; i--) {
+                            if(input.substring(i,i+1).equals(" ")) {
+                                word = input.substring(i,input.length());
+                                break;
                             }
                         }
 
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
+                        if(word.isEmpty()) {
+                            word = input;
+                        }
+                        wordlength = word.length();
+
+                        suggest1.setVisible(false);
+                        suggest2.setVisible(false);
+                        suggest3.setVisible(false);
+
+                        try {
+                            List<String>  suggestedwords = suggestwords(word);
+                            if(suggestedwords!=null) {
+                                if(suggestedwords.size()>0) {
+                                    suggest1.setText(suggestedwords.get(0));
+                                    suggest1.setVisible(true);
+                                } 
+                                if(suggestedwords.size()>1) {
+                                    suggest2.setText(suggestedwords.get(1));
+                                    suggest2.setVisible(true);
+                                } 
+                                if(suggestedwords.size()>2) {
+                                    suggest3.setText(suggestedwords.get(2));
+                                    suggest3.setVisible(true);
+                                }
+                            }
+
+                        } catch (IOException e) {
+                            throw new RuntimeException(e);
+                        }
+
+                        suggestbox.setVisible(true);
+                    } else {
+                        suggestbox.setVisible(false);
                     }
-
-                    suggestbox.setVisible(true);
-                } else {
-                    suggestbox.setVisible(false);
                 }
-
             }
-        });
-
-        String greeting = String.join(" app, ", skills);
-        // TODO: Implement adding new skills
-        greeting = ("Hello! How can I assist you? Would you like to access your " + greeting + " app, or quit? You can also create new skills!");
-        addBMessage(greeting, vbox_message);
+        );
+        // Default opening message
+        if(state == -1) {
+            String greeting = String.join(" app, ", skills);
+            greeting = ("Hello! How can I assist you? Would you like to access your " + greeting + " app, or quit? You can also create new skills!");
+            state = 0;
+            addBMessage(greeting, vbox_message);
+        }
     }
+
 
     public VBox getvBox() {
         return vbox_message;

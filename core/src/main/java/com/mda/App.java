@@ -23,7 +23,7 @@ public class App extends Application {
         Image image = new Image(getClass().getResourceAsStream("icon.png"));
         stage.getIcons().add(image);        
         stage.setScene(scene);
-        stage.setTitle("Multi-modal Digital Assistant");
+        stage.setTitle("Multi-Modal Digital Assistant");
         stage.show();
     }
 

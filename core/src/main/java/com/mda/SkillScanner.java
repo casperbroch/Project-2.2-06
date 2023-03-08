@@ -1,4 +1,5 @@
-package com.mda.EngineG;
+package com.mda;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -9,13 +10,13 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.io.BufferedReader;
 
-public class skillScanner {
+public class SkillScanner {
 
     File file; 
     String fileName;
     String output = "";
 
-    public skillScanner() throws FileNotFoundException{
+    public void setUp() throws FileNotFoundException{
         String os = System.getProperty("os.name").toLowerCase();
         if (os.contains("win")){
             file = new File("src\\main\\java\\com\\mda\\EngineG\\skills.txt");
@@ -31,7 +32,7 @@ public class skillScanner {
         System.out.println("Please type the prototype sentence: ");
         String sentence = scanSkill.nextLine();
         sentence = "Question  " + sentence;
-        skillScanner test = new skillScanner();
+        SkillScanner test = new SkillScanner();
         test.scanSkill(sentence);
         scanSkill.close();
     }
@@ -61,7 +62,7 @@ public class skillScanner {
         return false;
     }
 
-    private boolean scanSkill(String sentence) {
+    String scanSkill(String sentence) {
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
             ArrayList<String> action = new ArrayList<>();
             action.add("Action ");
@@ -87,7 +88,7 @@ public class skillScanner {
                                 if(!isSlotAvailable(lineNumber+1,temp)){
                                     getAction(actionLineNumber+1, action);
                                     System.out.println(output);
-                                    return false;
+                                    return output;
                                 }
                                 action.add("<" + match.substring(1, match.length() - 1) + ">  " + lineAdapted[index] + " ");
                             }
@@ -95,14 +96,14 @@ public class skillScanner {
                     }
                     getAction(actionLineNumber, action);
                     System.out.println(output);
-                    return true;
+                    return output;
                 }
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
         System.out.println("Question not found!");
-        return false;
+        return null;
     }
 
     private boolean matches(String template, String input) {

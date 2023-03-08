@@ -5,6 +5,7 @@ Slot  <DAY>  Wednesday
 Slot  <DAY>  Thursday
 Slot  <DAY>  Friday
 Slot  <DAY>  Saturday
+Slot  <DAY>  Sunday
 Slot  <TIME>  9
 Slot  <TIME>  11
 Slot  <TIME>  13

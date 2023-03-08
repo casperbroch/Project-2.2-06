@@ -2,6 +2,7 @@ package com.mda;
 
 import javafx.scene.layout.VBox;
 
+// Obsolete
 public class Connection {
 
     private Controller controller;
