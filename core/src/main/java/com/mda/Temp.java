@@ -1,12 +1,8 @@
 package com.mda;
 
-import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.ResourceBundle;
-
-import com.mda.wordsuggestion.SymSpell;
 
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -33,15 +29,14 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 
-public class Controller implements Initializable {
+public class Temp implements Initializable {
 
-    private Responder responder = new Responder();
     private int state = -1;
+    private Responder responder = new Responder();
     private ArrayList<String> skills = new ArrayList<String>();
     private static boolean DARKMODE = false;
     private static ArrayList<HBox> hboxlist = new ArrayList<>();
     private static ArrayList<Text> textlist = new ArrayList<>();
-    private int wordlength=0;
 
     @FXML
     private Button button_send;
@@ -55,7 +50,7 @@ public class Controller implements Initializable {
     private AnchorPane anchor_pane;
     @FXML
     private Label label1;
-    @FXML
+    @FXML 
     private Label label2;
     @FXML
     private Button dm_button;
@@ -65,42 +60,30 @@ public class Controller implements Initializable {
     private Button suggest2;
     @FXML
     private Button suggest3;
-    @FXML
+    @FXML 
     private HBox suggestbox;
 
-    public List<String> suggestwords(String wrongWord) throws IOException {
-        SymSpell dl = new SymSpell();
-        List<String> similarWords = dl.getSimilarWordsDistance(wrongWord, 3, 3);
-
-        if (similarWords!=null && similarWords.size()!=0){
-            System.out.println("Words within 3 Damerau-Levenshtein distance of " + wrongWord + ": " + similarWords);
-        } else {
-            System.out.println("The word is correct");
-        }
-        return similarWords;
-    }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
-        
         // TODO: Change + connect to txt files
         skills.add("calendar");
         skills.add("weather");
         skills.add("web search");
 
-
         suggestbox.setVisible(false);
+
         if(DARKMODE) {
             setDarkMode();
-
+            
         } else {
             setLightMode();
         }
 
         scroll_pane.setHbarPolicy(ScrollBarPolicy.NEVER);
         scroll_pane.setVbarPolicy(ScrollBarPolicy.NEVER);
-
+        
         vbox_message.heightProperty().addListener(new ChangeListener<Number>() {
             public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
                 suggestbox.setVisible(false);
@@ -135,24 +118,16 @@ public class Controller implements Initializable {
 
         suggest1.setOnAction(new EventHandler<ActionEvent>() {
             public void handle(ActionEvent event) {
-                text_field.deleteText(text_field.getLength()-wordlength, text_field.getLength());
-                text_field.appendText(" ");
                 text_field.appendText(suggest1.getText());
             }
         });
-
         suggest2.setOnAction(new EventHandler<ActionEvent>() {
             public void handle(ActionEvent event) {
-                text_field.deleteText(text_field.getLength()-wordlength, text_field.getLength());
-                text_field.appendText(" ");
                 text_field.appendText(suggest2.getText());
             }
         });
-
         suggest3.setOnAction(new EventHandler<ActionEvent>() {
             public void handle(ActionEvent event) {
-                text_field.deleteText(text_field.getLength()-wordlength, text_field.getLength());
-                text_field.appendText(" ");
                 text_field.appendText(suggest3.getText());
             }
         });
@@ -216,42 +191,18 @@ public class Controller implements Initializable {
                             break;
                         }
                     }
-
                     if(word.isEmpty()) {
                         word = input;
                     }
-                    wordlength = word.length();
-
-                    suggest1.setVisible(false);
-                    suggest2.setVisible(false);
-                    suggest3.setVisible(false);
-
-                    try {
-                        List<String>  suggestedwords = suggestwords(word);
-                        if(suggestedwords!=null) {
-                            if(suggestedwords.size()>0) {
-                                suggest1.setText(suggestedwords.get(0));
-                                suggest1.setVisible(true);
-                            } 
-                            if(suggestedwords.size()>1) {
-                                suggest2.setText(suggestedwords.get(1));
-                                suggest2.setVisible(true);
-                            } 
-                            if(suggestedwords.size()>2) {
-                                suggest3.setText(suggestedwords.get(2));
-                                suggest3.setVisible(true);
-                            }
-                        }
-
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
-                    }
+                    suggest1.setText(word+ "1");
+                    suggest2.setText(word + "2");
+                    suggest3.setText(word + "3");
 
                     suggestbox.setVisible(true);
                 } else {
                     suggestbox.setVisible(false);
                 }
-
+                
             }
         });
 
@@ -273,9 +224,9 @@ public class Controller implements Initializable {
         Text text = new Text(message);
         TextFlow TextFlow = new TextFlow(text);
         TextFlow.setStyle("-fx-color: rgb(239,242,255);" +
-                "-fx-background-color: rgb(15,125,242);" +
-                " -fx-background-radius: 20px;");
-
+                        "-fx-background-color: rgb(15,125,242);" +
+                        " -fx-background-radius: 20px;");
+                    
         TextFlow.setPadding(new Insets(5,10,5,10));
         text.setFill(Color.color(0.934,0.945,0.996));
 
@@ -295,14 +246,14 @@ public class Controller implements Initializable {
 
         if(DARKMODE) {
             TextFlow.setStyle("-fx-background-color: rgb(81,81,81);" +
-                    "-fx-background-radius: 20px;");
+            "-fx-background-radius: 20px;");
             text.setFill(Color.color(1,1,1));
         } else {
             TextFlow.setStyle("-fx-background-color: rgb(233,233,235);" +
-                    "-fx-background-radius: 20px;");
+            "-fx-background-radius: 20px;");
             text.setFill(Color.color(0,0,0));
         }
-
+                    
         TextFlow.setPadding(new Insets(5,10,5,10));
 
         hBox.getChildren().add(TextFlow);
@@ -327,7 +278,7 @@ public class Controller implements Initializable {
 
         for(int i=0; i<hboxlist.size(); i++) {
             hboxlist.get(i).getChildren().get(0).setStyle("-fx-background-color: rgb(81,81,81);" +
-                    "-fx-background-radius: 20px;");
+                                                                "-fx-background-radius: 20px;");
             textlist.get(i).setFill(Color.color(1,1,1));
         }
 
@@ -353,7 +304,7 @@ public class Controller implements Initializable {
 
         for(int i=0; i<hboxlist.size(); i++) {
             hboxlist.get(i).getChildren().get(0).setStyle("-fx-background-color: rgb(233,233,235);" +
-                    "-fx-background-radius: 20px;");
+                                                                "-fx-background-radius: 20px;");
             textlist.get(i).setFill(Color.color(0,0,0));
         }
 
@@ -363,7 +314,8 @@ public class Controller implements Initializable {
         iv.setFitWidth(50);
         dm_button.setGraphic(iv);
         dm_button.setStyle("-fx-background-color: rgb(255,255,255)");
-
+    
     }
-
+    
 }
+
