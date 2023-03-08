@@ -11,7 +11,7 @@ public class DictionaryFrecuency {
     private HashMap<String, Long> words;
     public DictionaryFrecuency() throws IOException {
         this.words = new HashMap<>();
-        String filePath = "core\\src\\main\\java\\com\\mda\\wordsuggestion\\words\\en-80k.txt";
+        String filePath = "src\\main\\java\\com\\mda\\wordsuggestion\\words\\en-80k.txt";
         try {
             BufferedReader reader = new BufferedReader(new FileReader(filePath));
             String line = reader.readLine();

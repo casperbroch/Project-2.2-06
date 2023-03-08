@@ -15,7 +15,7 @@ public class Dictionary {
 
     public Dictionary(){
         words = new ArrayList<>();
-        String filePath = "core\\src\\main\\java\\com\\mda\\wordsuggestion\\words\\words_alpha.txt";
+        String filePath = "src\\main\\java\\com\\mda\\wordsuggestion\\words\\words_alpha.txt";
         try {
             BufferedReader br = new BufferedReader(new FileReader(filePath));
             String line;
