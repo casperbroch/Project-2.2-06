@@ -304,6 +304,8 @@ public class Controller implements Initializable {
                             break;
                         }
 
+                        System.out.println(STATE);
+
                         addBMessage(response, vbox_message);
                         homegreeting();
                     }

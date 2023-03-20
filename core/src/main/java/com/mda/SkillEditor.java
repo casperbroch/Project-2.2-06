@@ -88,7 +88,7 @@ public class SkillEditor {
             String substr = sb.substring(i, i+holder.length()+1);
             sb.replace(i, i+holder.length()+1, substr.toUpperCase());
         }
-        br.write("\nQuestion  " + sb.toString());
+        br.write("\nQuestion  " + sb.toString() + "?");
     }
 
     public void addSlot(ArrayList<ArrayList<String>>  slots, ArrayList<String> placeHolders) throws IOException{
