@@ -30,7 +30,7 @@ public class SkillEditor {
         br = new BufferedWriter(writer);
         //addDefaultSkills();
         //addNewSkill();
-        closeUp();
+        //closeUp();
     }
 
     public void closeUp() throws IOException {
