@@ -14,3 +14,10 @@ Action  <DAY>  Saturday  There are no lectures on Saturday
 Action  <DAY>  Monday  <TIME>  9  We start the week with math
 Action  <DAY>  Monday  <TIME>  11  On Monday noon we have Theoratical Computer Science
 Action  I have no idea
+Question  this is a <TEST>
+Slot  <TEST>  one
+Slot  <TEST>  two
+Slot  <TEST>  three
+Action  <TEST>  one  this is one
+Action  <TEST>  two  this is two
+Action  <TEST>  three  this is three

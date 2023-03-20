@@ -45,7 +45,7 @@ public class Controller implements Initializable {
     public enum USERSTATE {
         HOME,
         SKILLC1, SKILLC2,
-        SCS1, SCS2, SCS3, SCS4, SCS5, SCS6, SCS7, SCS8,
+        SCS1, SCS2, SCS3, SCS4, SCS5, SCS6, SCS7,
         SGS1,
     }
 
@@ -193,7 +193,6 @@ public class Controller implements Initializable {
                         System.exit(0);
                     }
 
-                    System.out.println(message);
                     response = "Sorry, unknown action.";
 
                     // Response generator
@@ -282,19 +281,15 @@ public class Controller implements Initializable {
                             break;
                         
                         case SCS7:
-                            if(message.equals("")||message.equals(" ")) {
-                                STATE = USERSTATE.SCS8;
+                            if(message.equals("")||message.equals(" ")||message.equals(null)) {
+                                slotIndex = 0;
+                                response = "Skill added!";
+                                STATE = USERSTATE.HOME;
                             } else {
                                 actionValues = new ArrayList<>(Arrays.asList(message.split("[^a-zA-Z0-9]+")));
                                 response = "What action would you like to add for the selected values?";
                                 STATE = USERSTATE.SCS6;
                             }
-                            break;
-
-                        case SCS8:
-                            slotIndex = 0;
-                            response = "Skill added!";
-                            STATE = USERSTATE.HOME; // Goes to home page
                             break;
 
                         case SGS1:

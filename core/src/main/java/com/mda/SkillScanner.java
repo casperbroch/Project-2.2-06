@@ -19,11 +19,11 @@ public class SkillScanner {
     public void setUp() throws FileNotFoundException{
         String os = System.getProperty("os.name").toLowerCase();
         if (os.contains("win")){
-            file = new File("src\\main\\java\\com\\mda\\EngineG\\skills.txt");
-            fileName = "src\\main\\java\\com\\mda\\EngineG\\skills.txt";
+            file = new File("src\\main\\java\\com\\mda\\skills.txt");
+            fileName = "src\\main\\java\\com\\mda\\skills.txt";
         } else if (os.contains("os x")){
-            file = new File("src/main/java/com/mda/EngineG/skills.txt");
-            fileName = "src/main/java/com/mda/EngineG/skills.txt";
+            file = new File("src/main/java/com/mda/skills.txt");
+            fileName = "src/main/java/com/mda/skills.txt";
         }     
     }
 
@@ -33,6 +33,7 @@ public class SkillScanner {
         String sentence = scanSkill.nextLine();
         sentence = "Question  " + sentence;
         SkillScanner test = new SkillScanner();
+        test.setUp();
         test.scanSkill(sentence);
         scanSkill.close();
     }
