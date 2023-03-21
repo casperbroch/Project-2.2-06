@@ -768,4 +768,65 @@ public class skillEditor {
         writer.write("Action  <DAY>  Monday  <TIME>  11  On Monday noon we have Theoratical Computer Science\n"); 
         writer.write("Action  I have no idea"); 
     }
+
+    public String getActions(String skill){
+        String a = new String();
+        ArrayList<String> slots = new ArrayList<>();
+        try {
+            BufferedReader readerDel = new BufferedReader(new FileReader(file));
+            String current;
+            boolean delete = false;
+            int counter = 1;
+            while((current = readerDel.readLine()) != null) {
+                String trimmedLine = current.trim();
+                if(delete && current.startsWith("Question")){
+                    delete = false;
+                }
+                if(trimmedLine.equals(skill)){
+                    delete = true;
+                } 
+                if (delete && current.startsWith("Action")){
+                    a = a + counter+ ") " + current.substring(8)+"\n";
+                    slots.add(current);
+                    counter++;
+                }
+            }
+            readerDel.close();
+        } catch(IOException e) {
+            System.out.println("An error occurred: " + e.getMessage());
+        }
+        return a;
+    }
+
+    public String getSlots(String skill){
+        String a = new String();
+        ArrayList<String> slots = new ArrayList<>();
+        try {
+            BufferedReader readerDel = new BufferedReader(new FileReader(file));
+            String current;
+            boolean delete = false;
+            int counter = 1;
+            while((current = readerDel.readLine()) != null) {
+                String trimmedLine = current.trim();
+                if(delete && current.startsWith("Action")){
+                    delete = false;
+                }
+                if(trimmedLine.equals(skill)){
+                    delete = true;
+                } 
+                if (delete && current.startsWith("Slot")){
+
+                    int startIndex = current.indexOf("<") + 1; 
+                    int endIndex = current.indexOf(">"); 
+                    a = a + counter+ ") " + current.substring(startIndex, endIndex) + " - " + current.substring(13) + "\n";
+                    slots.add(current);
+                    counter++;
+                }
+            }
+            readerDel.close();
+        } catch(IOException e) {
+            System.out.println("An error occurred: " + e.getMessage());
+        }
+        return a;
+    }
 }

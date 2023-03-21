@@ -246,7 +246,6 @@ public class Controller implements Initializable {
                                 STATE = USERSTATE.SKILLA1;
                             } else if (message.equalsIgnoreCase("3")) {
                                 // ? input 3 leads the user to the deleting of a skill state
-                                System.out.println("test");
                                 try {
                                     response = "Which skill would you like to delete?\n"+ skillEditor.showskills();
                                 } catch (Exception e) {}
@@ -256,19 +255,38 @@ public class Controller implements Initializable {
                                 STATE = USERSTATE.SKILLE1;
                             } else if (message.equalsIgnoreCase("5")) {
                                 // ? input 5 leads the user to the viewing of a skill state
+                                try {
+                                    response = "Which skill would you like to view?\n"+ skillEditor.showskills();
+                                } catch (Exception e) {}
                                 STATE = USERSTATE.SKILLV1;
                             }
                             break;
 
+                        case SKILLV1:
+                            int skillamountv = skillEditor.getSkillAmount();
+                            int choicev = Integer.parseInt(message);
+
+                            if(choicev <= skillamountv) {
+                                ArrayList<String> questions = skillEditor.getSkillQuestions();
+                                response = questions.get(choicev-1) + "\n" + skillEditor.getSlots(questions.get(choicev-1)) + "\n" + skillEditor.getActions(questions.get(choicev-1));
+                                response = response + "\nDo you wish to 1) ask a question, or 2) add, 3) delete, 4) edit, 5) view a skill?";
+                                STATE = USERSTATE.SKILLHOME;
+                                break;
+                            } else {
+                                response = "Please choose a skill from the prompted list,\n"+ skillEditor.showskills();
+                                STATE = USERSTATE.SKILLV1;
+                                break;
+                            }
+
 
                         case SKILLD1:
-                            int skillamount = skillEditor.getSkillAmount();
-                            int choice = Integer.parseInt(message);
+                            int skillamountd = skillEditor.getSkillAmount();
+                            int choiced = Integer.parseInt(message);
                             
-                            if(choice <= skillamount) {
+                            if(choiced <= skillamountd) {
                                 ArrayList<String> questions = skillEditor.getSkillQuestions();
-                                skillEditor.deleteSkill(questions.get(choice-1));
-                                response = "Skill removed!\nDo you wish to 1) add, 2) delete, 3) edit, 4) view a skill?";
+                                skillEditor.deleteSkill(questions.get(choiced-1));
+                                response = "Skill removed!\nDo you wish to 1) ask a question, or 2) add, 3) delete, 4) edit, 5) view a skill?";
                                 STATE = USERSTATE.SKILLHOME;
                                 break;
                             } else {
@@ -356,7 +374,7 @@ public class Controller implements Initializable {
                         case SKILLA7:
                             if(message.equals("")||message.equals(" ")||message.equals(null)) {
                                 slotIndex = 0;
-                                response = "Skill added!\nDo you wish to 1) add, 2) delete, 3) edit, 4) view a skill?";
+                                response = "Skill added!\nDo you wish to 1) ask a question, or 2) add, 3) delete, 4) edit, 5) view a skill?";
                                 
                                 STATE = USERSTATE.SKILLHOME;
                             } else {
