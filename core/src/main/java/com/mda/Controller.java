@@ -2,6 +2,7 @@ package com.mda;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.lang.Thread.State;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -44,28 +45,37 @@ public class Controller implements Initializable {
      */
     public enum USERSTATE {
         HOME,
-        SKILLC1, SKILLC2,
-        SCS1, SCS2, SCS3, SCS4, SCS5, SCS6, SCS7,
-        SGS1,
+        APPC,
+
+        SKILLHOME,
+        SKILLQ1,
+        SKILLA1, SKILLA2, SKILLA3, SKILLA4, SKILLA5, SKILLA6, SKILLA7,
+        SKILLD1,
+        SKILLE1,
+        SKILLV1,
+    
     }
 
     // Important vars for the skill editor
-    SkillScanner skillScanner = new SkillScanner();
-    SkillEditor skillEditor = new SkillEditor();
-    String prototype;
-    String valueSlots;
-    ArrayList<String> placeHolders;
-    ArrayList<ArrayList<String>> values;
-    ArrayList<Slot> slotVals;
-    int slotIndex = 0;
-    String response;
-    String slot;
+    private skillScanner skillScanner;
+    private skillEditor skillEditor;
+
+    private String prototype;
+    
+    private String valueSlots;
+    private ArrayList<String> placeHolders;
+    private ArrayList<ArrayList<String>> values;
+    private ArrayList<Slot> slotVals;
+    private int slotIndex = 0;
+    private String response;
+    private String slot;
+
     private String message;
-    private Responder responder = new Responder();
-    ArrayList<String> actionValues;
-    String action;
-    //private int state = -1;
-    USERSTATE STATE = USERSTATE.HOME;
+
+    private ArrayList<String> actionValues;
+    private String action;
+
+    private USERSTATE STATE = USERSTATE.HOME;
     private ArrayList<String> skills = new ArrayList<String>();
     private static boolean DARKMODE = false;
     private static ArrayList<HBox> hboxlist = new ArrayList<>();
@@ -109,22 +119,27 @@ public class Controller implements Initializable {
         return similarWords;
     }
 
-    @Override
-    public void initialize(URL location, ResourceBundle resources) {
+    public void init() {
+        try {
+            skillEditor = new skillEditor();
+            skillScanner = new skillScanner();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         skills.add("skills");
-
-
-
         suggestbox.setVisible(false);
         if(DARKMODE) {
             setDarkMode();
-
         } else {
             setLightMode();
         }
-
         scroll_pane.setHbarPolicy(ScrollBarPolicy.NEVER);
         scroll_pane.setVbarPolicy(ScrollBarPolicy.NEVER);
+    }
+
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        init();
 
         vbox_message.heightProperty().addListener(new ChangeListener<Number>() {
             public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
@@ -181,135 +196,314 @@ public class Controller implements Initializable {
         });
 
         text_field.setOnKeyPressed(new EventHandler<KeyEvent>() {
-            // Program jumps to this method anything ANY key is typed into the chat
             @Override
             public void handle(KeyEvent ke) {   
                 if (ke.getCode().equals(KeyCode.ENTER)) {
+                    // * print the user message on enter click
                     message = text_field.getText();
                     addUMessage(message, vbox_message);
 
-                    // Shuts the program off and ignores case
+                    // * shuts the program off when quit is typed
                     if(message.toLowerCase().contains("quit")) {
                         System.exit(0);
                     }
 
+                    // * default response if no action is satisfied
                     response = "Sorry, unknown action.";
 
-                    // Response generator
+                    // * the state system is shown below
                     switch(STATE) {
-                        case SKILLC1: // Main greeting; what the user actually wants to do
-                            for (int i = 0; i < skills.size(); i++) {
-                                if(message.compareToIgnoreCase(skills.get(i)) == 0) {
-                                    // Directed to a specific skill
-                                    response = responder.getSkills(message);
-                                    STATE = USERSTATE.SKILLC2;
-                                    break;
+
+                    // ! state description: appc is the state of the user inputting the app they want to choose 
+                    // ! state type: USER CHOOSING 
+                        case APPC:
+                        for (int i = 0; i < skills.size(); i++) {
+                            if(message.compareToIgnoreCase(skills.get(i)) == 0) {                                
+                                // ? if user chose the app 'skills' the user gets progressed to the correct state & is given the correct bot response
+                                if(message.equalsIgnoreCase("skills")) {
+                                    response = "Welcome to the Skill APP!\nDo you wish to 1) ask a question, or 2) add, 3) delete, 4) edit, 5) view a skill?";
+                                    STATE = USERSTATE.SKILLHOME;
                                 }
-                                if(i == skills.size() - 1)
+                                break;
+                            }
+
+                            if(i == skills.size() - 1)
+                                // ? bot response, state remains the same
                                 response = "Sorry, I do not have that app. Please try again.";
                             }
                             break;
 
-                        case SKILLC2:
-                            if(message.equalsIgnoreCase("add")) {
-                                STATE = USERSTATE.SCS1;
-                                response = "Please type the prototype sentence: ";
-                            } else if(message.equalsIgnoreCase("retrieve")) {
-                                STATE = USERSTATE.SGS1;
+                        // ! state description: skillhome is the state where the user has been prompted with the options and how selects one
+                        // ! state type: USER CHOOSING 
+                        case SKILLHOME:
+                            if(message.equalsIgnoreCase("1")) {
+                                // ? input 1 leads the user to asking a question
                                 response = "You can ask your question: ";
+                                STATE = USERSTATE.SKILLQ1;
+                            } else if (message.equalsIgnoreCase("2")) {
+                                // ? input 2 leads the user to the adding a skill state
+                                response = "Please type the prototype sentence: ";
+                                STATE = USERSTATE.SKILLA1;
+                            } else if (message.equalsIgnoreCase("3")) {
+                                // ? input 3 leads the user to the deleting of a skill state
+                                System.out.println("test");
+                                try {
+                                    response = "Which skill would you like to delete?\n"+ skillEditor.showskills();
+                                } catch (Exception e) {}
+                                STATE = USERSTATE.SKILLD1;
+                            } else if (message.equalsIgnoreCase("4")) {
+                                // ? input 4 leads the user to the editing of a skill state
+                                STATE = USERSTATE.SKILLE1;
+                            } else if (message.equalsIgnoreCase("5")) {
+                                // ? input 5 leads the user to the viewing of a skill state
+                                STATE = USERSTATE.SKILLV1;
                             }
                             break;
 
 
-                        case SCS1: // Which slots in the prototype sentence the user can change
+                        case SKILLD1:
+                            int skillamount = skillEditor.getSkillAmount();
+                            int choice = Integer.parseInt(message);
+                            
+                            if(choice <= skillamount) {
+                                ArrayList<String> questions = skillEditor.getSkillQuestions();
+                                skillEditor.deleteSkill(questions.get(choice-1));
+                                response = "Skill removed!\nDo you wish to 1) add, 2) delete, 3) edit, 4) view a skill?";
+                                STATE = USERSTATE.SKILLHOME;
+                                break;
+                            } else {
+                                response = "Please choose a skill from the prompted list,\n"+ skillEditor.showskills();
+                                STATE = USERSTATE.SKILLD1;
+                                break;
+                            }
+
+
+
+                        // ! state description: skilla1 is the first of the skill adding sequence
+                        case SKILLA1:
                             prototype = message;
                             response = "Please type the slots you wish to set as placeholders: (separated by a coma) ";
-                            STATE = USERSTATE.SCS2;
+                            STATE = USERSTATE.SKILLA2;
                             break;
-                        case SCS2: // Creating a list of slots/placeholders (ex: DAY, TIME)
+                        
+                        // ! state description: skilla2 is the second of the skill adding sequence
+                        case SKILLA2:
                             placeHolders = new ArrayList<>(Arrays.asList(message.split("[^a-zA-Z0-9]+"))); 
                             values = new ArrayList<ArrayList<String>>(); 
                             slotVals = new ArrayList<>();
-                            STATE = USERSTATE.SCS3;
-                        case SCS4: // Getting all the possible values for a slot as a list
+                            STATE = USERSTATE.SKILLA3;
+
+                         // ! state description: skilla4 is the fourth of the skill adding sequence
+                        case SKILLA4:
                             ArrayList<String> placeValues = new ArrayList<>(Arrays.asList(message.split("[^a-zA-Z0-9]+"))); 
                             for (String vals : placeValues) {
                                 Slot slotObject = new Slot(slot, vals); 
                                 slotVals.add(slotObject);
                             }
-                            if(slotIndex != 0)
+
+                            if(slotIndex != 0) {
                                 values.add(placeValues);
-                            STATE = USERSTATE.SCS3;
-                        case SCS3: // Getting possible values for a slot (ex: Mon, Tues, Wed for DAY)
+                            }
+
+                            STATE = USERSTATE.SKILLA3;
+                        
+                        // ! state description: skilla3 is the third of the skill adding sequence
+                        case SKILLA3:
                             if(slotIndex < placeHolders.size()) {
+                                // ? if not every slot has been filled, fill the others
                                 slot = placeHolders.get(slotIndex);
                                 slotIndex++;
                                 response = "Please type the values for place holder <" + slot.toUpperCase() + ">. (separated by a coma)";
-                                STATE = USERSTATE.SCS4;
+                                STATE = USERSTATE.SKILLA4;
                                 break;
                             } else {                            
                                 try {
+                                    System.out.println("adding a skill rn");
+                                    // ? create the question and the slots
                                     skillEditor.setUp();
                                     skillEditor.addQuestion(prototype, placeHolders);
                                     skillEditor.addSlot(values, placeHolders);
                                     skillEditor.closeUp();
-                                } catch (IOException e) {
-                                    e.printStackTrace();
-                                }
-                                response = "Choose the holder values you would like to add actions for: (separated by a coma)";
-                                STATE = USERSTATE.SCS5;
-                                break;
-                            } 
+                                } catch (IOException e) {e.printStackTrace();}
+                                    // ? prompt the user to select the holder values
+                                    response = "Choose the holder values you would like to add actions for: (separated by a coma)";
+                                    STATE = USERSTATE.SKILLA5;
+                            }
+                            break;
 
-                        case SCS5:
+                        // ! state description: skilla5 is the fifth of the skill adding sequence
+                        case SKILLA5:
                             actionValues = new ArrayList<>(Arrays.asList(message.split("[^a-zA-Z0-9]+")));
+
                             response = "What action would you like to add for the selected values?";
-                            STATE = USERSTATE.SCS6;
+                            STATE = USERSTATE.SKILLA6;
                             break;
                         
-                        case SCS6:
+                        // ! state description: skilla6 is the sixth of the skill adding sequence
+                        case SKILLA6:
                             action = message;
                             try {
                                 skillEditor.setUp();
                                 skillEditor.addAction(actionValues, action, slotVals);
-                                skillEditor.closeUp();
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
+                            skillEditor.closeUp();
+                            } catch (IOException e) {e.printStackTrace();}
+
                             response = "Do you want to create another action or quit and finalize the skill? Simply press 'Enter' to quit or type once again the holder values you would like to add actions for: (seperated by a coma)";
-                            STATE = USERSTATE.SCS7;
+                            STATE = USERSTATE.SKILLA7;
                             break;
-                        
-                        case SCS7:
+
+                        // ! state description: skilla7 is the seventh of the skill adding sequence
+                        case SKILLA7:
                             if(message.equals("")||message.equals(" ")||message.equals(null)) {
                                 slotIndex = 0;
-                                response = "Skill added!";
-                                STATE = USERSTATE.HOME;
+                                response = "Skill added!\nDo you wish to 1) add, 2) delete, 3) edit, 4) view a skill?";
+                                
+                                STATE = USERSTATE.SKILLHOME;
                             } else {
                                 actionValues = new ArrayList<>(Arrays.asList(message.split("[^a-zA-Z0-9]+")));
                                 response = "What action would you like to add for the selected values?";
-                                STATE = USERSTATE.SCS6;
+                                STATE = USERSTATE.SKILLA6;
                             }
                             break;
 
-                        case SGS1:
-                            String sentence = "Question  " + message;
-                            try {
-                                skillScanner.setUp();
-                            } catch (FileNotFoundException e) {
-                                e.printStackTrace();
+                        
+                            case SKILLQ1:
+                                if(message.equalsIgnoreCase("back")) {
+                                    response = "Welcome to the Skill APP!\nDo you wish to 1) ask a question, or 2) add, 3) delete, 4) edit, 5) view a skill?";
+                                    STATE = USERSTATE.SKILLHOME;
+                                } else {
+                                    String sentence = "Question  " + message;
+                                    response = skillScanner.scanSkill(sentence)+ "\nWant to go back to the skill app menu? Type 'back'.";
+                                    STATE = USERSTATE.SKILLQ1;
+                                }
+                        
+                                break;
                             }
-                            response = skillScanner.scanSkill(sentence);
-                            STATE = USERSTATE.HOME;
-                            break;
-                        }
-
+                        
                         System.out.println(STATE);
-
                         addBMessage(response, vbox_message);
+                        // ! greet the user with home menu if they are in home state
                         homegreeting();
                     }
 
+                    
+
+                    // // Response generator
+                    // switch(STATE) {
+                    //     case SKILLC1: // Main greeting; what the user actually wants to do
+                    //         for (int i = 0; i < skills.size(); i++) {
+                    //             if(message.compareToIgnoreCase(skills.get(i)) == 0) {
+                    //                 // Directed to a specific skill
+                    //                 response = responder.getSkills(message);
+                    //                 STATE = USERSTATE.SKILLC2;
+                    //                 break;
+                    //             }
+                    //             if(i == skills.size() - 1)
+                    //             response = "Sorry, I do not have that app. Please try again.";
+                    //         }
+                    //         break;
+
+                    //     case SKILLC2:
+                    //         if(message.equalsIgnoreCase("add")) {
+                    //             STATE = USERSTATE.SCS1;
+                    //             response = "Please type the prototype sentence: ";
+                    //         } else if(message.equalsIgnoreCase("retrieve")) {
+                    //             STATE = USERSTATE.SGS1;
+                    //             response = "You can ask your question: ";
+                    //         }
+                    //         break;
+
+
+                    //     case SCS1: // Which slots in the prototype sentence the user can change
+                    //         prototype = message;
+                    //         response = "Please type the slots you wish to set as placeholders: (separated by a coma) ";
+                    //         STATE = USERSTATE.SCS2;
+                    //         break;
+                    //     case SCS2: // Creating a list of slots/placeholders (ex: DAY, TIME)
+                    //         placeHolders = new ArrayList<>(Arrays.asList(message.split("[^a-zA-Z0-9]+"))); 
+                    //         values = new ArrayList<ArrayList<String>>(); 
+                    //         slotVals = new ArrayList<>();
+                    //         STATE = USERSTATE.SCS3;
+                    //     case SCS4: // Getting all the possible values for a slot as a list
+                    //         ArrayList<String> placeValues = new ArrayList<>(Arrays.asList(message.split("[^a-zA-Z0-9]+"))); 
+                    //         for (String vals : placeValues) {
+                    //             Slot slotObject = new Slot(slot, vals); 
+                    //             slotVals.add(slotObject);
+                    //         }
+                    //         if(slotIndex != 0)
+                    //             values.add(placeValues);
+                    //         STATE = USERSTATE.SCS3;
+                    //     case SCS3: // Getting possible values for a slot (ex: Mon, Tues, Wed for DAY)
+                    //         if(slotIndex < placeHolders.size()) {
+                    //             slot = placeHolders.get(slotIndex);
+                    //             slotIndex++;
+                    //             response = "Please type the values for place holder <" + slot.toUpperCase() + ">. (separated by a coma)";
+                    //             STATE = USERSTATE.SCS4;
+                    //             break;
+                    //         } else {                            
+                    //             try {
+                    //                 skillEditor.setUp();
+                    //                 skillEditor.addQuestion(prototype, placeHolders);
+                    //                 skillEditor.addSlot(values, placeHolders);
+                    //                 skillEditor.closeUp();
+                    //             } catch (IOException e) {
+                    //                 e.printStackTrace();
+                    //             }
+                    //             response = "Choose the holder values you would like to add actions for: (separated by a coma)";
+                    //             STATE = USERSTATE.SCS5;
+                    //             break;
+                    //         } 
+
+                    //     case SCS5:
+                    //         actionValues = new ArrayList<>(Arrays.asList(message.split("[^a-zA-Z0-9]+")));
+                    //         response = "What action would you like to add for the selected values?";
+                    //         STATE = USERSTATE.SCS6;
+                    //         break;
+                        
+                    //     case SCS6:
+                    //         action = message;
+                    //         try {
+                    //             skillEditor.setUp();
+                    //             skillEditor.addAction(actionValues, action, slotVals);
+                    //             skillEditor.closeUp();
+                    //         } catch (IOException e) {
+                    //             e.printStackTrace();
+                    //         }
+                    //         response = "Do you want to create another action or quit and finalize the skill? Simply press 'Enter' to quit or type once again the holder values you would like to add actions for: (seperated by a coma)";
+                    //         STATE = USERSTATE.SCS7;
+                    //         break;
+                        
+                    //     case SCS7:
+                    //         if(message.equals("")||message.equals(" ")||message.equals(null)) {
+                    //             slotIndex = 0;
+                    //             response = "Skill added!";
+                    //             STATE = USERSTATE.HOME;
+                    //         } else {
+                    //             actionValues = new ArrayList<>(Arrays.asList(message.split("[^a-zA-Z0-9]+")));
+                    //             response = "What action would you like to add for the selected values?";
+                    //             STATE = USERSTATE.SCS6;
+                    //         }
+                    //         break;
+
+                    //     case SGS1:
+                    //         String sentence = "Question  " + message;
+                    //         try {
+                    //             skillScanner.setUp();
+                    //         } catch (FileNotFoundException e) {
+                    //             e.printStackTrace();
+                    //         }
+                    //         response = skillScanner.scanSkill(sentence);
+                    //         STATE = USERSTATE.HOME;
+                    //         break;
+                    //     }
+
+                    //     System.out.println(STATE);
+
+                    //     addBMessage(response, vbox_message);
+                    //     homegreeting();
+                    // }
+
+                    // ! code below is for the word suggestion 
                     String input = text_field.getText() + ke.getText();
                     if(!input.isEmpty() && ke.getCode().equals(KeyCode.BACK_QUOTE) && !input.substring(input.length()-1).equals(" ")) {
                         String word = new String();
@@ -355,17 +549,17 @@ public class Controller implements Initializable {
                         suggestbox.setVisible(false);
                     }
                 }
-            }
-        );
-        // First home greeting
-        homegreeting();
+            });
+            // ! First home greeting when program is started
+            homegreeting();
     }
+    
 
     public void homegreeting() {
         if(STATE == USERSTATE.HOME) {
             String greeting = String.join(" app, ", skills);
             greeting = ("Hello! How can I assist you? Would you like to access your " + greeting + " app, or quit? You can also create new skills!");
-            STATE = USERSTATE.SKILLC1;
+            STATE = USERSTATE.APPC;
             addBMessage(greeting, vbox_message);
         }
     }

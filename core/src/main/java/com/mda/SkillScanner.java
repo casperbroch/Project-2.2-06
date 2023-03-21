@@ -1,5 +1,4 @@
 package com.mda;
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -10,35 +9,34 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.io.BufferedReader;
 
-public class SkillScanner {
+public class skillScanner {
 
     File file; 
     String fileName;
     String output = "";
 
-    public void setUp() throws FileNotFoundException{
+    public skillScanner() throws FileNotFoundException{
         String os = System.getProperty("os.name").toLowerCase();
         if (os.contains("win")){
-            file = new File("src\\main\\java\\com\\mda\\skills.txt");
-            fileName = "src\\main\\java\\com\\mda\\skills.txt";
+            file = new File("core\\src\\main\\java\\com\\mda\\skills.txt");
+            fileName = "core\\src\\main\\java\\com\\mda\\skills.txt";
         } else if (os.contains("os x")){
-            file = new File("src/main/java/com/mda/skills.txt");
-            fileName = "src/main/java/com/mda/skills.txt";
+            file = new File("core/src/main/java/com/mda/skills.txt");
+            fileName = "core/src/main/java/com/mda/skills.txt";
         }     
     }
-
+ 
     public static void main(String[] args) throws FileNotFoundException {
         Scanner scanSkill = new Scanner(System.in);
         System.out.println("Please type the prototype sentence: ");
         String sentence = scanSkill.nextLine();
         sentence = "Question  " + sentence;
-        SkillScanner test = new SkillScanner();
-        test.setUp();
+        skillScanner test = new skillScanner();
         test.scanSkill(sentence);
         scanSkill.close();
     }
 
-    private boolean isSlotAvailable(int startLine, String slot) {
+    public boolean isSlotAvailable(int startLine, String slot) {
         try(BufferedReader reader = new BufferedReader(new FileReader(file))){ 
             String line = "";
             int lineNumber = 0;
@@ -63,7 +61,7 @@ public class SkillScanner {
         return false;
     }
 
-    String scanSkill(String sentence) {
+    public String scanSkill(String sentence) {
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
             ArrayList<String> action = new ArrayList<>();
             action.add("Action ");
@@ -84,12 +82,13 @@ public class SkillScanner {
                         lineAdapt = line.replaceAll("\\p{Punct}", "").split("\\s+");
                         lineAdapted = sentence.replaceAll("\\p{Punct}", "").split("\\s+");
                         for (int index = 0; index < lineAdapted.length; index++) {
+                            //System.out.println(match.substring(1, match.length() - 1));
+                            //System.out.println(lineAdapt[index]);
                             if(match.substring(1, match.length() - 1).equals(lineAdapt[index])){
                                 String temp = "Slot  <" + match.substring(1, match.length() - 1) + ">  " + lineAdapted[index];
                                 if(!isSlotAvailable(lineNumber+1,temp)){
                                     getAction(actionLineNumber+1, action);
                                     System.out.println(output);
-                                    return output;
                                 }
                                 action.add("<" + match.substring(1, match.length() - 1) + ">  " + lineAdapted[index] + " ");
                             }
@@ -104,10 +103,10 @@ public class SkillScanner {
             e.printStackTrace();
         }
         System.out.println("Question not found!");
-        return null;
+        return output;
     }
 
-    private boolean matches(String template, String input) {
+    public boolean matches(String template, String input) {
         template = template.toLowerCase();
         input = input.toLowerCase();
         String[] slots = template.split("\\<.+?\\>");
@@ -118,7 +117,7 @@ public class SkillScanner {
         return input.matches(sloted.toString());
     }
 
-    private String getAction(int startLine, ArrayList<String> actionList) {
+    public String getAction(int startLine, ArrayList<String> actionList) {
         try {
             BufferedReader reader = new BufferedReader(new FileReader(fileName));
             String line = "";
@@ -167,7 +166,3 @@ public class SkillScanner {
     }
 }
 
-
-// Can add: 1) same questions 2x or more in one text file. 
-//          2) different answer for same parameters
-//          3) Order matters when inputing actions (care)
