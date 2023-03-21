@@ -82,6 +82,8 @@ public class skillScanner {
                         lineAdapt = line.replaceAll("\\p{Punct}", "").split("\\s+");
                         lineAdapted = sentence.replaceAll("\\p{Punct}", "").split("\\s+");
                         for (int index = 0; index < lineAdapted.length; index++) {
+                            //System.out.println(match.substring(1, match.length() - 1));
+                            //System.out.println(lineAdapt[index]);
                             if(match.substring(1, match.length() - 1).equals(lineAdapt[index])){
                                 String temp = "Slot  <" + match.substring(1, match.length() - 1) + ">  " + lineAdapted[index];
                                 if(!isSlotAvailable(lineNumber+1,temp)){
@@ -165,7 +167,3 @@ public class skillScanner {
     }
 }
 
-
-// Can add: 1) same questions 2x or more in one text file. 
-//          2) different answer for same parameters
-//          3) Order matters when inputing actions (care)

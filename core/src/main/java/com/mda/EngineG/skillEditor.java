@@ -78,25 +78,28 @@ public class skillEditor {
             StringBuilder stringBuilder = new StringBuilder();
             String current;
             boolean delete = false;
-            while((current = readerDel.readLine()) != null) {
-                String trimmedLine = current.trim();
-                if(delete && current.startsWith("Question")){
-                    delete = false;
+            if(printSlots(skill).size() != 1){
+                while((current = readerDel.readLine()) != null) {
+                    String trimmedLine = current.trim();
+                    if(delete && current.startsWith("Question")){
+                        delete = false;
+                    }
+                    if(trimmedLine.equals(skill)){
+                        delete = true;
+                    } 
+                    if (delete && trimmedLine.equals(slot)){
+                        continue;
+                    } else{
+                        stringBuilder.append(current);
+                        stringBuilder.append(System.getProperty("line.separator"));
+                    }
                 }
-                if(trimmedLine.equals(skill)){
-                    delete = true;
-                } 
-                if (delete && trimmedLine.equals(slot)){
-                    continue;
-                } else{
-                    stringBuilder.append(current);
-                    stringBuilder.append(System.getProperty("line.separator"));
-                }
-            }
-            readerDel.close();
-            FileWriter writerDel = new FileWriter(file);
-            writerDel.write(stringBuilder.toString());
-            writerDel.close();
+                readerDel.close();
+                FileWriter writerDel = new FileWriter(file);
+                writerDel.write(stringBuilder.toString());
+                writerDel.close();
+            } else System.out.println("Cannot delete slot as there is only one slot available.");
+            
         } catch(IOException e) {
             System.out.println("An error occurred: " + e.getMessage());
         }
@@ -108,25 +111,29 @@ public class skillEditor {
             StringBuilder stringBuilder = new StringBuilder();
             String current;
             boolean delete = false;
-            while((current = readerDel.readLine()) != null) {
-                String trimmedLine = current.trim();
-                if(delete && current.startsWith("Question")){
-                    delete = false;
+            if(printActions(skill).size() != 1){
+                while((current = readerDel.readLine()) != null) {
+                    String trimmedLine = current.trim();
+                    if(delete && current.startsWith("Question")){
+                        delete = false;
+                    }
+                    if(trimmedLine.equals(skill)){
+                        delete = true;
+                    } 
+                    if (delete && trimmedLine.equals(action)){
+                        continue;
+                    } else{
+                        stringBuilder.append(current);
+                        stringBuilder.append(System.getProperty("line.separator"));
+                    }
                 }
-                if(trimmedLine.equals(skill)){
-                    delete = true;
-                } 
-                if (delete && trimmedLine.equals(action)){
-                    continue;
-                } else{
-                    stringBuilder.append(current);
-                    stringBuilder.append(System.getProperty("line.separator"));
-                }
-            }
-            readerDel.close();
-            FileWriter writerDel = new FileWriter(file);
-            writerDel.write(stringBuilder.toString());
-            writerDel.close();
+                readerDel.close();
+                FileWriter writerDel = new FileWriter(file);
+                writerDel.write(stringBuilder.toString());
+                writerDel.close();
+            } else System.out.println("Cannot delete action as it is the only one left.");
+
+        
         } catch(IOException e) {
             System.out.println("An error occurred: " + e.getMessage());
         }
@@ -239,7 +246,7 @@ public class skillEditor {
             String substr = sb.substring(i, i+holder.length()+1);
             sb.replace(i, i+holder.length()+1, substr.toUpperCase());
         }
-        br.write("\nQuestion  " + sb.toString());
+        br.write("\nQuestion  " + sb.toString() + "?");
     }
 
     public void addSlot(ArrayList<ArrayList<String>>  slots, ArrayList<String> placeHolders) throws IOException{
@@ -300,10 +307,14 @@ public class skillEditor {
                             }
                         } 
                         skill = scan.nextInt();
+                        if(skill >= questions.size()+1){
+                            System.out.println("Invalid choice. Restart.");
+                            break;
+                        }
                         deleteSkill(questions.get(skill-1));
                         break;
                     case 3:          
-                        Scanner scan33 = new Scanner(System.in);
+                        Scanner scan39 = new Scanner(System.in);
                         System.out.println("Which skill would you like to edit? ");
                         while ((line = reader.readLine()) != null) {
                             if (line.startsWith("Question")) {
@@ -312,13 +323,18 @@ public class skillEditor {
                                 counter++;
                             }
                         } 
-                        skill = scan33.nextInt();
+                        skill = scan39.nextInt();
+                        if(skill >= questions.size()+1){
+                            System.out.println("Invalid choice. Restart.");
+                            break;
+                        }
                         System.out.println("--");
                         System.out.println("What action would you like to take? ");
                         System.out.println("1) Add a slot.");
                         System.out.println("2) Add an action.");
                         System.out.println("3) Delete a slot.");
                         System.out.println("4) Delete an action.");
+                        Scanner scan33 = new Scanner(System.in);
                         int action = scan33.nextInt();
 
                         switch (action) {
@@ -417,6 +433,8 @@ public class skillEditor {
                                 int actionH = scan4.nextInt();
                                 deleteAction(questions.get(skill-1), actions.get(actionH-1));                           
                                 break;
+                            default:
+                            System.out.println("Action not found. Retry.");
                         }
                         break;
                     case 4:
