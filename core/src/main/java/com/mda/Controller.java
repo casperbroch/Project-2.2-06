@@ -82,6 +82,8 @@ public class Controller implements Initializable {
     private static ArrayList<Text> textlist = new ArrayList<>();
     private int wordlength=0;
 
+    private SymSpell sp;
+
     @FXML
     private Button button_send;
     @FXML
@@ -108,8 +110,7 @@ public class Controller implements Initializable {
     private HBox suggestbox;
 
     public List<String> suggestwords(String wrongWord) throws IOException {
-        SymSpell dl = new SymSpell();
-        List<String> similarWords = dl.getSimilarWordsDistance(wrongWord, 3, 3);
+        List<String> similarWords = sp.getSimilarWordsDistance(wrongWord, 3, 3);
 
         if (similarWords!=null && similarWords.size()!=0){
             System.out.println("Words within 3 Damerau-Levenshtein distance of " + wrongWord + ": " + similarWords);
@@ -121,6 +122,7 @@ public class Controller implements Initializable {
 
     public void init() {
         try {
+            sp = new SymSpell();
             skillEditor = new skillEditor();
             skillScanner = new skillScanner();
         } catch (Exception e) {
@@ -523,7 +525,7 @@ public class Controller implements Initializable {
 
                     // ! code below is for the word suggestion 
                     String input = text_field.getText() + ke.getText();
-                    if(!input.isEmpty() && ke.getCode().equals(KeyCode.BACK_QUOTE) && !input.substring(input.length()-1).equals(" ")) {
+                    if(!input.isEmpty() && !ke.getCode().equals(KeyCode.ENTER) && !input.substring(input.length()-1).equals(" ")) {
                         String word = new String();
                         for(int i=input.length()-1; i>=0; i--) {
                             if(input.substring(i,i+1).equals(" ")) {

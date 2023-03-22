@@ -1,4 +1,5 @@
 package com.mda;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -7,25 +8,28 @@ import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import javafx.scene.control.SpinnerValueFactory;
+
 import java.io.BufferedReader;
 
 public class skillScanner {
 
-    File file; 
+    File file;
     String fileName;
     String output = "";
 
-    public skillScanner() throws FileNotFoundException{
+    public skillScanner() throws FileNotFoundException {
         String os = System.getProperty("os.name").toLowerCase();
-        if (os.contains("win")){
-            file = new File("core\\src\\main\\java\\com\\mda\\skills.txt");
-            fileName = "core\\src\\main\\java\\com\\mda\\skills.txt";
-        } else if (os.contains("os x")){
-            file = new File("core/src/main/java/com/mda/skills.txt");
-            fileName = "core/src/main/java/com/mda/skills.txt";
-        }     
+        if (os.contains("win")) {
+            file = new File(App.TEXTPATH);
+            fileName = App.TEXTPATH;
+        } else if (os.contains("os x")) {
+            file = new File(App.TEXTPATH);
+            fileName = App.TEXTPATH;
+        }
     }
- 
+
     public static void main(String[] args) throws FileNotFoundException {
         Scanner scanSkill = new Scanner(System.in);
         System.out.println("Please type the prototype sentence: ");
@@ -37,7 +41,7 @@ public class skillScanner {
     }
 
     public boolean isSlotAvailable(int startLine, String slot) {
-        try(BufferedReader reader = new BufferedReader(new FileReader(file))){ 
+        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
             String line = "";
             int lineNumber = 0;
             while ((line = reader.readLine()) != null) {
@@ -53,7 +57,7 @@ public class skillScanner {
                 if (line.startsWith("Action")) {
                     break;
                 }
-            } 
+            }
             reader.close();
         } catch (IOException e) {
             e.printStackTrace();
@@ -62,6 +66,7 @@ public class skillScanner {
     }
 
     public String scanSkill(String sentence) {
+        System.out.println(sentence);
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
             ArrayList<String> action = new ArrayList<>();
             action.add("Action ");
@@ -70,7 +75,7 @@ public class skillScanner {
             String[] lineAdapt;
             String[] lineAdapted;
             int lineNumber = 0;
-            int actionLineNumber = 0; 
+            int actionLineNumber = 0;
             while ((line = reader.readLine()) != null) {
                 lineNumber++;
                 actionLineNumber = lineNumber;
@@ -82,15 +87,18 @@ public class skillScanner {
                         lineAdapt = line.replaceAll("\\p{Punct}", "").split("\\s+");
                         lineAdapted = sentence.replaceAll("\\p{Punct}", "").split("\\s+");
                         for (int index = 0; index < lineAdapted.length; index++) {
-                            //System.out.println(match.substring(1, match.length() - 1));
-                            //System.out.println(lineAdapt[index]);
-                            if(match.substring(1, match.length() - 1).equals(lineAdapt[index])){
-                                String temp = "Slot  <" + match.substring(1, match.length() - 1) + ">  " + lineAdapted[index];
-                                if(!isSlotAvailable(lineNumber+1,temp)){
-                                    getAction(actionLineNumber+1, action);
+                            // System.out.println(match.substring(1, match.length() - 1));
+                            // System.out.println(lineAdapt[index]);
+                            System.out.println(lineAdapt[index]);
+                            if (match.substring(1, match.length() - 1).equals(lineAdapt[index])) {
+                                String temp = "Slot  <" + match.substring(1, match.length() - 1) + ">  "
+                                        + lineAdapted[index];
+                                if (!isSlotAvailable(lineNumber + 1, temp)) {
+                                    getAction(actionLineNumber + 1, action);
                                     System.out.println(output);
                                 }
-                                action.add("<" + match.substring(1, match.length() - 1) + ">  " + lineAdapted[index] + " ");
+                                action.add("<" + match.substring(1, match.length() - 1) + ">  " + lineAdapted[index]
+                                        + " ");
                             }
                         }
                     }
@@ -138,14 +146,14 @@ public class skillScanner {
                 returnLine = line;
                 line = line.toLowerCase();
                 if (line.startsWith(action)) {
-                    if(line.startsWith(action + "<")){
+                    if (line.startsWith(action + "<")) {
                         continue;
-                    } 
+                    }
                     output = returnLine.substring(action.length());
                     return returnLine.substring(action.length());
                 }
                 if (line.startsWith("Question")) {
-                    if(actionList.size() == 1){
+                    if (actionList.size() == 1) {
                         return "Action for that input not found.";
                     }
                     actionList.remove(actionList.size() - 1);
@@ -161,8 +169,7 @@ public class skillScanner {
         return "Error ocurred, please try again.";
     }
 
-    public String getOutput(){
+    public String getOutput() {
         return this.output;
     }
 }
-

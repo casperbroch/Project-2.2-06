@@ -22,10 +22,10 @@ public class skillEditor {
     public void setUp() throws IOException{
         String os = System.getProperty("os.name").toLowerCase();
         if (os.contains("win")){
-            file = new File("core\\src\\main\\java\\com\\mda\\skills.txt");
+            file = new File(App.TEXTPATH);
         }
         else if (os.contains("os x")){
-            file = new File("core/src/main/java/com/mda/skills.txt");
+            file = new File(App.TEXTPATH);
         }   
         writer = new FileWriter(file, true); 
         br = new BufferedWriter(writer);
@@ -285,10 +285,10 @@ public class skillEditor {
         BufferedReader reader;
         String os = System.getProperty("os.name").toLowerCase();
         if (os.contains("win")){
-            file = new File("core\\src\\main\\java\\com\\mda\\skills.txt");
+            file = new File(App.TEXTPATH);
         }
         else if (os.contains("os x")){
-            file = new File("core/src/main/java/com/mda/skills.txt");
+            file = new File(App.TEXTPATH);
         } 
 
         try {
@@ -315,10 +315,10 @@ public class skillEditor {
         BufferedReader reader;
         String os = System.getProperty("os.name").toLowerCase();
         if (os.contains("win")){
-            file = new File("core\\src\\main\\java\\com\\mda\\skills.txt");
+            file = new File(App.TEXTPATH);
         }
         else if (os.contains("os x")){
-            file = new File("core/src/main/java/com/mda/skills.txt");
+            file = new File(App.TEXTPATH);
         } 
 
         try {
@@ -343,10 +343,10 @@ public class skillEditor {
         BufferedReader reader;
         String os = System.getProperty("os.name").toLowerCase();
         if (os.contains("win")){
-            file = new File("core\\src\\main\\java\\com\\mda\\skills.txt");
+            file = new File(App.TEXTPATH);
         }
         else if (os.contains("os x")){
-            file = new File("core/src/main/java/com/mda/skills.txt");
+            file = new File(App.TEXTPATH);
         } 
 
         try {
