@@ -13,14 +13,18 @@ Action  <DAY>  Saturday  There are no lectures on Saturday
 Action  <DAY>  Monday  <TIME>  9  We start the week with math
 Action  <DAY>  Monday  <TIME>  11  On Monday noon we have Theoratical Computer Science
 Action  I have no idea
-Question  i am <YEARS> old?
-Slot  <YEARS>  12
-Slot  <YEARS>  14
-Slot  <YEARS>  1 2
-Action  <YEARS>  12  go home
-Action  <YEARS>  1 2  go home too
-Question  how old is <A>?
-Slot  <A>  gui a
-Slot  <A>  six
-Action  <A>  gui a  go gome
-Action  hello
+Question  Which dasdslecres are there on <DAY> at <TIME>
+Slot  <DAY>  Monday
+Slot  <DAY>  Tuesday
+Slot  <DAY>  Wednesday
+Slot  <DAY>  Friday
+Slot  <DAY>  Saturday
+Slot  <TIME>  9
+Slot  <TIME>  11
+Slot  <TIME>  13
+Slot  <TIME>  15
+Action  <DAY>  monday  <TIME>  13  adadasdsadasdas
+Action  <DAY>  Saturday  There are no lectures on Saturday
+Action  <DAY>  Monday  <TIME>  9  We start the week with math
+Action  <DAY>  Monday  <TIME>  11  On Monday noon we have Theoratical Computer Science
+Action  I have no idea

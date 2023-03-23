@@ -30,9 +30,31 @@ public class skillEditor {
         writer = new FileWriter(file, true); 
         br = new BufferedWriter(writer);
         //addDefaultSkills();
+        removeEmptyLines();
         getSkillAndAction();
         br.close();
         writer.close();
+    }
+
+    public void removeEmptyLines(){
+        try {
+            String current = "";
+            BufferedReader readerDel1 = new BufferedReader(new FileReader(file));
+            StringBuilder stringBuilder1 = new StringBuilder();
+            while((current = readerDel1.readLine()) != null) {
+                if(current.length() != 0){
+                    stringBuilder1.append(current);
+                    stringBuilder1.append(System.getProperty("line.separator"));
+                }
+            }
+            readerDel1.close();
+            FileWriter writerDel1 = new FileWriter(file);
+            writerDel1.write(stringBuilder1.toString());
+            writerDel1.close();
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
     }
 
     public void addSlot(String skill, String data, String slotLoc){
@@ -146,7 +168,7 @@ public class skillEditor {
         prototype = scanSkill.nextLine();
         System.out.println("Please type the slots you wish to set as placeholders: (separated by a coma) ");
 
-        ArrayList<String> placeHolders = new ArrayList<>(Arrays.asList(scanSkill.nextLine().split("\\s*,\\s*"))); 
+        ArrayList<String> placeHolders = new ArrayList<>(Arrays.asList(scanSkill.nextLine().split("[^a-zA-Z0-9]+"))); 
         System.out.println(placeHolders.toString());
         ArrayList<ArrayList<String>> values = new ArrayList<ArrayList<String>> (); 
         ArrayList<slot> slotVals = new ArrayList<>(); 
@@ -195,7 +217,7 @@ public class skillEditor {
             while (addingAction) {
                 System.out.println("Choose the holder values you would like to add actions for: (separated by a coma / To quit type 'quit')");
                 ArrayList<String> actionValues = new ArrayList<>(Arrays.asList(scanSkill.nextLine().split("\\s*,\\s*"))); 
-    
+                System.out.println(actionValues.toString());
                 if(actionValues.get(0).equalsIgnoreCase("quit")){
                     addingAction = false; 
                 } else{
@@ -404,14 +426,6 @@ public class skillEditor {
                                     duplicateAction = duplicateAction(questions.get(skill-1), dataA, actionValues, actionVals);
                                     if(duplicateAction){
                                         System.out.println("That action already exists, do you wish to 'add' another action, 'overwrite' the current one or 'quit'?");
-                                        Scanner scan7 = new Scanner(System.in);
-                                        String data2 = scan7.nextLine();
-                                        if(data2.equalsIgnoreCase("quit")) {
-                                            quittedAction = true;
-                                            break;
-                                        } else if(data2.equalsIgnoreCase("modify")){
-
-                                        }
                                     }
                                 }
                                 if(!quittedAction){
