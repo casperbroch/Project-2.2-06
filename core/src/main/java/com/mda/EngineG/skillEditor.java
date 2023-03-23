@@ -146,7 +146,8 @@ public class skillEditor {
         prototype = scanSkill.nextLine();
         System.out.println("Please type the slots you wish to set as placeholders: (separated by a coma) ");
 
-        ArrayList<String> placeHolders = new ArrayList<>(Arrays.asList(scanSkill.nextLine().split("[^a-zA-Z0-9]+"))); 
+        ArrayList<String> placeHolders = new ArrayList<>(Arrays.asList(scanSkill.nextLine().split("\\s*,\\s*"))); 
+        System.out.println(placeHolders.toString());
         ArrayList<ArrayList<String>> values = new ArrayList<ArrayList<String>> (); 
         ArrayList<slot> slotVals = new ArrayList<>(); 
         boolean flag = false;
@@ -178,7 +179,7 @@ public class skillEditor {
         if (!flag){
             for (String slot : placeHolders) {
                 System.out.println("Please type the values for place holder <" + slot.toUpperCase() + ">. (separated by a coma)");
-                ArrayList<String> placeValues = new ArrayList<>(Arrays.asList(scanSkill.nextLine().split("[^a-zA-Z0-9]+"))); 
+                ArrayList<String> placeValues = new ArrayList<>(Arrays.asList(scanSkill.nextLine().split("\\s*,\\s*"))); 
     
                 for (String vals : placeValues) {
                     slot slotObject = new slot(slot, vals); 
@@ -193,7 +194,7 @@ public class skillEditor {
             addingAction = true;
             while (addingAction) {
                 System.out.println("Choose the holder values you would like to add actions for: (separated by a coma / To quit type 'quit')");
-                ArrayList<String> actionValues = new ArrayList<>(Arrays.asList(scanSkill.nextLine().split("[^a-zA-Z0-9]+"))); 
+                ArrayList<String> actionValues = new ArrayList<>(Arrays.asList(scanSkill.nextLine().split("\\s*,\\s*"))); 
     
                 if(actionValues.get(0).equalsIgnoreCase("quit")){
                     addingAction = false; 
@@ -258,6 +259,7 @@ public class skillEditor {
     }
 
     public void addAction(ArrayList<String> actionValues, String action, ArrayList<slot> slotVals) throws IOException{
+        System.out.println(actionValues.toString());
         String finalAction = ""; 
         StringBuilder sb = new StringBuilder(finalAction);
         sb.append("\nAction"); 
@@ -269,6 +271,7 @@ public class skillEditor {
             }
             sb.append(actionValues.get(i).toString());                      
         }
+        System.out.println(action);
         sb.append("  " + action);
         br.write(sb.toString());
     }

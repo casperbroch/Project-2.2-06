@@ -27,6 +27,7 @@ public class skillScanner {
     }
 
     public static void main(String[] args) throws FileNotFoundException {
+         
         Scanner scanSkill = new Scanner(System.in);
         System.out.println("Please type the prototype sentence: ");
         String sentence = scanSkill.nextLine();
@@ -34,6 +35,8 @@ public class skillScanner {
         skillScanner test = new skillScanner();
         test.scanSkill(sentence);
         scanSkill.close();
+        
+   
     }
 
     private boolean isSlotAvailable(int startLine, String slot) {
@@ -45,6 +48,7 @@ public class skillScanner {
                 if (lineNumber < startLine) {
                     continue;
                 }
+                
                 if (!line.startsWith("Action")) {
                     if (slot.equalsIgnoreCase(line)) {
                         return true;
@@ -63,6 +67,8 @@ public class skillScanner {
 
     private boolean scanSkill(String sentence) {
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+            ArrayList<String> defaultAction = new ArrayList<>();
+            defaultAction.add("Action ");
             ArrayList<String> action = new ArrayList<>();
             action.add("Action ");
             String line;
@@ -81,14 +87,39 @@ public class skillScanner {
                         match = matcher.group();
                         lineAdapt = line.replaceAll("\\p{Punct}", "").split("\\s+");
                         lineAdapted = sentence.replaceAll("\\p{Punct}", "").split("\\s+");
+                        String [] test = new String[lineAdapt.length];
+                        int cntAdder = 0;
+                        for (int i = 0; i < lineAdapt.length; i++) {
+                            test[i] = "";
+                            if(lineAdapt[i].equalsIgnoreCase(lineAdapted[cntAdder])){
+                                test[i] = lineAdapted[cntAdder];
+                                cntAdder++;
+                            } else{
+                                if(i + 1 < lineAdapt.length){
+                                    while (!lineAdapt[i+1].equalsIgnoreCase(lineAdapted[cntAdder])) {
+                                        test[i] = test[i] + lineAdapted[cntAdder];
+                                        if(!lineAdapt[i+1].equalsIgnoreCase(lineAdapted[cntAdder+1])){
+                                            test[i] = test[i] + " ";
+                                        }
+                                        cntAdder++;
+                                    }
+                                } else{
+                                    while (cntAdder < lineAdapted.length) {
+                                        test[i] = test[i] + lineAdapted[cntAdder];
+                                        if(cntAdder + 1 < lineAdapted.length){
+                                            test[i] = test[i] + " ";
+                                        }
+                                        cntAdder++;
+                                    }
+                                }
+                            }
+                        }
+                        lineAdapted = test;
                         for (int index = 0; index < lineAdapted.length; index++) {
-                            //System.out.println(match.substring(1, match.length() - 1));
-                            //System.out.println(lineAdapt[index]);
                             if(match.substring(1, match.length() - 1).equals(lineAdapt[index])){
                                 String temp = "Slot  <" + match.substring(1, match.length() - 1) + ">  " + lineAdapted[index];
                                 if(!isSlotAvailable(lineNumber+1,temp)){
-                                    getAction(actionLineNumber+1, action);
-                                    System.out.println(output);
+                                    System.out.println(getAction(actionLineNumber+1, defaultAction));
                                     return false;
                                 }
                                 action.add("<" + match.substring(1, match.length() - 1) + ">  " + lineAdapted[index] + " ");
