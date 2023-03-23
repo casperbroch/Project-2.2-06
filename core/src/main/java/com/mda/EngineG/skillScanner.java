@@ -27,7 +27,6 @@ public class skillScanner {
     }
 
     public static void main(String[] args) throws FileNotFoundException {
-         
         Scanner scanSkill = new Scanner(System.in);
         System.out.println("Please type the prototype sentence: ");
         String sentence = scanSkill.nextLine();
@@ -35,8 +34,6 @@ public class skillScanner {
         skillScanner test = new skillScanner();
         test.scanSkill(sentence);
         scanSkill.close();
-        
-   
     }
 
     private boolean isSlotAvailable(int startLine, String slot) {
