@@ -194,4 +194,3 @@ public class skillScanner {
         return this.output;
     }
 }
-
