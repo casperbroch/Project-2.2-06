@@ -6,6 +6,7 @@ import java.lang.Thread.State;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -52,8 +53,8 @@ public class Controller implements Initializable {
         SKILLA1, SKILLA2, SKILLA3, SKILLA4, SKILLA5, SKILLA6, SKILLA7,
         SKILLD1,
         SKILLE1, SKILLE2,
-        SKILLEAddS,
-        SKILLEAddA,
+        SKILLEAddS1, SKILLEAddS2, SKILLEAddS3,
+        SKILLEAddA1, SKILLEAddA2, SKILLEAddA3, SKILLEAddA4,
         SKILLEDelS,
         SKILLEDelA,
         SKILLV1,
@@ -65,6 +66,13 @@ public class Controller implements Initializable {
     private skillEditor skillEditor;
 
     private String prototype;
+    private String addedslot;
+    private String addedaction;
+    ArrayList<Integer> actionNumsOrdered;
+    ArrayList<String> actionT;
+    ArrayList<String> actionV;
+    private ArrayList<String> actionValues1;
+    int actionindex;
     
     private String valueSlots;
     private int choiceedit;
@@ -77,7 +85,7 @@ public class Controller implements Initializable {
 
     private String message;
 
-    private ArrayList<String> actionValues;
+    private ArrayList<String> actionValues2;
     private String action;
 
     private USERSTATE STATE = USERSTATE.HOME;
@@ -287,9 +295,11 @@ public class Controller implements Initializable {
 
                         case SKILLE2:
                             if(message.equalsIgnoreCase("1")) {
-                                STATE = USERSTATE.SKILLEAddS;
+                                response = "What do you want to add as a slot?";
+                                STATE = USERSTATE.SKILLEAddS1;
                             } else if (message.equalsIgnoreCase("2")) {
-                                STATE = USERSTATE.SKILLEAddA;
+                                response = "What do you want to add as an action?";
+                                STATE = USERSTATE.SKILLEAddA1;
                             } else if (message.equalsIgnoreCase("3")) {
                                 ArrayList<String> questions = skillEditor.getSkillQuestions();
                                 response = "Which slot would you like to delete ?\n"+skillEditor.getSlots(questions.get(choiceedit-1));
@@ -299,6 +309,79 @@ public class Controller implements Initializable {
                                 response = "Which action would you like to delete ?\n"+skillEditor.getActions(questions.get(choiceedit-1));
                                 STATE = USERSTATE.SKILLEDelA;
                             }
+                            break;
+
+                        case SKILLEAddA1:
+                            actionV = new ArrayList<>();
+                            actionValues1 = new ArrayList<>();
+                            actionindex=0;
+                            addedaction = message;
+                            ArrayList<String> questionA1 = skillEditor.getSkillQuestions();
+                            actionT = skillEditor.showSlots(questionA1.get(choiceedit-1));
+                            response = "To which slot(s) does this data belong to? You can find the slots below: ";
+                            response = response + actionT;
+                            STATE = USERSTATE.SKILLEAddA2;
+                            break;
+
+                        case SKILLEAddA2:
+                            ArrayList<String> questionA3 = skillEditor.getSkillQuestions();
+                            int cnt = 0;
+                            
+                            ArrayList<String> actionNums = new ArrayList<>(Arrays.asList(message.split("[^a-zA-Z0-9]+")));
+                            actionNumsOrdered = new ArrayList<>();
+                            for (String string : actionNums) {
+                                actionNumsOrdered.add(Integer.parseInt(string));
+                            }
+                            Collections.sort(actionNumsOrdered);
+                            actionV = new ArrayList<>(); 
+                            for (String string : actionNums) {
+                                actionValues1.add(actionT.get(actionNumsOrdered.get(cnt)-1));
+                                cnt++;
+                            }
+                            System.out.println(actionValues1.size());
+                            response = "What is the value of slot " + actionValues1.get(actionindex) +"? \n"+skillEditor.printSlotsSpecasString(questionA3.get(choiceedit-1), actionValues1.get(actionindex));
+                            STATE = USERSTATE.SKILLEAddA3;
+                            break;
+
+                        case SKILLEAddA3:
+                            ArrayList<String> questionA2 = skillEditor.getSkillQuestions();
+                            
+
+                            ArrayList<String> slots2 = skillEditor.printSlotsSpec(questionA2.get(choiceedit-1), actionValues1.get(actionindex));
+                            actionindex++;
+                            actionV.add(slots2.get(Integer.parseInt(message)-1));
+
+                            if(actionindex>=actionValues1.size()) {
+                                if(skillEditor.duplicateAction(questionA2.get(choiceedit-1), addedaction, actionValues1, actionV)) {
+                                    response = "That action already exisits, please retry.\nWhat do you want to add as an action?";
+                                    STATE = USERSTATE.SKILLEAddA1;
+                                } else {
+                                    skillEditor.addAction(questionA2.get(choiceedit-1), addedaction, actionValues1, actionV); 
+                                    response = "Action added!\nDo you wish to 1) ask a question, or 2) add, 3) delete, 4) edit, 5) view a skill?";
+                                    STATE = USERSTATE.SKILLHOME;
+                                }
+                            } else {
+                                response = "What is the value of slot " + actionValues1.get(actionindex) +"? \n"+skillEditor.printSlotsSpecasString(questionA2.get(choiceedit-1), actionValues1.get(actionindex));
+                            }
+                            break;
+
+                        case SKILLEAddS1:
+                            addedslot = message;
+                            ArrayList<String> questionsas = skillEditor.getSkillQuestions();
+                            response = "And to which slot would you like to add '" + message + "' to? Choose one from the options below:\n"+skillEditor.showSlots(questionsas.get(choiceedit-1));
+                            STATE = USERSTATE.SKILLEAddS2;
+                            break;
+
+                        case SKILLEAddS2:
+                            int choiceadds = Integer.parseInt(message);
+                            ArrayList<String> questionsas2 = skillEditor.getSkillQuestions();
+                            ArrayList<String> slots = skillEditor.showSlots(questionsas2.get(choiceedit-1));
+                            if(skillEditor.duplicateSlot(questionsas2.get(choiceedit-1), addedslot, slots.get(choiceadds))) {
+                                response = "That slot already exists, please retry.";
+                            } else {
+                                skillEditor.addSlot(questionsas2.get(choiceedit-1), addedslot, slots.get(choiceadds-1));
+                                response = "Slot added!\nDo you wish to 1) ask a question, or 2) add, 3) delete, 4) edit, 5) view a skill?";
+                                STATE = USERSTATE.SKILLHOME;                            }
                             break;
 
                         case SKILLEDelA:
@@ -408,7 +491,7 @@ public class Controller implements Initializable {
 
                         // ! state description: skilla5 is the fifth of the skill adding sequence
                         case SKILLA5:
-                            actionValues = new ArrayList<>(Arrays.asList(message.split("[^a-zA-Z0-9]+")));
+                            actionValues2 = new ArrayList<>(Arrays.asList(message.split("[^a-zA-Z0-9]+")));
 
                             response = "What action would you like to add for the selected values?";
                             STATE = USERSTATE.SKILLA6;
@@ -419,7 +502,7 @@ public class Controller implements Initializable {
                             action = message;
                             try {
                                 skillEditor.setUp();
-                                skillEditor.addAction(actionValues, action, slotVals);
+                                skillEditor.addAction(actionValues2, action, slotVals);
                             skillEditor.closeUp();
                             } catch (IOException e) {e.printStackTrace();}
 
@@ -435,7 +518,7 @@ public class Controller implements Initializable {
                                 
                                 STATE = USERSTATE.SKILLHOME;
                             } else {
-                                actionValues = new ArrayList<>(Arrays.asList(message.split("[^a-zA-Z0-9]+")));
+                                actionValues2 = new ArrayList<>(Arrays.asList(message.split("[^a-zA-Z0-9]+")));
                                 response = "What action would you like to add for the selected values?";
                                 STATE = USERSTATE.SKILLA6;
                             }

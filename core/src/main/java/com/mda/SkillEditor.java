@@ -29,8 +29,29 @@ public class skillEditor {
         }   
         writer = new FileWriter(file, true); 
         br = new BufferedWriter(writer);
-        //addDefaultSkills();
-        //getSkillAndAction();
+        removeEmptyLines();
+        getSkillAndAction();
+        removeEmptyLines();
+    }
+
+    public void removeEmptyLines(){
+        try {
+            String current = "";
+            BufferedReader readerDel1 = new BufferedReader(new FileReader(file));
+            StringBuilder stringBuilder1 = new StringBuilder();
+            while((current = readerDel1.readLine()) != null) {
+                if(current.length() != 0){
+                    stringBuilder1.append(current);
+                    stringBuilder1.append(System.getProperty("line.separator"));
+                }
+            }
+            readerDel1.close();
+            FileWriter writerDel1 = new FileWriter(file);
+            writerDel1.write(stringBuilder1.toString());
+            writerDel1.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public void closeUp() throws IOException {
@@ -143,13 +164,11 @@ public class skillEditor {
         }
     }
 
-    public void addNewSkill() throws IOException{
-        // check if exists 
+    public void addNewSkill() throws IOException{        
         Scanner scanSkill = new Scanner(System.in);
         System.out.println("Please type the prototype sentence: ");
         prototype = scanSkill.nextLine();
         System.out.println("Please type the slots you wish to set as placeholders: (separated by a coma) ");
-
         ArrayList<String> placeHolders = new ArrayList<>(Arrays.asList(scanSkill.nextLine().split("[^a-zA-Z0-9]+"))); 
         ArrayList<ArrayList<String>> values = new ArrayList<ArrayList<String>> (); 
         ArrayList<Slot> slotVals = new ArrayList<>(); 
@@ -175,14 +194,14 @@ public class skillEditor {
         }
 
         for (String question : questions) {
-            if(question.substring(10).equalsIgnoreCase(sb.toString())){
+            if(question.equalsIgnoreCase("Question  " + sb.toString() + "?")){
                 flag = true;
             }
         }
         if (!flag){
             for (String slot : placeHolders) {
                 System.out.println("Please type the values for place holder <" + slot.toUpperCase() + ">. (separated by a coma)");
-                ArrayList<String> placeValues = new ArrayList<>(Arrays.asList(scanSkill.nextLine().split("[^a-zA-Z0-9]+"))); 
+                ArrayList<String> placeValues = new ArrayList<>(Arrays.asList(scanSkill.nextLine().split("\\s*,\\s*"))); 
     
                 for (String vals : placeValues) {
                     Slot slotObject = new Slot(slot, vals); 
@@ -193,19 +212,66 @@ public class skillEditor {
     
             addQuestion(prototype, placeHolders);
             addSlot(values, placeHolders);
-    
+            boolean addedDefault = false;
             addingAction = true;
             while (addingAction) {
-                System.out.println("Choose the holder values you would like to add actions for: (separated by a coma / To quit type 'quit')");
-                ArrayList<String> actionValues = new ArrayList<>(Arrays.asList(scanSkill.nextLine().split("[^a-zA-Z0-9]+"))); 
-    
-                if(actionValues.get(0).equalsIgnoreCase("quit")){
-                    addingAction = false; 
-                } else{
-                    System.out.println("What action would you like to add for the selected values?");
-                    String action = scanSkill.nextLine(); 
-                    addAction(actionValues, action, slotVals);
-                }   
+                ArrayList<String> actionVals = new ArrayList<>();
+                String dataA = "";
+                actionVals = new ArrayList<>();
+                Scanner scan2 = new Scanner(System.in);
+                if(!addedDefault){
+                    System.out.println("Do you wish to add a default action? ");
+                    System.out.println("1) Yes");
+                    System.out.println("2) No");
+                    if(scan2.nextLine().equalsIgnoreCase("1")){
+                        System.out.println("Please type in your default action:");
+                        dataA = scan2.nextLine();
+                        addAction(new ArrayList<String>(), dataA, new ArrayList<Slot>());
+                    }
+                    addedDefault = true;
+                }
+
+                System.out.println("--");
+                System.out.println("What do you want to add as an action? Type 'quit' to leave.");
+
+                dataA = scan2.nextLine();
+                if(dataA.equalsIgnoreCase("quit")){
+                    addingAction = false;
+                    continue;
+                }
+                System.out.println("To which slot(s) does this data belong to? You can find the slots below: ");
+                int cnt = 1;
+                for (int i = 0; i < placeHolders.size(); i++) {
+                    System.out.println(cnt + ") "+ placeHolders.get(i));
+                    cnt++;
+                }
+                ArrayList<String> actionNums =new ArrayList<>(Arrays.asList(scan2.nextLine().split("[^a-zA-Z0-9]+"))); 
+                ArrayList<Integer> actionNumsOrdered = new ArrayList<>();
+                for (String string : actionNums) {
+                    actionNumsOrdered.add(Integer.parseInt(string));
+                }
+                Collections.sort(actionNumsOrdered);
+
+                actionVals = new ArrayList<>(); 
+                ArrayList<Slot> actionValss = new ArrayList<>(); 
+                ArrayList<Slot> actionValsSend = new ArrayList<>(); 
+
+                for (int i = 0; i < actionNumsOrdered.size(); i++) {
+                    actionValss = new ArrayList<>(); 
+                    int count = 1;
+                    System.out.println("What is the value of slot " + placeHolders.get(actionNumsOrdered.get(i)-1) +"? ");
+                    for (int j = 0; j < slotVals.size(); j++) {
+                        if(slotVals.get(j).getSlot().equals(placeHolders.get(actionNumsOrdered.get(i)-1))){
+                            System.out.println(count + ") " + slotVals.get(j).getParent());
+                            actionValss.add(slotVals.get(j));
+                            count++;
+                        }
+                    }
+                    int holder = scan2.nextInt()-1;
+                    actionVals.add(actionValss.get(holder).getParent());
+                    actionValsSend.add(actionValss.get(holder));
+                }
+                addAction(actionVals, dataA, actionValsSend);
             }
             scanSkill.close();
         }
@@ -464,6 +530,8 @@ public class skillEditor {
                                 ArrayList<String> actionValues = new ArrayList<>();
                                 String dataA = "";
                                 while(duplicateAction){
+                                    actionVals = new ArrayList<>();
+                                    actionValues = new ArrayList<>();
                                     Scanner scan2 = new Scanner(System.in);
                                     System.out.println("--");
                                     System.out.println("What do you want to add as an action?");
@@ -485,19 +553,12 @@ public class skillEditor {
                                     actionVals = new ArrayList<>(); 
                                     for (int i = 0; i < actionValues.size(); i++) {
                                         System.out.println("What is the value of slot " + actionValues.get(i) +"? ");
-                                        actionVals.add(scan2.nextLine());
+                                        ArrayList<String> slots = printSlotsSpec(questions.get(skill-1), actionValues.get(i));
+                                        actionVals.add(slots.get(scan2.nextInt()-1));
                                     }
                                     duplicateAction = duplicateAction(questions.get(skill-1), dataA, actionValues, actionVals);
                                     if(duplicateAction){
                                         System.out.println("That action already exists, do you wish to 'add' another action, 'overwrite' the current one or 'quit'?");
-                                        Scanner scan7 = new Scanner(System.in);
-                                        String data2 = scan7.nextLine();
-                                        if(data2.equalsIgnoreCase("quit")) {
-                                            quittedAction = true;
-                                            break;
-                                        } else if(data2.equalsIgnoreCase("modify")){
-
-                                        }
                                     }
                                 }
                                 if(!quittedAction){
@@ -591,6 +652,67 @@ public class skillEditor {
         return slots;
     }
 
+    public ArrayList<String> printSlotsSpec(String skill, String slott) {
+        ArrayList<String> slots = new ArrayList<>();
+        try {
+            BufferedReader readerDel = new BufferedReader(new FileReader(file));
+            String current;
+            boolean delete = false;
+            int counter = 1;
+            while((current = readerDel.readLine()) != null) {
+                String trimmedLine = current.trim();
+                if(delete && current.startsWith("Action")){
+                    delete = false;
+                }
+                if(trimmedLine.equals(skill)){
+                    delete = true;
+                } 
+                if (delete && current.startsWith("Slot  <" + slott + ">  ")){
+                    int endIndex = current.indexOf(">"); 
+                    System.out.println(counter+ ") " + slott + " - " + current.substring(endIndex+3));
+                    slots.add(current.substring(endIndex+3));
+                    counter++;
+                }
+            }
+            readerDel.close();
+        } catch(IOException e) {
+            System.out.println("An error occurred: " + e.getMessage());
+        }
+        return slots;
+    }
+
+    public String printSlotsSpecasString(String skill, String slott) {
+        String a = new String();
+        ArrayList<String> slots = new ArrayList<>();
+        try {
+            BufferedReader readerDel = new BufferedReader(new FileReader(file));
+            String current;
+            boolean delete = false;
+            int counter = 1;
+            while((current = readerDel.readLine()) != null) {
+                String trimmedLine = current.trim();
+                if(delete && current.startsWith("Action")){
+                    delete = false;
+                }
+                if(trimmedLine.equals(skill)){
+                    delete = true;
+                } 
+                if (delete && current.startsWith("Slot  <" + slott + ">  ")){
+                    int endIndex = current.indexOf(">"); 
+                    a = a+counter+ ") " + slott + " - " + current.substring(endIndex+3)+"\n";
+                    System.out.println(counter+ ") " + slott + " - " + current.substring(endIndex+3));
+                    slots.add(current.substring(endIndex+3));
+                    counter++;
+                }
+            }
+            readerDel.close();
+        } catch(IOException e) {
+            a = "An error occurred: " + e.getMessage();
+            System.out.println("An error occurred: " + e.getMessage());
+        }
+        return a;
+    }
+
     public boolean duplicateSlot(String slot, String skill, String slotHolder){
         boolean duplicate = false;
         String slotTest = "Slot  <"+slotHolder+">  " + skill; 
@@ -617,6 +739,8 @@ public class skillEditor {
         }
         return duplicate;
     }
+
+    
 
     public boolean duplicateAction(String skill, String data, ArrayList<String> slotLoc, ArrayList<String> slotVal){
         boolean duplicate = false;
