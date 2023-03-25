@@ -51,7 +51,11 @@ public class Controller implements Initializable {
         SKILLQ1,
         SKILLA1, SKILLA2, SKILLA3, SKILLA4, SKILLA5, SKILLA6, SKILLA7,
         SKILLD1,
-        SKILLE1,
+        SKILLE1, SKILLE2,
+        SKILLEAddS,
+        SKILLEAddA,
+        SKILLEDelS,
+        SKILLEDelA,
         SKILLV1,
     
     }
@@ -63,6 +67,7 @@ public class Controller implements Initializable {
     private String prototype;
     
     private String valueSlots;
+    private int choiceedit;
     private ArrayList<String> placeHolders;
     private ArrayList<ArrayList<String>> values;
     private ArrayList<Slot> slotVals;
@@ -254,7 +259,9 @@ public class Controller implements Initializable {
                                 STATE = USERSTATE.SKILLD1;
                             } else if (message.equalsIgnoreCase("4")) {
                                 // ? input 4 leads the user to the editing of a skill state
+                                response = "Which skill would you like to edit?\n"+ skillEditor.showskills();
                                 STATE = USERSTATE.SKILLE1;
+
                             } else if (message.equalsIgnoreCase("5")) {
                                 // ? input 5 leads the user to the viewing of a skill state
                                 try {
@@ -262,6 +269,54 @@ public class Controller implements Initializable {
                                 } catch (Exception e) {}
                                 STATE = USERSTATE.SKILLV1;
                             }
+                            break;
+
+                        case SKILLE1:
+                            int skillamounte = skillEditor.getSkillAmount();
+                            choiceedit = Integer.parseInt(message);
+
+                            if(choiceedit <= skillamounte) {
+                                response = "What action would you like to take?\n1) Add a slot\n2) Add an action\n3) Delete a slot\n4) Delete an action";
+                                STATE = USERSTATE.SKILLE2;
+                                break;
+                            } else {
+                                response = "Please choose a skill from the prompted list,\n"+ skillEditor.showskills();
+                                STATE = USERSTATE.SKILLE1;
+                                break;
+                            }
+
+                        case SKILLE2:
+                            if(message.equalsIgnoreCase("1")) {
+                                STATE = USERSTATE.SKILLEAddS;
+                            } else if (message.equalsIgnoreCase("2")) {
+                                STATE = USERSTATE.SKILLEAddA;
+                            } else if (message.equalsIgnoreCase("3")) {
+                                ArrayList<String> questions = skillEditor.getSkillQuestions();
+                                response = "Which slot would you like to delete ?\n"+skillEditor.getSlots(questions.get(choiceedit-1));
+                                STATE = USERSTATE.SKILLEDelS;
+                            } else if (message.equalsIgnoreCase("4")) {
+                                ArrayList<String> questions = skillEditor.getSkillQuestions();
+                                response = "Which action would you like to delete ?\n"+skillEditor.getActions(questions.get(choiceedit-1));
+                                STATE = USERSTATE.SKILLEDelA;
+                            }
+                            break;
+
+                        case SKILLEDelA:
+                            ArrayList<String> questionsdela = skillEditor.getSkillQuestions();
+                            ArrayList<String> actionsdela = skillEditor.printActions(questionsdela.get(choiceedit-1));
+                            int choicedela = Integer.parseInt(message);
+                            skillEditor.deleteAction(questionsdela.get(choiceedit-1), actionsdela.get(choicedela-1));
+                            response = "Action deleted!\nDo you wish to 1) ask a question, or 2) add, 3) delete, 4) edit, 5) view a skill?";
+                            STATE = USERSTATE.SKILLHOME;
+                            break;
+
+                        case SKILLEDelS:
+                            ArrayList<String> questionsdels = skillEditor.getSkillQuestions();
+                            ArrayList<String> slotsdels = skillEditor.printSlots(questionsdels.get(choiceedit-1));
+                            int choicedels = Integer.parseInt(message);
+                            skillEditor.deleteSlot(questionsdels.get(choiceedit-1), slotsdels.get(choicedels-1));
+                            response = "Slot deleted!\nDo you wish to 1) ask a question, or 2) add, 3) delete, 4) edit, 5) view a skill?";
+                            STATE = USERSTATE.SKILLHOME;
                             break;
 
                         case SKILLV1:

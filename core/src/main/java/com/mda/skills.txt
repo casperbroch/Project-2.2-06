@@ -15,9 +15,5 @@ Action  <DAY>  Monday  <TIME>  9  We start the week with math
 Action  <DAY>  Monday  <TIME>  11  On Monday noon we have Theoratical Computer Science
 Action  I have no idea
 Question  Where in <A> is <B>?
-Slot  <A>  Kitchen
 Slot  <B>  Coffee
 Action  <A>  Kitchen  <B>  Coffee  On the table
-Question  help <A>?
-Slot  <A>  help123
-Action  <A>  help123  pleasefuckinghelp
