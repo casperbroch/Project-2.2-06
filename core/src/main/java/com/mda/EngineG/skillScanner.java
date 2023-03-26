@@ -4,9 +4,13 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import com.mda.Testing.WordMatch;
+
 import java.io.BufferedReader;
 
 public class skillScanner {
@@ -14,6 +18,7 @@ public class skillScanner {
     File file; 
     String fileName;
     String output = "";
+    WordMatch matchAlg;
 
     public skillScanner() throws FileNotFoundException{
         String os = System.getProperty("os.name").toLowerCase();
@@ -77,7 +82,28 @@ public class skillScanner {
             while ((line = reader.readLine()) != null) {
                 lineNumber++;
                 actionLineNumber = lineNumber;
-                if (matches(line, sentence)) {
+                matchAlg = new WordMatch();
+
+                lineAdapt = line.replaceAll("\\p{Punct}", "").split("\\s+");
+                lineAdapted = sentence.replaceAll("\\p{Punct}", "").split("\\s+");
+                ArrayList<String> adapted = new ArrayList<>();
+                ArrayList<String> adaptedTemplate = new ArrayList<>();
+
+                int cntAdd = 0;
+                for (int i = 0; i < lineAdapt.length; i++) {
+                    if(!lineAdapt[i].equals(lineAdapt[i].toUpperCase())){
+                        if(i<lineAdapted.length){
+                            adapted.add(lineAdapted[i]);
+                            adaptedTemplate.add(lineAdapt[i]);
+                        }
+                    }
+                }
+                System.out.println(adapted.toString());
+                System.out.println(matchAlg.wordMatch(adapted.toString(), adaptedTemplate.toString()));
+
+
+                // if matches or meets threshold
+                if (matches(line, sentence) || matchAlg.wordMatch(adapted.toString(), adaptedTemplate.toString())) {
                     Pattern pattern = Pattern.compile("\\<.+?\\>");
                     Matcher matcher = pattern.matcher(line);
                     while (matcher.find()) {

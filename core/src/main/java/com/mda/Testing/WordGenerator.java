@@ -1,20 +1,20 @@
-package com.mda;
+package com.mda.Testing;
+
 
 import java.util.Random;
 
 // For experiments
 public class WordGenerator {
-    String input1 = "I need help and coffee.";
-    String input2 = "We are in the learning spaces.";
-    String input3 = "I like my coffee with milk and syrup.";
-    String input4 = "Help, what is happening in my courses.";
-    String input5 = "I'm looking for people to test my HCI prototype.";
+    String shortInput = "Apples.";
+    String shortMedInput = "I need help and coffee.";
+    String medInput = "Help, what is happening in my courses.";
+    String longInput = "I'm looking for people to test my HCI prototype.";
 
     public String wordScrambler(String input, int numOfErrors) {
         StringBuilder output = new StringBuilder(input);
         for(int i = 0; i < numOfErrors; i++) {
             double prob = Math.random();
-            int index = (int) (Math.random() * (input.length()+1));
+            int index = (int) (Math.random() * (output.length()));
             if(prob >= 2.0/3) {
                 // Deletes a random character
                 output.deleteCharAt(index);
@@ -25,8 +25,13 @@ public class WordGenerator {
                 char c = (char)(r.nextInt(26) + 'a');
                 output.insert(index, c);
             } else {
-                // Switch two random characters
-                int index2 = (int) (Math.random() * (input.length()+1));
+                // Switch two random adjacent characters
+                int index2;
+                if(index == output.length()-1) {
+                    index2 = index-1;
+                } else {
+                    index2 = index+1;
+                }
                 char temp = output.charAt(index);
                 output.replace(index, index+1, Character.toString(output.charAt(index2)));
                 output.replace(index2, index2+1, Character.toString(temp));
@@ -37,10 +42,29 @@ public class WordGenerator {
 
     public static void main(String[] args) {
         WordGenerator gen = new WordGenerator();
-        String random1 = gen.wordScrambler(gen.input1, 3);
         WordMatch match = new WordMatch();
-        System.out.println(random1);
-        System.out.println(gen.input1);
-        System.out.println(match.wordMatch(random1, gen.input1));
+        for(int i = 0; i < 5; i++) {
+            int numOfErrors = 7;
+            // Short input
+            String input1 = gen.wordScrambler(gen.shortInput, numOfErrors);
+            // System.out.println(input1);
+            // System.out.println(match.wordMatch(input1, gen.shortInput));
+            match.wordMatch(input1, gen.shortInput);
+            // Short-medium input
+            String input2 = gen.wordScrambler(gen.shortMedInput, numOfErrors);
+            // System.out.println(input2);
+            //System.out.println(match.wordMatch(input2, gen.shortMedInput));
+            match.wordMatch(input2, gen.shortMedInput);
+            // Medium input
+            String input3 = gen.wordScrambler(gen.medInput, numOfErrors);
+            // System.out.println(input3);
+            // System.out.println(match.wordMatch(input3, gen.medInput));
+            match.wordMatch(input3, gen.medInput);
+            // Long input
+            String input4 = gen.wordScrambler(gen.longInput, numOfErrors);
+            // System.out.println(input4);
+            // System.out.println(match.wordMatch(input4, gen.longInput));
+            match.wordMatch(input4, gen.longInput);
+        }
     }
 }
