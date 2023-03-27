@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Scanner;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import com.mda.App;
 
@@ -651,39 +653,10 @@ public class skillEditor {
 
     public ArrayList<String> showSlots(String skill){
         ArrayList<String> slots = new ArrayList<>();
-        boolean checkIfSeen = false;
-        try {
-            BufferedReader readerDel = new BufferedReader(new FileReader(file));
-            String current;
-            boolean delete = false;
-            int counter = 1;
-            while((current = readerDel.readLine()) != null) {
-                String trimmedLine = current.trim();
-                if(delete && current.startsWith("Action")){
-                    delete = false;
-                }
-                if(trimmedLine.equals(skill)){
-                    delete = true;
-                } 
-                if (delete && current.startsWith("Slot")){
-                    int startIndex = current.indexOf("<") + 1; 
-                    int endIndex = current.indexOf(">"); 
-                    for (String sl : slots) {
-                        if(sl.equalsIgnoreCase(current.substring(startIndex, endIndex))){
-                            checkIfSeen = true;
-                        }
-                    }
-                    if(!checkIfSeen){
-                        System.out.println(counter+ ") " + current.substring(startIndex, endIndex));
-                        slots.add(current.substring(startIndex, endIndex));
-                        counter++;
-                    }
-                    checkIfSeen = false;
-                }
-            }
-            readerDel.close();
-        } catch(IOException e) {
-            System.out.println("An error occurred: " + e.getMessage());
+        Pattern pattern = Pattern.compile("<(.*?)>");
+        Matcher matcher = pattern.matcher(skill);
+        while (matcher.find()) {
+            slots.add(matcher.group(1));
         }
         return slots;
     }
@@ -851,6 +824,45 @@ public class skillEditor {
             System.out.println("Error while adding a line to the file: " + e.getMessage());
          }
     }
+    
+    public void addDefaultAction(String skill, String data, ArrayList<String> slotLoc, ArrayList<String> slotVal){
+       
+        try {
+            FileInputStream fs = new FileInputStream(file);
+            BufferedReader br = new BufferedReader(new InputStreamReader(fs));
+            ArrayList<String> lines = new ArrayList<>();
+            String line;
+            boolean relevant = false;
+            int index = 0;
+            int counter = 1;
+            while ((line = br.readLine()) != null) {
+                if(line.equals(skill)){
+                    relevant = true;
+                }
+                if(relevant && line.startsWith("Action")){
+                 index = counter-1; 
+                 relevant = false;  
+                } 
+                counter++;
+                lines.add(line);
+            }
+            br.close();
+            String tempLine = "Action  ";
+            lines.add(index,tempLine + data );  
+            FileOutputStream fos = new FileOutputStream(file);
+            BufferedWriter bnew = new BufferedWriter(new OutputStreamWriter(fos));
+            for (String str : lines) {
+               bnew.write(str);
+               bnew.newLine();
+            }
+            bnew.close();
+            System.out.println("Line added successfully.");
+            
+         } catch (IOException e) {
+            System.out.println("Error while adding a line to the file: " + e.getMessage());
+         }
+    }
+
 
     public void addActionNewSkill(String skill, String data, ArrayList<String> slotLoc, ArrayList<String> slotVal){
        

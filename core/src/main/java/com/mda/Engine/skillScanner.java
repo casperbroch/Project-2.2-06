@@ -4,12 +4,10 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.io.BufferedReader;
-
 import com.mda.App;
 import com.mda.WordMatching.WordMatch;
 
@@ -87,7 +85,7 @@ public class skillScanner {
                 lineAdapted = sentence.replaceAll("\\p{Punct}", "").split("\\s+");
                 ArrayList<String> adapted = new ArrayList<>();
                 ArrayList<String> adaptedTemplate = new ArrayList<>();
-                if(lineAdapt.length == lineAdapted.length){ 
+                if(lineAdapt.length <= lineAdapted.length){ 
                     for (int i = 0; i < lineAdapt.length; i++) {
                         if(!lineAdapt[i].equals(lineAdapt[i].toUpperCase())){
                             if(i<lineAdapted.length){
