@@ -84,6 +84,7 @@ public class Controller implements Initializable {
     private String slot;
 
     private String message;
+    private boolean editing;
 
     private ArrayList<String> actionValues2;
     private String action;
@@ -299,6 +300,7 @@ public class Controller implements Initializable {
                                 STATE = USERSTATE.SKILLEAddS1;
                             } else if (message.equalsIgnoreCase("2")) {
                                 response = "What do you want to add as an action?";
+                                editing = true;
                                 STATE = USERSTATE.SKILLEAddA1;
                             } else if (message.equalsIgnoreCase("3")) {
                                 ArrayList<String> questions = skillEditor.getSkillQuestions();
@@ -351,20 +353,20 @@ public class Controller implements Initializable {
 
                         case SKILLEAddA3:
                             ArrayList<String> questionA2 = skillEditor.getSkillQuestions();
-                            
-
                             ArrayList<String> slots2 = skillEditor.printSlotsSpec(questionA2.get(choiceedit-1), actionValues1.get(actionindex));
                             actionindex++;
                             actionV.add(slots2.get(Integer.parseInt(message)-1));
 
                             if(actionindex>=actionValues1.size()) {
                                 if(skillEditor.duplicateAction(questionA2.get(choiceedit-1), addedaction, actionValues1, actionV)) {
-                                    response = "That action already exisits, please retry.\nWhat do you want to add as an action?";
+                                    response = "That action already exists, please retry.\nWhat do you want to add as an action?";
                                     STATE = USERSTATE.SKILLEAddA1;
                                 } else {
-                                    System.out.println(questionA2.get(choiceedit-1)+ "WE NEED TO LOOK HEAR");
-                                    skillEditor.addAction(questionA2.get(choiceedit-1), addedaction, actionValues1, actionV); 
                                     skillEditor.removeEmptyLines();
+                                    if(!editing){
+                                        skillEditor.addActionNewSkill(questionA2.get(choiceedit-1), addedaction, actionValues1, actionV); 
+                                    } else skillEditor.addAction(questionA2.get(choiceedit-1), addedaction, actionValues1, actionV); 
+                                    editing = false;
                                     response = "Action added!\nDo you wish to 1) ask a question, or 2) add, 3) delete, 4) edit, 5) view a skill?";
                                     STATE = USERSTATE.SKILLHOME;
                                 }
@@ -404,7 +406,7 @@ public class Controller implements Initializable {
                             ArrayList<String> actionsdela = skillEditor.printActions(questionsdela.get(choiceedit-1));
                             int choicedela = Integer.parseInt(message);
                             skillEditor.deleteAction(questionsdela.get(choiceedit-1), actionsdela.get(choicedela-1));
-                            response = "Action deleted!\nDo you wish tskio 1) ask a question, or 2) add, 3) delete, 4) edit, 5) view a skill?";
+                            response = "Action deleted!\nDo you wish to 1) ask a question, or 2) add, 3) delete, 4) edit, 5) view a skill?";
                             STATE = USERSTATE.SKILLHOME;
                             break;
 
@@ -517,7 +519,6 @@ public class Controller implements Initializable {
                                 ArrayList<String> questions = skillEditor.getSkillQuestions();
                                 choiceedit = questions.size();
                                 STATE = USERSTATE.SKILLEAddA1;
-
                             }
                             break;
 

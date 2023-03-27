@@ -810,6 +810,7 @@ public class skillEditor {
     }
 
     public void addAction(String skill, String data, ArrayList<String> slotLoc, ArrayList<String> slotVal){
+       
         try {
             FileInputStream fs = new FileInputStream(file);
             BufferedReader br = new BufferedReader(new InputStreamReader(fs));
@@ -825,7 +826,7 @@ public class skillEditor {
                 if(relevant && line.startsWith("Action")){
                  index = counter-1; 
                  relevant = false;  
-                }
+                } 
                 counter++;
                 lines.add(line);
             }
@@ -842,6 +843,37 @@ public class skillEditor {
                bnew.newLine();
             }
             bnew.close();
+            System.out.println("Line added successfully.");
+            
+         } catch (IOException e) {
+            System.out.println("Error while adding a line to the file: " + e.getMessage());
+         }
+    }
+
+    public void addActionNewSkill(String skill, String data, ArrayList<String> slotLoc, ArrayList<String> slotVal){
+       
+        try {
+            
+            String current = "";
+            BufferedReader readerDel1 = new BufferedReader(new FileReader(file));
+            StringBuilder stringBuilder1 = new StringBuilder();
+            while((current = readerDel1.readLine()) != null) {
+                if(current.length() != 0){
+                    stringBuilder1.append(current);
+                    stringBuilder1.append(System.getProperty("line.separator"));
+                }
+            }
+            readerDel1.close();
+            FileWriter writerDel1 = new FileWriter(file);
+            String tempLine = "Action  ";
+            for (int i = 0; i < slotLoc.size(); i++) {
+                tempLine += "<"+slotLoc.get(i).toUpperCase()+">  "+slotVal.get(i)+"  ";
+            }
+            tempLine += data;
+            stringBuilder1.append(tempLine);
+            stringBuilder1.append(System.getProperty("line.separator"));
+            writerDel1.write(stringBuilder1.toString());
+            writerDel1.close();
             System.out.println("Line added successfully.");
             
          } catch (IOException e) {
