@@ -10,6 +10,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.ResourceBundle;
 
+import com.mda.Engine.Slot;
+import com.mda.Engine.skillEditor;
+import com.mda.Engine.skillScanner;
 import com.mda.wordsuggestion.SymSpell;
 
 import javafx.beans.value.ChangeListener;

@@ -1,4 +1,4 @@
-package com.mda;
+package com.mda.Engine;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -8,6 +8,8 @@ import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.io.BufferedReader;
+
+import com.mda.App;
 import com.mda.WordMatching.WordMatch;
 
 public class skillScanner {
