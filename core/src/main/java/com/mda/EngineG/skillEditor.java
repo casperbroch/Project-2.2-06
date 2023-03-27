@@ -203,6 +203,7 @@ public class skillEditor {
         prototype = scanSkill.nextLine();
         System.out.println("Please type the slots you wish to set as placeholders: (separated by a coma) ");
         ArrayList<String> placeHolders = new ArrayList<>(Arrays.asList(scanSkill.nextLine().split("[^a-zA-Z0-9]+"))); 
+        System.out.println(placeHolders.toString());
         ArrayList<ArrayList<String>> values = new ArrayList<ArrayList<String>> (); 
         ArrayList<slot> slotVals = new ArrayList<>(); 
         boolean flag = false;
@@ -218,15 +219,34 @@ public class skillEditor {
         }
 
         StringBuilder sb = new StringBuilder(prototype);
+
         for (String holder : placeHolders) {
-            int i = sb.indexOf(holder);
+            boolean found = false;
+            int current = 0; 
+            int i = 0;
+            while(!found){
+                i = sb.indexOf(holder, current);  
+                if(sb.indexOf(holder) == 0 && sb.substring(i+holder.length(), i+holder.length()+1).equals(" ")){
+                    found = true;
+
+                }else if (i == sb.length()-holder.length() && sb.substring(i-1, i).equals(" ")){
+                    found = true;
+
+                }else if(sb.substring(i-1, i).equals(" ")  && sb.substring(i+holder.length(), i+holder.length()+1).equals(" ")){
+                    found = true;
+                }
+                if(!found){
+                    current += holder.length();
+                }
+            }
             sb.insert(i, '<');
             sb.insert(i+holder.length()+1, '>');
             String substr = sb.substring(i, i+holder.length()+1);
             sb.replace(i, i+holder.length()+1, substr.toUpperCase());
+            
         }
-
         for (String question : questions) {
+            System.out.println(question.equalsIgnoreCase("Question  " + sb.toString() + "?"));
             if(question.equalsIgnoreCase("Question  " + sb.toString() + "?")){
                 flag = true;
             }
@@ -343,7 +363,24 @@ public class skillEditor {
     public void addQuestion(String question, ArrayList<String> placeHolders) throws IOException{
         StringBuilder sb = new StringBuilder(question);
         for (String holder : placeHolders) {
-            int i = sb.indexOf(holder);
+            boolean found = false;
+            int current = 0; 
+            int i = 0;
+            while(!found){
+                i = sb.indexOf(holder, current);
+                if(sb.indexOf(holder) == 0 && sb.substring(i+holder.length(), i+holder.length()+1).equals(" ")){
+                    found = true;
+
+                }else if (i == sb.length()-holder.length() && sb.substring(i-1, i).equals(" ")){
+                    found = true;
+
+                }else if(sb.substring(i-1, i).equals(" ")  && sb.substring(i+holder.length(), i+holder.length()+1).equals(" ")){
+                    found = true;
+                }
+                if(!found){
+                    current += holder.length();
+                }
+            }
             sb.insert(i, '<');
             sb.insert(i+holder.length()+1, '>');
             String substr = sb.substring(i, i+holder.length()+1);
@@ -700,6 +737,7 @@ public class skillEditor {
             boolean relevant = false;
             int index = 0;
             int counter = 1;
+            System.out.println(skill);
             while ((line = br.readLine()) != null) {
                 if(line.equals(skill)){
                     relevant = true;
@@ -777,7 +815,7 @@ public class skillEditor {
                 if (delete && current.startsWith("Slot")){
                     int startIndex = current.indexOf("<") + 1; 
                     int endIndex = current.indexOf(">"); 
-                    System.out.println(counter+ ") " + current.substring(startIndex, endIndex) + " - " + current.substring(13));
+                    System.out.println(counter+ ") " + current.substring(startIndex, endIndex) + " - " + current.substring(10+current.substring(startIndex, endIndex).length()-1));
                     slots.add(current);
                     counter++;
                 }
