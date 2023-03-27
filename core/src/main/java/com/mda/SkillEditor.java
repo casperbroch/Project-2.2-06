@@ -30,8 +30,8 @@ public class skillEditor {
         writer = new FileWriter(file, true); 
         br = new BufferedWriter(writer);
         removeEmptyLines();
-        getSkillAndAction();
-        removeEmptyLines();
+        //getSkillAndAction();
+        //removeEmptyLines();
     }
 
     public void removeEmptyLines(){

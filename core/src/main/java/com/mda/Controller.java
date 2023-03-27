@@ -357,6 +357,7 @@ public class Controller implements Initializable {
                                     STATE = USERSTATE.SKILLEAddA1;
                                 } else {
                                     skillEditor.addAction(questionA2.get(choiceedit-1), addedaction, actionValues1, actionV); 
+                                    skillEditor.removeEmptyLines();
                                     response = "Action added!\nDo you wish to 1) ask a question, or 2) add, 3) delete, 4) edit, 5) view a skill?";
                                     STATE = USERSTATE.SKILLHOME;
                                 }
@@ -376,10 +377,11 @@ public class Controller implements Initializable {
                             int choiceadds = Integer.parseInt(message);
                             ArrayList<String> questionsas2 = skillEditor.getSkillQuestions();
                             ArrayList<String> slots = skillEditor.showSlots(questionsas2.get(choiceedit-1));
-                            if(skillEditor.duplicateSlot(questionsas2.get(choiceedit-1), addedslot, slots.get(choiceadds))) {
+                            if(skillEditor.duplicateSlot(questionsas2.get(choiceedit-1), addedslot, slots.get(choiceadds-1))) {
                                 response = "That slot already exists, please retry.";
                             } else {
                                 skillEditor.addSlot(questionsas2.get(choiceedit-1), addedslot, slots.get(choiceadds-1));
+                                skillEditor.removeEmptyLines();
                                 response = "Slot added!\nDo you wish to 1) ask a question, or 2) add, 3) delete, 4) edit, 5) view a skill?";
                                 STATE = USERSTATE.SKILLHOME;                            }
                             break;
@@ -481,47 +483,42 @@ public class Controller implements Initializable {
                                     skillEditor.setUp();
                                     skillEditor.addQuestion(prototype, placeHolders);
                                     skillEditor.addSlot(values, placeHolders);
+                                    skillEditor.removeEmptyLines();
                                     skillEditor.closeUp();
                                 } catch (IOException e) {e.printStackTrace();}
                                     // ? prompt the user to select the holder values
-                                    response = "Choose the holder values you would like to add actions for: (separated by a coma)";
+                                    response = "Do you wish to add a default action?\n1) Yes\n2) No";
                                     STATE = USERSTATE.SKILLA5;
                             }
                             break;
 
                         // ! state description: skilla5 is the fifth of the skill adding sequence
                         case SKILLA5:
-                            actionValues2 = new ArrayList<>(Arrays.asList(message.split("[^a-zA-Z0-9]+")));
+                            if(message.equalsIgnoreCase("1")) {
+                                response = "Please type in your default action";
+                                STATE = USERSTATE.SKILLA6;
+                            } else if (message.equalsIgnoreCase("2")){
+                                response = "Please type an action you would like to add";
+                                ArrayList<String> questions = skillEditor.getSkillQuestions();
+                                choiceedit = questions.size()-1;
+                                STATE = USERSTATE.SKILLEAddA1;
 
-                            response = "What action would you like to add for the selected values?";
-                            STATE = USERSTATE.SKILLA6;
+                            }
                             break;
-                        
-                        // ! state description: skilla6 is the sixth of the skill adding sequence
+
                         case SKILLA6:
-                            action = message;
                             try {
                                 skillEditor.setUp();
-                                skillEditor.addAction(actionValues2, action, slotVals);
-                            skillEditor.closeUp();
-                            } catch (IOException e) {e.printStackTrace();}
-
-                            response = "Do you want to create another action or quit and finalize the skill? Simply press 'Enter' to quit or type once again the holder values you would like to add actions for: (seperated by a coma)";
-                            STATE = USERSTATE.SKILLA7;
-                            break;
-
-                        // ! state description: skilla7 is the seventh of the skill adding sequence
-                        case SKILLA7:
-                            if(message.equals("")||message.equals(" ")||message.equals(null)) {
-                                slotIndex = 0;
-                                response = "Skill added!\nDo you wish to 1) ask a question, or 2) add, 3) delete, 4) edit, 5) view a skill?";
-                                
-                                STATE = USERSTATE.SKILLHOME;
-                            } else {
-                                actionValues2 = new ArrayList<>(Arrays.asList(message.split("[^a-zA-Z0-9]+")));
-                                response = "What action would you like to add for the selected values?";
-                                STATE = USERSTATE.SKILLA6;
+                                skillEditor.addAction(new ArrayList<String>(), message, new ArrayList<Slot>());
+                                skillEditor.removeEmptyLines();
+                                skillEditor.closeUp();
+                            } catch (IOException e) {
+                                e.printStackTrace();
                             }
+                            response = "Please type an action you would like to add";
+                            ArrayList<String> questions2 = skillEditor.getSkillQuestions();
+                            choiceedit = questions2.size();
+                            STATE = USERSTATE.SKILLEAddA1;
                             break;
 
                         

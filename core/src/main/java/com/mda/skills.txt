@@ -1,3 +1,4 @@
+Action  <A>  one  test 
 Question  Which lectures are there on <DAY> at <TIME>
 Slot  <DAY>  Monday
 Slot  <DAY>  Tuesday
@@ -16,4 +17,12 @@ Action  <DAY>  Monday  <TIME>  11  On Monday noon we have Theoratical Computer S
 Action  I have no idea
 Question  Where in <A> is <B>?
 Slot  <B>  Coffee
+Action  <B>  Coffee  action
 Action  <A>  Kitchen  <B>  Coffee  On the table
+Question  get from <A> to <B>?
+Slot  <A>  maastricht
+Slot  <B>  utrecht
+Slot  <B>  eindhoven
+Action  <A>  maastricht  <B>  eindhoven  900km
+Action  <A>  maastricht  <B>  utrecht  90km
+Action  no idea
