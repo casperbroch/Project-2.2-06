@@ -14,3 +14,12 @@ Action  <DAY>  Saturday  There are no lectures on Saturday
 Action  <DAY>  Monday  <TIME>  9  We start the week with math
 Action  <DAY>  Monday  <TIME>  11  On Monday noon we have Theoratical Computer Science
 Action  I have no idea
+Question  go <HOME>?
+Slot  <HOME>  fggg
+Action  go home
+Action  <HOME>  fggg  yay
+Question  go to <A> from <B> and go to sleep?
+Slot  <A>  maas
+Slot  <A>  orleans s
+Slot  <B>  gogo
+Action  <A>  maas  <B>  gogo  homeee

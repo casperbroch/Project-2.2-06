@@ -1,5 +1,4 @@
 package com.mda;
-
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.lang.Thread.State;
@@ -9,12 +8,10 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.ResourceBundle;
-
 import com.mda.Engine.Slot;
 import com.mda.Engine.skillEditor;
 import com.mda.Engine.skillScanner;
 import com.mda.wordsuggestion.SymSpell;
-
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
@@ -47,10 +44,10 @@ public class Controller implements Initializable {
      * SCS(x) - skill creating states which are states where the user uses to add a new skill
      * SGS(x) - skill getting states which are state where the user can retrieve skill information by asking a question
      */
+
     public enum USERSTATE {
         HOME,
         APPC,
-
         SKILLHOME,
         SKILLQ1,
         SKILLA1, SKILLA2, SKILLA3, SKILLA4, SKILLA5, SKILLA6, SKILLA7,
@@ -61,13 +58,12 @@ public class Controller implements Initializable {
         SKILLEDelS,
         SKILLEDelA,
         SKILLV1,
-    
+
     }
 
     // Important vars for the skill editor
     private skillScanner skillScanner;
     private skillEditor skillEditor;
-
     private String prototype;
     private String addedslot;
     private String addedaction;
@@ -76,7 +72,6 @@ public class Controller implements Initializable {
     ArrayList<String> actionV;
     private ArrayList<String> actionValues1;
     int actionindex;
-    
     private String valueSlots;
     private int choiceedit;
     private ArrayList<String> placeHolders;
@@ -85,22 +80,17 @@ public class Controller implements Initializable {
     private int slotIndex = 0;
     private String response;
     private String slot;
-
     private String message;
     private boolean editing;
-
     private ArrayList<String> actionValues2;
     private String action;
-
     private USERSTATE STATE = USERSTATE.HOME;
     private ArrayList<String> skills = new ArrayList<String>();
     private static boolean DARKMODE = false;
     private static ArrayList<HBox> hboxlist = new ArrayList<>();
     private static ArrayList<Text> textlist = new ArrayList<>();
     private int wordlength=0;
-
     private SymSpell sp;
-
     @FXML
     private Button button_send;
     @FXML
