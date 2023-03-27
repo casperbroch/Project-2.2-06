@@ -14,19 +14,3 @@ Action  <DAY>  Saturday  There are no lectures on Saturday
 Action  <DAY>  Monday  <TIME>  9  We start the week with math
 Action  <DAY>  Monday  <TIME>  11  On Monday noon we have Theoratical Computer Science
 Action  I have no idea
-Question  go from <A> to <O>?
-Slot  <A>  maas
-Slot  <A>  ams
-Slot  <O>  lux
-Slot  <O>  n y c
-Slot  <A>  1 2 3 4 5 6 7
-Action  <A>  1 2 3 4 5 6 7  <O>  n y c  gg
-Action  go homr
-Action  <A>  maas  <O>  n y c  yay
-Question  go from <A>?
-Slot  <A>  maas
-Slot  <A>  ams
-Slot  <O>  lux
-Slot  <O>  n y c
-Action  go homr
-Action  <A>  maas  yaysssss
