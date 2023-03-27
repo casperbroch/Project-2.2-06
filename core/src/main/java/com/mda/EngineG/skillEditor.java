@@ -272,7 +272,7 @@ public class skillEditor {
                     addingAction = false;
                     continue;
                 }
-                System.out.println("To which slot(s) does this data belong to? You can find the slots below: ");
+                System.out.println("To which slot(s) does thisqdwdqwdqdqwdq data belong to? You can find the slots below: ");
                 int cnt = 1;
                 for (int i = 0; i < placeHolders.size(); i++) {
                     System.out.println(cnt + ") "+ placeHolders.get(i));
