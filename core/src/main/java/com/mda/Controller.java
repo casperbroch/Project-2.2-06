@@ -369,7 +369,13 @@ public class Controller implements Initializable {
                         case SKILLEAddS1:
                             addedslot = message;
                             ArrayList<String> questionsas = skillEditor.getSkillQuestions();
-                            response = "And to which slot would you like to add '" + message + "' to? Choose one from the options below:\n"+skillEditor.showSlots(questionsas.get(choiceedit-1));
+                            ArrayList<String> slotslist = skillEditor.showSlots(questionsas.get(choiceedit-1));
+                            String a = new String();
+                            for(int i=0; i<slotslist.size(); i++) {
+                                a = a+(i+1)+") "+slotslist.get(i)+"\n";
+                            }
+                            response = "And to which slot would you like to add '" + message + "' to? Choose one from the options below:\n"+a;
+
                             STATE = USERSTATE.SKILLEAddS2;
                             break;
 
@@ -391,7 +397,7 @@ public class Controller implements Initializable {
                             ArrayList<String> actionsdela = skillEditor.printActions(questionsdela.get(choiceedit-1));
                             int choicedela = Integer.parseInt(message);
                             skillEditor.deleteAction(questionsdela.get(choiceedit-1), actionsdela.get(choicedela-1));
-                            response = "Action deleted!\nDo you wish to 1) ask a question, or 2) add, 3) delete, 4) edit, 5) view a skill?";
+                            response = "Action deleted!\nDo you wish tskio 1) ask a question, or 2) add, 3) delete, 4) edit, 5) view a skill?";
                             STATE = USERSTATE.SKILLHOME;
                             break;
 
@@ -455,7 +461,7 @@ public class Controller implements Initializable {
 
                          // ! state description: skilla4 is the fourth of the skill adding sequence
                         case SKILLA4:
-                            ArrayList<String> placeValues = new ArrayList<>(Arrays.asList(message.split("[^a-zA-Z0-9]+"))); 
+                            ArrayList<String> placeValues = new ArrayList<>(Arrays.asList(message.split("\\s*,\\s*"))); 
                             for (String vals : placeValues) {
                                 Slot slotObject = new Slot(slot, vals); 
                                 slotVals.add(slotObject);
@@ -500,7 +506,7 @@ public class Controller implements Initializable {
                             } else if (message.equalsIgnoreCase("2")){
                                 response = "Please type an action you would like to add";
                                 ArrayList<String> questions = skillEditor.getSkillQuestions();
-                                choiceedit = questions.size()-1;
+                                choiceedit = questions.size();
                                 STATE = USERSTATE.SKILLEAddA1;
 
                             }
@@ -517,6 +523,7 @@ public class Controller implements Initializable {
                             }
                             response = "Please type an action you would like to add";
                             ArrayList<String> questions2 = skillEditor.getSkillQuestions();
+                            System.out.println(questions2);
                             choiceedit = questions2.size();
                             STATE = USERSTATE.SKILLEAddA1;
                             break;

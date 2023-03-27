@@ -942,7 +942,7 @@ public class skillEditor {
 
                     int startIndex = current.indexOf("<") + 1; 
                     int endIndex = current.indexOf(">"); 
-                    a = a + counter+ ") " + current.substring(startIndex, endIndex) + " - " + current.substring(13) + "\n";
+                    a = a + counter+ ") " + current.substring(startIndex, endIndex) + " - " + current.substring(11) + "\n";
                     slots.add(current);
                     counter++;
                 }
