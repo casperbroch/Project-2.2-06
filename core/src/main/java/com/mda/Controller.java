@@ -318,8 +318,14 @@ public class Controller implements Initializable {
                             addedaction = message;
                             ArrayList<String> questionA1 = skillEditor.getSkillQuestions();
                             actionT = skillEditor.showSlots(questionA1.get(choiceedit-1));
-                            response = "To which slot(s) does this data belong to? You can find the slots below: ";
-                            response = response + actionT;
+                            response = "To which slot(s) does this data belong to? You can find the slots below:\n";
+
+                            String a2 = new String();
+                            for(int i=0; i<actionT.size(); i++) {
+                                a2 = a2+(i+1)+") "+actionT.get(i)+"\n";
+                            }
+
+                            response = response + a2;
                             STATE = USERSTATE.SKILLEAddA2;
                             break;
 
@@ -356,6 +362,7 @@ public class Controller implements Initializable {
                                     response = "That action already exisits, please retry.\nWhat do you want to add as an action?";
                                     STATE = USERSTATE.SKILLEAddA1;
                                 } else {
+                                    System.out.println(questionA2.get(choiceedit-1)+ "WE NEED TO LOOK HEAR");
                                     skillEditor.addAction(questionA2.get(choiceedit-1), addedaction, actionValues1, actionV); 
                                     skillEditor.removeEmptyLines();
                                     response = "Action added!\nDo you wish to 1) ask a question, or 2) add, 3) delete, 4) edit, 5) view a skill?";
@@ -448,6 +455,7 @@ public class Controller implements Initializable {
                         // ! state description: skilla1 is the first of the skill adding sequence
                         case SKILLA1:
                             prototype = message;
+                            slotIndex=0;
                             response = "Please type the slots you wish to set as placeholders: (separated by a coma) ";
                             STATE = USERSTATE.SKILLA2;
                             break;
@@ -457,7 +465,10 @@ public class Controller implements Initializable {
                             placeHolders = new ArrayList<>(Arrays.asList(message.split("[^a-zA-Z0-9]+"))); 
                             values = new ArrayList<ArrayList<String>>(); 
                             slotVals = new ArrayList<>();
-                            STATE = USERSTATE.SKILLA3;
+                            STATE = USERSTATE.SKILLA4;
+                            slot = placeHolders.get(slotIndex);
+                            response = "Please type the values for place holder <" + slot.toUpperCase() + ">. (separated by a coma)";
+                            break;
 
                          // ! state description: skilla4 is the fourth of the skill adding sequence
                         case SKILLA4:
@@ -466,10 +477,9 @@ public class Controller implements Initializable {
                                 Slot slotObject = new Slot(slot, vals); 
                                 slotVals.add(slotObject);
                             }
+                            values.add(placeValues);
 
-                            if(slotIndex != 0) {
-                                values.add(placeValues);
-                            }
+                            slotIndex++;
 
                             STATE = USERSTATE.SKILLA3;
                         
@@ -478,7 +488,6 @@ public class Controller implements Initializable {
                             if(slotIndex < placeHolders.size()) {
                                 // ? if not every slot has been filled, fill the others
                                 slot = placeHolders.get(slotIndex);
-                                slotIndex++;
                                 response = "Please type the values for place holder <" + slot.toUpperCase() + ">. (separated by a coma)";
                                 STATE = USERSTATE.SKILLA4;
                                 break;
