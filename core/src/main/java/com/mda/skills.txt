@@ -1,4 +1,3 @@
-Action  <A>  one  test 
 Question  Which lectures are there on <DAY> at <TIME>
 Slot  <DAY>  Monday
 Slot  <DAY>  Tuesday
