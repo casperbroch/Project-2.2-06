@@ -18,9 +18,14 @@ This project in the current version supports a number of features. They are list
 - Skills editing functionality
     - Adding new Skills
     - Deleting Skills
-    - Adding/deleting slots in excisting Skills
-    - Adding/deleting actions in excisting Skills
+    - Adding/deleting slots in existing Skills
+    - Adding/deleting actions in existing Skills
     - Getting an overview of all the created Skills
+- Google Calendar API connection
+    - Insert new events
+    - Delete existing events
+    - Get the next 10 upcoming events
+    - Fetch a specific event
 ## Run Locally
 
 Clone the project
