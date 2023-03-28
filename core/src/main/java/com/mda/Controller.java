@@ -60,7 +60,7 @@ public class Controller implements Initializable {
         SKILLEDelA,
         SKILLV1,
         
-        //GOOGLECAL, GOOGLECALINSERT, GOOGLECALDELETE, GOOGLECALFETCH, GOOGLECALFETCHONDATE,
+        GOOGLECAL, GOOGLECALINSERT, GOOGLECALDELETE, GOOGLECALFETCH, GOOGLECALFETCHONDATE,
     
     }
 
@@ -69,7 +69,7 @@ public class Controller implements Initializable {
     private skillEditor skillEditor;
     
     //For Google calendar
-    //CalendarConnection cal;
+    CalendarConnection cal;
 
     private String prototype;
     private String addedslot;
@@ -149,7 +149,7 @@ public class Controller implements Initializable {
             e.printStackTrace();
         }
         skills.add("skills");
-        //skills.add("google calendar");
+        skills.add("google calendar");
         suggestbox.setVisible(false);
         if(DARKMODE) {
             setDarkMode();
@@ -248,13 +248,13 @@ public class Controller implements Initializable {
                                     STATE = USERSTATE.SKILLHOME;
                                 }
                                 
-                                /*
+                                
                                 //GOOGLE CALENDAR
                                 if(message.equalsIgnoreCase("google calendar")) {
                                     response = "Welcome to the Google calendar!\nDo you wish to 1) Insert event, or 2) Delete event, 3) Fetch next 10 events, 4) Find a specific event or 5) Find events on a specific day?";
                                     STATE = USERSTATE.GOOGLECAL;
                                 }
-                                */
+                                
                                 break;
                             }
 
@@ -566,7 +566,7 @@ public class Controller implements Initializable {
                         
                                 break;
                             
-                            /*
+                            
                             case GOOGLECAL:
                             //int skillamountv = skillEditor.getSkillAmount();
                             int choice = Integer.parseInt(message);
@@ -717,7 +717,7 @@ public class Controller implements Initializable {
 
 
                             break;
-                            */
+                            
                             }
                         
                         System.out.println(STATE);
