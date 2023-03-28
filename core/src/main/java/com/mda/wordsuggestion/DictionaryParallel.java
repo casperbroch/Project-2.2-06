@@ -17,7 +17,7 @@ public class DictionaryParallel {
 //        String filePath = "src/main/java/Damerau_Levenshtein_Distance/list_dict/words_alpha.txt";
 //        String filePath = "src/main/java/Damerau_Levenshtein_Distance/list_dict/corncob_lowercase.txt";
 //        String filePath = "src/main/java/Damerau_Levenshtein_Distance/list_dict/most_common_words.txt";
-        String filePath = "src\\main\\java\\com\\mda\\wordsuggestion\\words\\words_alpha.txt";
+        String filePath = "core\\src\\main\\java\\com\\mda\\wordsuggestion\\words\\words_alpha.txt";
         try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
             this.words = br.lines().parallel().collect(ArrayList::new, ArrayList::add, ArrayList::addAll);
         } catch (IOException e) {

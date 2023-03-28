@@ -11,7 +11,7 @@ import javafx.stage.Stage;
 public class App extends Application {
 
     private static Controller controller;
-    public static final String TEXTPATH = "src\\main\\java\\com\\mda\\skills.txt";
+    public static final String TEXTPATH = "core\\src\\main\\java\\com\\mda\\skills.txt";
 
     @Override
     public void start(Stage stage) throws Exception {
