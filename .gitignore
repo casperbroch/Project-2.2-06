@@ -1,3 +1,4 @@
+/core/target
 # Ignore Gradle project-specific cache directory
 .gradle
 
@@ -121,3 +122,5 @@ Thumbs.db
 /ios/xcode/native/
 /ios/IOSLauncher.app
 /ios/IOSLauncher.app.dSYM
+*.class
+core/gradlew.bat

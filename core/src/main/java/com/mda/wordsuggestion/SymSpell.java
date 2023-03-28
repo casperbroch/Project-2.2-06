@@ -4,24 +4,19 @@ import java.io.IOException;
 import java.util.*;
 
 public class SymSpell {
-    public static void main(String[] args) throws IOException {
-        SymSpell dl = new SymSpell();
-        String word = "imagine";
-        if (dl.getSimilarWordsDistance(word, 3, 5)!=null){
-            List<String> similarWords = dl.getSimilarWordsDistance(word, 3, 5);
-            System.out.println("Words within 3 Damerau-Levenshtein distance of " + word + ": " + similarWords);
-        } else {
-            System.out.println("The word is correct");
-        }
+
+    DictionaryFrecuency dict;
+    DamerauLevenshtein dl;
+
+    public SymSpell() throws IOException { 
+        this.dict = new DictionaryFrecuency();
+        this.dl = new DamerauLevenshtein();
 
     }
-    DictionaryFrecuency dict;
-    public SymSpell() throws IOException { this.dict = new DictionaryFrecuency();}
 
     public List<String> getSimilarWordsDistance(String word, int maximumDistance, int n){
         HashMap<String, Long> closeWords = new HashMap<>();
         HashMap<String, Long> dictionary = dict.getWords();
-        DamerauLevenshtein dl = new DamerauLevenshtein();
 
         for (String candidate : dictionary.keySet()){
             if (Objects.equals(candidate, word)){

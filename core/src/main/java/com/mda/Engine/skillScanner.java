@@ -1,4 +1,4 @@
-package com.mda.EngineG;
+package com.mda.Engine;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -8,21 +8,24 @@ import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.io.BufferedReader;
+import com.mda.App;
+import com.mda.WordMatching.WordMatch;
 
 public class skillScanner {
 
     File file; 
     String fileName;
     String output = "";
+    WordMatch matchAlg;
 
     public skillScanner() throws FileNotFoundException{
         String os = System.getProperty("os.name").toLowerCase();
         if (os.contains("win")){
-            file = new File("src\\main\\java\\com\\mda\\EngineG\\skills.txt");
-            fileName = "src\\main\\java\\com\\mda\\EngineG\\skills.txt";
+            file = new File(App.TEXTPATH);
+            fileName = App.TEXTPATH;
         } else if (os.contains("os x")){
-            file = new File("src/main/java/com/mda/EngineG/skills.txt");
-            fileName = "src/main/java/com/mda/EngineG/skills.txt";
+            file = new File("core/src/main/java/com/mda/EngineG/skills.txt");
+            fileName = "core/src/main/java/com/mda/EngineG/skills.txt";
         }     
     }
 
@@ -45,6 +48,7 @@ public class skillScanner {
                 if (lineNumber < startLine) {
                     continue;
                 }
+                
                 if (!line.startsWith("Action")) {
                     if (slot.equalsIgnoreCase(line)) {
                         return true;
@@ -61,8 +65,10 @@ public class skillScanner {
         return false;
     }
 
-    private boolean scanSkill(String sentence) {
+    public String scanSkill(String sentence) {
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+            ArrayList<String> defaultAction = new ArrayList<>();
+            defaultAction.add("Action ");
             ArrayList<String> action = new ArrayList<>();
             action.add("Action ");
             String line;
@@ -74,35 +80,79 @@ public class skillScanner {
             while ((line = reader.readLine()) != null) {
                 lineNumber++;
                 actionLineNumber = lineNumber;
-                if (matches(line, sentence)) {
-                    Pattern pattern = Pattern.compile("\\<.+?\\>");
-                    Matcher matcher = pattern.matcher(line);
-                    while (matcher.find()) {
-                        match = matcher.group();
-                        lineAdapt = line.replaceAll("\\p{Punct}", "").split("\\s+");
-                        lineAdapted = sentence.replaceAll("\\p{Punct}", "").split("\\s+");
-                        for (int index = 0; index < lineAdapted.length; index++) {
-                            if(match.substring(1, match.length() - 1).equals(lineAdapt[index])){
-                                String temp = "Slot  <" + match.substring(1, match.length() - 1) + ">  " + lineAdapted[index];
-                                if(!isSlotAvailable(lineNumber+1,temp)){
-                                    getAction(actionLineNumber+1, action);
-                                    System.out.println(output);
-                                    return false;
-                                }
-                                action.add("<" + match.substring(1, match.length() - 1) + ">  " + lineAdapted[index] + " ");
+                matchAlg = new WordMatch();
+                lineAdapt = line.replaceAll("\\p{Punct}", "").split("\\s+");
+                lineAdapted = sentence.replaceAll("\\p{Punct}", "").split("\\s+");
+                ArrayList<String> adapted = new ArrayList<>();
+                ArrayList<String> adaptedTemplate = new ArrayList<>();
+                if(lineAdapt.length <= lineAdapted.length){ 
+                    for (int i = 0; i < lineAdapt.length; i++) {
+                        if(!lineAdapt[i].equals(lineAdapt[i].toUpperCase())){
+                            if(i<lineAdapted.length){
+                                adapted.add(lineAdapted[i]);
+                                adaptedTemplate.add(lineAdapt[i]);
                             }
                         }
                     }
-                    getAction(actionLineNumber, action);
-                    System.out.println(output);
-                    return true;
+                    // if matches or meets threshold 
+                    if (matches(line, sentence) || matchAlg.wordMatch(adapted.toString(), adaptedTemplate.toString())) {
+                        Pattern pattern = Pattern.compile("\\<.+?\\>");
+                        Matcher matcher = pattern.matcher(line);
+                        while (matcher.find()) {
+                            match = matcher.group();
+                            lineAdapt = line.replaceAll("\\p{Punct}", "").split("\\s+");
+                            lineAdapted = sentence.replaceAll("\\p{Punct}", "").split("\\s+");
+                            String [] test = new String[lineAdapt.length];
+                            int cntAdder = 0;
+                            for (int i = 0; i < lineAdapt.length; i++) {
+                                test[i] = "";
+                                if(lineAdapt[i].equalsIgnoreCase(lineAdapted[cntAdder])){
+                                    test[i] = lineAdapted[cntAdder];
+                                    cntAdder++;
+                                } else{
+                                    if(i + 1 < lineAdapt.length){
+                                        while (!lineAdapt[i+1].equalsIgnoreCase(lineAdapted[cntAdder])) {
+                                            test[i] = test[i] + lineAdapted[cntAdder];
+                                            if(!lineAdapt[i+1].equalsIgnoreCase(lineAdapted[cntAdder+1])){
+                                                test[i] = test[i] + " ";
+                                            }
+                                            cntAdder++;
+                                        }
+                                    } else{
+                                        while (cntAdder < lineAdapted.length) {
+                                            test[i] = test[i] + lineAdapted[cntAdder];
+                                            if(cntAdder + 1 < lineAdapted.length){
+                                                test[i] = test[i] + " ";
+                                            }
+                                            cntAdder++;
+                                        }
+                                    }
+                                }
+                            }
+                            lineAdapted = test;
+                            for (int index = 0; index < lineAdapted.length; index++) {
+                                if(match.substring(1, match.length() - 1).equals(lineAdapt[index])){
+                                    String temp = "Slot  <" + match.substring(1, match.length() - 1) + ">  " + lineAdapted[index];
+                                    if(!isSlotAvailable(lineNumber+1,temp)){
+                                        System.out.println(getAction(actionLineNumber+1, defaultAction));
+                                        return getAction(actionLineNumber+1, defaultAction);
+                                    }
+                                    action.add("<" + match.substring(1, match.length() - 1) + ">  " + lineAdapted[index] + " ");
+                                }
+                            }
+                        }
+                        getAction(actionLineNumber, action);
+                        System.out.println(output);
+                        return output;
+                    }
                 }
+                
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
         System.out.println("Question not found!");
-        return false;
+        return "Question not found!";
     }
 
     private boolean matches(String template, String input) {
@@ -164,8 +214,3 @@ public class skillScanner {
         return this.output;
     }
 }
-
-
-// Can add: 1) same questions 2x or more in one text file. 
-//          2) different answer for same parameters
-//          3) Order matters when inputing actions (care)
