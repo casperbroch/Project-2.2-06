@@ -9,7 +9,6 @@ import java.util.List;
 public class Dictionary {
     public static void main(String[] args) {
         Dictionary run = new Dictionary();
-        System.out.println(run.getWords());
     }
     private List<String> words;
 

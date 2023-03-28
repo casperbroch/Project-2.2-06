@@ -94,10 +94,8 @@ public class skillEditor {
                bnew.newLine();
             }
             bnew.close();
-            System.out.println("Line added successfully.");
-            
+        
          } catch (IOException e) {
-            System.out.println("Error while adding a line to the file: " + e.getMessage());
          }
     }
 
@@ -127,10 +125,9 @@ public class skillEditor {
                 FileWriter writerDel = new FileWriter(file);
                 writerDel.write(stringBuilder.toString());
                 writerDel.close();
-            } else System.out.println("Cannot delete slot as there is only one slot available.");
+            } 
             
         } catch(IOException e) {
-            System.out.println("An error occurred: " + e.getMessage());
         }
     }
 
@@ -160,19 +157,17 @@ public class skillEditor {
                 FileWriter writerDel = new FileWriter(file);
                 writerDel.write(stringBuilder.toString());
                 writerDel.close();
-            } else System.out.println("Cannot delete action as it is the only one left.");
+            } 
 
         
         } catch(IOException e) {
-            System.out.println("An error occurred: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 
     public void addNewSkill() throws IOException{        
         Scanner scanSkill = new Scanner(System.in);
-        System.out.println("Please type the prototype sentence: ");
         prototype = scanSkill.nextLine();
-        System.out.println("Please type the slots you wish to set as placeholders: (separated by a coma) ");
         ArrayList<String> placeHolders = new ArrayList<>(Arrays.asList(scanSkill.nextLine().split("[^a-zA-Z0-9]+"))); 
         ArrayList<ArrayList<String>> values = new ArrayList<ArrayList<String>> (); 
         ArrayList<Slot> slotVals = new ArrayList<>(); 
@@ -221,7 +216,6 @@ public class skillEditor {
         }
         if (!flag){
             for (String slot : placeHolders) {
-                System.out.println("Please type the values for place holder <" + slot.toUpperCase() + ">. (separated by a coma)");
                 ArrayList<String> placeValues = new ArrayList<>(Arrays.asList(scanSkill.nextLine().split("\\s*,\\s*"))); 
     
                 for (String vals : placeValues) {
@@ -241,29 +235,21 @@ public class skillEditor {
                 actionVals = new ArrayList<>();
                 Scanner scan2 = new Scanner(System.in);
                 if(!addedDefault){
-                    System.out.println("Do you wish to add a default action? ");
-                    System.out.println("1) Yes");
-                    System.out.println("2) No");
                     if(scan2.nextLine().equalsIgnoreCase("1")){
-                        System.out.println("Please type in your default action:");
                         dataA = scan2.nextLine();
                         addAction(new ArrayList<String>(), dataA, new ArrayList<Slot>());
                     }
                     addedDefault = true;
                 }
 
-                System.out.println("--");
-                System.out.println("What do you want to add as an action? Type 'quit' to leave.");
 
                 dataA = scan2.nextLine();
                 if(dataA.equalsIgnoreCase("quit")){
                     addingAction = false;
                     continue;
                 }
-                System.out.println("To which slot(s) does this data belong to? You can find the slots below: ");
                 int cnt = 1;
                 for (int i = 0; i < placeHolders.size(); i++) {
-                    System.out.println(cnt + ") "+ placeHolders.get(i));
                     cnt++;
                 }
                 ArrayList<String> actionNums =new ArrayList<>(Arrays.asList(scan2.nextLine().split("[^a-zA-Z0-9]+"))); 
@@ -280,10 +266,8 @@ public class skillEditor {
                 for (int i = 0; i < actionNumsOrdered.size(); i++) {
                     actionValss = new ArrayList<>(); 
                     int count = 1;
-                    System.out.println("What is the value of slot " + placeHolders.get(actionNumsOrdered.get(i)-1) +"? ");
                     for (int j = 0; j < slotVals.size(); j++) {
                         if(slotVals.get(j).getSlot().equals(placeHolders.get(actionNumsOrdered.get(i)-1))){
-                            System.out.println(count + ") " + slotVals.get(j).getParent());
                             actionValss.add(slotVals.get(j));
                             count++;
                         }
@@ -296,7 +280,6 @@ public class skillEditor {
             }
             scanSkill.close();
         }
-        else System.out.println("Question already exists. Try editing or deleting it to make changes.");
     }
 
 
@@ -324,7 +307,7 @@ public class skillEditor {
             writerDel.write(stringBuilder.toString());
             writerDel.close();
         } catch(IOException e) {
-            System.out.println("An error occurred: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 
@@ -399,7 +382,6 @@ public class skillEditor {
             reader = new BufferedReader(new FileReader(file));
             while ((line = reader.readLine()) != null) {
                 if (line.startsWith("Question")) {
-                    System.out.println(counter + ") " + line.substring(10));
                     a = a + counter + ") " + line.substring(10)+"\n";
                     questions.add(line);
                     counter++;
@@ -429,7 +411,6 @@ public class skillEditor {
             reader = new BufferedReader(new FileReader(file));
             while ((line = reader.readLine()) != null) {
                 if (line.startsWith("Question")) {
-                    System.out.println(counter + ") " + line.substring(10));
                     a = a + counter + ") " + line.substring(10)+"\n";
                     questions.add(line);
                     counter++;
@@ -468,9 +449,6 @@ public class skillEditor {
 
     public void getSkillAndAction(){
         Scanner scanSkill = new Scanner(System.in);
-        System.out.println();
-        System.out.println("Welcome to the Skill Editor!");
-        System.out.println("Do you wish to 1) add, 2) delete, 3) edit, 4) view a skill?");
         int act = scanSkill.nextInt();
         int skill = 0;
         String line = "";
@@ -485,48 +463,35 @@ public class skillEditor {
             }
         }
         else{
-            System.out.println("--");
             try(BufferedReader reader = new BufferedReader(new FileReader(file))){ 
                 counter = 1;
                 switch (act) {
                     case 2:
                         Scanner scan= new Scanner(System.in);
-                        System.out.println("Which skill would you like to delete? ");
                         while ((line = reader.readLine()) != null) {
                             if (line.startsWith("Question")) {
-                                System.out.println(counter + ") " + line.substring(10));
                                 questions.add(line);
                                 counter++;
                             }
                         } 
                         skill = scan.nextInt();
                         if(skill >= questions.size()+1){
-                            System.out.println("Invalid choice. Restart.");
                             break;
                         }
                         deleteSkill(questions.get(skill-1));
                         break;
                     case 3:          
                         Scanner scan39 = new Scanner(System.in);
-                        System.out.println("Which skill would you like to edit? ");
                         while ((line = reader.readLine()) != null) {
                             if (line.startsWith("Question")) {
-                                System.out.println(counter + ") " + line.substring(10));
                                 questions.add(line);
                                 counter++;
                             }
                         } 
                         skill = scan39.nextInt();
                         if(skill >= questions.size()+1){
-                            System.out.println("Invalid choice. Restart.");
                             break;
                         }
-                        System.out.println("--");
-                        System.out.println("What action would you like to take? ");
-                        System.out.println("1) Add a slot.");
-                        System.out.println("2) Add an action.");
-                        System.out.println("3) Delete a slot.");
-                        System.out.println("4) Delete an action.");
                         Scanner scan33 = new Scanner(System.in);
                         int action = scan33.nextInt();
 
@@ -539,16 +504,12 @@ public class skillEditor {
                                 ArrayList<String> slotTemp = new ArrayList<>();
                                 while(duplicateS){
                                     Scanner scan1 = new Scanner(System.in);
-                                    System.out.println("--");
-                                    System.out.println("What do you want to add as a slot?");
                                     data = scan1.nextLine();
-                                    System.out.println("And to which slot would you like to add '" + data + "' to? Choose one from the options below:");
                                     // print available slots
                                     slotTemp = showSlots(questions.get(skill-1));
                                     slotT = scan1.nextInt();
                                     duplicateS = duplicateSlot(questions.get(skill-1), data, slotTemp.get(slotT-1));
                                     if(duplicateS){
-                                        System.out.println("That slot already exists, do you wish to 'add' another slot or 'quit'?");
                                         Scanner scan7 = new Scanner(System.in);
                                         String data2 = scan7.nextLine();
                                         if(data2.equalsIgnoreCase("quit")) {
@@ -571,10 +532,7 @@ public class skillEditor {
                                     actionVals = new ArrayList<>();
                                     actionValues = new ArrayList<>();
                                     Scanner scan2 = new Scanner(System.in);
-                                    System.out.println("--");
-                                    System.out.println("What do you want to add as an action?");
                                     dataA = scan2.nextLine();
-                                    System.out.println("To which slot(s) does this data belong to? You can find the slots below: ");
                                     ArrayList<String> actionTemp = showSlots(questions.get(skill-1));
                                     ArrayList<String> actionNums =new ArrayList<>(Arrays.asList(scan2.nextLine().split("[^a-zA-Z0-9]+"))); 
                                     int cnt = 0;
@@ -590,13 +548,11 @@ public class skillEditor {
                                     }
                                     actionVals = new ArrayList<>(); 
                                     for (int i = 0; i < actionValues.size(); i++) {
-                                        System.out.println("What is the value of slot " + actionValues.get(i) +"? ");
                                         ArrayList<String> slots = printSlotsSpec(questions.get(skill-1), actionValues.get(i));
                                         actionVals.add(slots.get(scan2.nextInt()-1));
                                     }
                                     duplicateAction = duplicateAction(questions.get(skill-1), dataA, actionValues, actionVals);
                                     if(duplicateAction){
-                                        System.out.println("That action already exists, do you wish to 'add' another action, 'overwrite' the current one or 'quit'?");
                                     }
                                 }
                                 if(!quittedAction){
@@ -606,43 +562,32 @@ public class skillEditor {
 
                             case 3:
                                 Scanner scan3 = new Scanner(System.in);
-                                System.out.println("--");
-                                System.out.println("Which slot would you like to delete? Please choose one of the following:");
-                                System.out.println();
                                 ArrayList<String> slots = printSlots(questions.get(skill-1));
                                 int slot = scan3.nextInt();
                                 deleteSlot(questions.get(skill-1), slots.get(slot-1));                           
                                 break;
                             case 4:
                                 Scanner scan4 = new Scanner(System.in);
-                                System.out.println("Which action would you like to delete? Please choose one of the following:");
-                                System.out.println();
                                 ArrayList<String> actions = printActions(questions.get(skill-1));
                                 int actionH = scan4.nextInt();
                                 deleteAction(questions.get(skill-1), actions.get(actionH-1));                           
                                 break;
                             default:
-                            System.out.println("Action not found. Retry.");
                         }
                         break;
                     case 4:
                         Scanner scan34 = new Scanner(System.in);
-                        System.out.println("Which skill would you like to view? ");
                         while ((line = reader.readLine()) != null) {
                             if (line.startsWith("Question")) {
-                                System.out.println(counter + ") " + line.substring(10));
                                 questions.add(line);
                                 counter++;
                             }
                         } 
                         skill = scan34.nextInt();
-                        System.out.println("Here is your skill: ");
-                        System.out.println(questions.get(skill-1));
                         printSlots(questions.get(skill-1));
                         printActions(questions.get(skill-1));
                         break;    
                     default:
-                        System.out.println("Invalid choice. Restart.");
             }
             reader.close();
             } catch (IOException e) {
@@ -678,14 +623,12 @@ public class skillEditor {
                 } 
                 if (delete && current.startsWith("Slot  <" + slott + ">  ")){
                     int endIndex = current.indexOf(">"); 
-                    System.out.println(counter+ ") " + slott + " - " + current.substring(endIndex+3));
                     slots.add(current.substring(endIndex+3));
                     counter++;
                 }
             }
             readerDel.close();
         } catch(IOException e) {
-            System.out.println("An error occurred: " + e.getMessage());
         }
         return slots;
     }
@@ -709,7 +652,6 @@ public class skillEditor {
                 if (delete && current.startsWith("Slot  <" + slott + ">  ")){
                     int endIndex = current.indexOf(">"); 
                     a = a+counter+ ") " + slott + " - " + current.substring(endIndex+3)+"\n";
-                    System.out.println(counter+ ") " + slott + " - " + current.substring(endIndex+3));
                     slots.add(current.substring(endIndex+3));
                     counter++;
                 }
@@ -717,7 +659,6 @@ public class skillEditor {
             readerDel.close();
         } catch(IOException e) {
             a = "An error occurred: " + e.getMessage();
-            System.out.println("An error occurred: " + e.getMessage());
         }
         return a;
     }
@@ -744,7 +685,7 @@ public class skillEditor {
             }
             readerDel.close();
         } catch(IOException e) {
-            System.out.println("An error occurred: " + e.getMessage());
+            e.printStackTrace();
         }
         return duplicate;
     }
@@ -758,7 +699,6 @@ public class skillEditor {
             tempAction += "<"+slotLoc.get(i)+">  "+slotVal.get(i)+"  ";
         }
         tempAction = tempAction.toUpperCase();
-        System.out.println(tempAction);
         try {
             BufferedReader readerDel = new BufferedReader(new FileReader(file));
             String current;
@@ -779,7 +719,7 @@ public class skillEditor {
             }
             readerDel.close();
         } catch(IOException e) {
-            System.out.println("An error occurred: " + e.getMessage());
+            e.printStackTrace();
         }
         return duplicate;
     }
@@ -818,10 +758,9 @@ public class skillEditor {
                bnew.newLine();
             }
             bnew.close();
-            System.out.println("Line added successfully.");
             
          } catch (IOException e) {
-            System.out.println("Error while adding a line to the file: " + e.getMessage());
+            e.printStackTrace();
          }
     }
     
@@ -856,10 +795,9 @@ public class skillEditor {
                bnew.newLine();
             }
             bnew.close();
-            System.out.println("Line added successfully.");
             
          } catch (IOException e) {
-            System.out.println("Error while adding a line to the file: " + e.getMessage());
+            e.printStackTrace();
          }
     }
 
@@ -888,10 +826,9 @@ public class skillEditor {
             stringBuilder1.append(System.getProperty("line.separator"));
             writerDel1.write(stringBuilder1.toString());
             writerDel1.close();
-            System.out.println("Line added successfully.");
             
          } catch (IOException e) {
-            System.out.println("Error while adding a line to the file: " + e.getMessage());
+            e.printStackTrace();
          }
     }
 
@@ -911,14 +848,13 @@ public class skillEditor {
                     delete = true;
                 } 
                 if (delete && current.startsWith("Action")){
-                    System.out.println(counter+ ") " + current.substring(8));
                     slots.add(current);
                     counter++;
                 }
             }
             readerDel.close();
         } catch(IOException e) {
-            System.out.println("An error occurred: " + e.getMessage());
+            e.printStackTrace();
         }
         return slots;
     }
@@ -942,14 +878,13 @@ public class skillEditor {
 
                     int startIndex = current.indexOf("<") + 1; 
                     int endIndex = current.indexOf(">"); 
-                    System.out.println(counter+ ") " + current.substring(startIndex, endIndex) + " - " + current.substring(10+current.substring(startIndex, endIndex).length()-1));
                     slots.add(current);
                     counter++;
                 }
             }
             readerDel.close();
         } catch(IOException e) {
-            System.out.println("An error occurred: " + e.getMessage());
+            e.printStackTrace();
         }
         return slots;
     }
@@ -997,8 +932,9 @@ public class skillEditor {
             }
             readerDel.close();
         } catch(IOException e) {
-            System.out.println("An error occurred: " + e.getMessage());
+            e.printStackTrace();
         }
+
         return a;
     }
 
@@ -1029,7 +965,7 @@ public class skillEditor {
             }
             readerDel.close();
         } catch(IOException e) {
-            System.out.println("An error occurred: " + e.getMessage());
+            e.printStackTrace();
         }
         return a;
     }

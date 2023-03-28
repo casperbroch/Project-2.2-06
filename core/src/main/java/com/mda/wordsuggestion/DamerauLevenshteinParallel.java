@@ -9,7 +9,6 @@ public class DamerauLevenshteinParallel {
         DamerauLevenshteinParallel dl = new DamerauLevenshteinParallel();
         String word = "hell";
         List<String> similarWords = dl.getSimilarWordsDistance(word, 1);
-        System.out.println("Words within 3 Damerau-Levenshtein distance of " + word + ": " + similarWords);
     }
     DictionaryParallel dict;
     public DamerauLevenshteinParallel(){

@@ -9,7 +9,6 @@ import java.util.List;
 public class DictionaryParallel {
     public static void main(String[] args) {
         DictionaryParallel run = new DictionaryParallel();
-        System.out.println(run.getWords());
     }
     private List<String> words;
 

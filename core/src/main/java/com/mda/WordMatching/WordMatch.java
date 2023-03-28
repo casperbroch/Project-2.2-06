@@ -9,7 +9,7 @@ public class WordMatch {
         // Matching is more robust for longer inputs (think: less susceptible to anomalies)
         if(input.length() <= 30)
             threshold = 0.85;
-        else
+        else    
             threshold = 0.9;
         double length = template.length(); // Total length of the final string
         double matchingChars = 0;
@@ -29,7 +29,6 @@ public class WordMatch {
         }
         matchingChars -= numOfExtras;
         double percentage = matchingChars/length;
-        System.out.println(Math.max(percentage, 0));
         if(percentage >= threshold)
             return true;
         else
@@ -39,9 +38,7 @@ public class WordMatch {
         WordMatch match = new WordMatch();
         String input1 = "I nde covfef.e";
         String template1 = "I need coffee.";
-        System.out.println(match.wordMatch(input1, template1));
         String input2 = "I' lgning for people to test y mHCI prototype.";
         String template2 = "I'm looking for people to test my HCI prototype.";
-        System.out.println(match.wordMatch(input2, template2));
     }
 }

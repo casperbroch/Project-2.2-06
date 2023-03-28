@@ -26,9 +26,6 @@ import java.util.List;
 
 /* Class to connect with a users Google account and perform Google Calendar actions */
 public class CalendarConnection {
-    /**
-     * Varibales for inserting an event
-     */
     private static String insert1;
     private static String insert2;
     private static String insert3;
@@ -42,32 +39,21 @@ public class CalendarConnection {
     //Whether insert is clean or not
     private static boolean insertIsClean;
 
-    /**
-     * Application name.
-     */
+
     private static final String APPLICATION_NAME = "Google Calendar";
-    /**
-     * Global instance of the JSON factory.
-     */
+
     private static final JsonFactory JSON_FACTORY = GsonFactory.getDefaultInstance();
-    /**
-     * Directory to store authorization tokens for this application.
-     */
+
     private static final String TOKENS_DIRECTORY_PATH = "tokens";
 
     private NetHttpTransport HTTP_TRANSPORT;
     static Calendar service;
 
-    /**
-     * Global instance of the scopes required
-     */
+
     private static final List<String> SCOPES =
             Collections.singletonList(CalendarScopes.CALENDAR);
     private static final String CREDENTIALS_FILE_PATH = "/credentials.json";
 
-    /**
-     * Opens a Google connection and creates the Calendar object
-     */
     public CalendarConnection() throws GeneralSecurityException, IOException{
         insertIsClean =false;
         calInsertState =0;
@@ -80,13 +66,8 @@ public class CalendarConnection {
                 .build();
 
     }
-    /**
-     * Creates an authorized Credential object.
-     *
-     * @param HTTP_TRANSPORT The network HTTP Transport.
-     * @return An authorized Credential object.
-     * @throws IOException If the credentials.json file cannot be found.
-     */
+
+
     private static Credential getCredentials(final NetHttpTransport HTTP_TRANSPORT)
             throws IOException {
         // Load client secrets.
@@ -110,12 +91,6 @@ public class CalendarConnection {
     }
 
 
-    /**
-     * Fetch the next 10 events in the calendar
-     *
-     * @return arraylist of Strings representing the events
-     * @throws IOException
-     */
     public ArrayList<String> getNext10Events() throws IOException{
         ArrayList<String> empty =new ArrayList<String>();
         // List the next 10 events from the primary calendar.
@@ -128,18 +103,15 @@ public class CalendarConnection {
                 .execute();
         List<Event> items = events.getItems();
         if (items.isEmpty()) {
-            System.out.println("No upcoming events found.");
+
         } else {
-            System.out.println("Upcoming events");
             for (Event event : items) {
                 DateTime start = event.getStart().getDateTime();
                 if (start == null) {
                     start = event.getStart().getDate();
                 }
-                System.out.printf("%s (%s)\n", event.getSummary(), start);
 
                 String s = event.getDescription() + " on " + event.getStart().getDate();
-                System.out.println(s);
                 String datetime = String.valueOf(event.getStart().getDateTime());
                 String e =event.getSummary()+" on "+datetime.substring(0,10);
                 empty.add(e);
@@ -151,13 +123,6 @@ public class CalendarConnection {
 
     }
 
-    /**
-     * Search for event by name
-     *
-     * @param search name of event
-     * @return String representing full event details
-     * @throws IOException
-     */
     public String getEvent(String search) throws IOException {
         DateTime now = new DateTime(System.currentTimeMillis());
         Events events = service.events().list("primary")
@@ -170,7 +135,6 @@ public class CalendarConnection {
 
         List<Event> items = events.getItems();
 
-        System.out.println("Upcoming events");
         for (Event event : items) {
 
             if(event.getSummary().equalsIgnoreCase(search)){
@@ -188,7 +152,6 @@ public class CalendarConnection {
                 //2015-05-28T12:01:00-04:00
                 return event.getSummary()+" - " +description+", on "+ datetime.substring(0,10)+" @ "+datetime.substring(11,16) +" by location "+location;
             }
-            //System.out.printf("%s (%s)\n", event.getSummary(), start);
         }
 
 
@@ -197,12 +160,6 @@ public class CalendarConnection {
     }
 
 
-    /**
-     * Search for events by date
-     * @param date date for search
-     * @return
-     * @throws IOException
-     */
     public ArrayList<String> getEventsOnDate(String date) throws IOException {
         DateTime now = new DateTime(System.currentTimeMillis());
         Events events = service.events().list("primary")
@@ -218,7 +175,6 @@ public class CalendarConnection {
         ArrayList<String> eventsOnDate =new ArrayList<>();
 
         try{
-            System.out.println("Events on "+date);
             for (Event event : items) {
 
                 String dateTime = String.valueOf(event.getStart().getDateTime());
@@ -229,7 +185,6 @@ public class CalendarConnection {
                     //2015-05-28T12:01:00-04:00
                     //return event.getSummary()+" on "+ datetime.substring(0,10)+" @ "+datetime.substring(11,16) +" by location "+location;
                 }
-                //System.out.printf("%s (%s)\n", event.getSummary(), start);
             }
             return eventsOnDate;
 
@@ -241,13 +196,6 @@ public class CalendarConnection {
     }
 
 
-    /**
-     * Delete an event
-     *
-     * @param delete name of event ot be deleted
-     * @return whether it was successful
-     * @throws IOException
-     */
     public boolean deleteEvent(String delete) throws IOException {
         //this.service.events().delete("primary", eventId).execute();
 
@@ -263,9 +211,7 @@ public class CalendarConnection {
         List<Event> items = events.getItems();
 
         if (items.isEmpty()) {
-            System.out.println("No upcoming events found.");
         } else {
-            System.out.println("Upcoming events");
             for (Event event : items) {
 
                 if(event.getSummary().equalsIgnoreCase(delete)){
@@ -279,13 +225,6 @@ public class CalendarConnection {
         return false;
     }
 
-
-    /**
-     * Creates a new event
-     *
-     * @return the created event
-     * @throws IOException
-     */
     public static String insertEvent() throws IOException{
 
         try{
@@ -294,8 +233,6 @@ public class CalendarConnection {
                         .setSummary(insert1)
                         .setDescription(insert2);
 
-                ////NOTE: DATETIME USES ISO_8601 FORMAT, LEARN THAT HERE ---> https://en.wikipedia.org/wiki/ISO_8601
-                //EXAMPLE: 2015-05-28T12:01:00-04:00
                 DateTime startDateTime = new DateTime(insert3+"T"+insert4+":00+02:00");
                 EventDateTime start = new EventDateTime()
                         .setDateTime(startDateTime)
@@ -310,50 +247,25 @@ public class CalendarConnection {
 
                 String calendarId = "primary";
                 event = service.events().insert(calendarId, event).execute();
-                System.out.printf("Event created: %s\n", event.getHtmlLink());
                 return "Event successfully created!\nName: "+insert1 +"\nDescription: "+insert2 +"\nDate: "+insert3+"\nFrom "+insert4+" till "+insert5+"\nLink: "+event.getHtmlLink();
             }else{
-                System.out.println("Insert is not valid, from CalendarConnection class");
                 return "Please try again, formatting was wrong";
             }
         }catch (Exception e){
             return "Please try again, formatting was wrong";
         }
 
-        /*\
-        MORE OPTIONS
-        Can add .setLocation("800 Howard St., San Francisco, CA 94103")
 
-        String[] recurrence = new String[] {"RRULE:FREQ=DAILY;COUNT=2"};
-        event.setRecurrence(Arrays.asList(recurrence));
-
-        EventAttendee[] attendees = new EventAttendee[] {
-        new EventAttendee().setEmail("lpage@example.com"),
-        new EventAttendee().setEmail("sbrin@example.com"),
-        };
-        event.setAttendees(Arrays.asList(attendees));
-
-        EventReminder[] reminderOverrides = new EventReminder[] {
-        new EventReminder().setMethod("email").setMinutes(24 * 60),
-        new EventReminder().setMethod("popup").setMinutes(10),
-        };
-        Event.Reminders reminders = new Event.Reminders()
-        .setUseDefault(false)
-        .setOverrides(Arrays.asList(reminderOverrides));
-        event.setReminders(reminders);
-        */
     }
 
-    /**
-     * Delete the users token, meaning they are no longer logged in
-     */
+
     public void DeleteToken() {
         File file = new File("tokens\\StoredCredential");
 
         try{
             file.delete();
         }catch (Exception e){
-            System.out.println("Unable to delete file");
+            e.printStackTrace();
         }
 
     }
@@ -362,7 +274,6 @@ public class CalendarConnection {
         return true;
     }
 
-    //OOP for inserting
 
     public boolean setInsert1(String insert1) {
         this.insert1 = insert1;
@@ -409,15 +320,10 @@ public class CalendarConnection {
         this.calFetchState = calFetchState;
     }
 
-    ////////////////////////////////////
-    //////////MAIN FOR TESTING//////////
-    ////////////////////////////////////
 
     public static void main(String... args) throws IOException, GeneralSecurityException {
         CalendarConnection cal =new CalendarConnection();
         ArrayList<String> e =cal.getNext10Events();
-        System.out.println(e.toString());
-        System.out.println();
         //cal.insertEvent();
         cal.DeleteToken();
     }

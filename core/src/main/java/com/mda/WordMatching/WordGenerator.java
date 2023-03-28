@@ -46,23 +46,19 @@ public class WordGenerator {
             int numOfErrors = 7;
             // Short input
             String input1 = gen.wordScrambler(gen.shortInput, numOfErrors);
-            // System.out.println(input1);
-            // System.out.println(match.wordMatch(input1, gen.shortInput));
+
             match.wordMatch(input1, gen.shortInput);
             // Short-medium input
             String input2 = gen.wordScrambler(gen.shortMedInput, numOfErrors);
-            // System.out.println(input2);
-            //System.out.println(match.wordMatch(input2, gen.shortMedInput));
+
             match.wordMatch(input2, gen.shortMedInput);
             // Medium input
             String input3 = gen.wordScrambler(gen.medInput, numOfErrors);
-            // System.out.println(input3);
-            // System.out.println(match.wordMatch(input3, gen.medInput));
+
             match.wordMatch(input3, gen.medInput);
             // Long input
             String input4 = gen.wordScrambler(gen.longInput, numOfErrors);
-            // System.out.println(input4);
-            // System.out.println(match.wordMatch(input4, gen.longInput));
+
             match.wordMatch(input4, gen.longInput);
         }
     }

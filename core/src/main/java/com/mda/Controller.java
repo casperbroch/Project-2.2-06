@@ -125,11 +125,6 @@ public class Controller implements Initializable {
     public List<String> suggestwords(String wrongWord) throws IOException {
         List<String> similarWords = sp.getSimilarWordsDistance(wrongWord, 3, 3);
 
-        if (similarWords!=null && similarWords.size()!=0){
-            System.out.println("Words within 3 Damerau-Levenshtein distance of " + wrongWord + ": " + similarWords);
-        } else {
-            System.out.println("The word is correct");
-        }
         return similarWords;
     }
 
@@ -363,7 +358,6 @@ public class Controller implements Initializable {
                                 actionValues1.add(actionT.get(actionNumsOrdered.get(cnt)-1));
                                 cnt++;
                             }
-                            System.out.println(actionValues1.size());
                             response = "What is the value of slot " + actionValues1.get(actionindex) +"? \n"+skillEditor.printSlotsSpecasString(questionA3.get(choiceedit-1), actionValues1.get(actionindex));
                             STATE = USERSTATE.SKILLEAddA3;
                             break;
@@ -523,7 +517,6 @@ public class Controller implements Initializable {
                                 break;
                             } else {                            
                                 try {
-                                    System.out.println("adding a skill rn");
                                     // ? create the question and the slots
                                     skillEditor.setUp();
                                     skillEditor.addQuestion(prototype, placeHolders);
@@ -628,7 +621,6 @@ public class Controller implements Initializable {
                                     }
     
                                 } catch (GeneralSecurityException | IOException e) {
-                                    System.out.println("Problem with Google connection");
                                     throw new RuntimeException(e);
                                 }
                                 break;
@@ -676,7 +668,6 @@ public class Controller implements Initializable {
                                                 STATE =USERSTATE.GOOGLECAL;
     
                                             } catch (IOException e) {
-                                                System.out.println("Problem with insert from Controller class");
                                                 throw new RuntimeException(e);
                                             }
                                             cal.incrementInsertCalState();
@@ -750,7 +741,6 @@ public class Controller implements Initializable {
 
                             }
                         
-                        System.out.println(STATE);
                         if(!homegreeting()) {
                             addBMessage(response, vbox_message);
                         }
