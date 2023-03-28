@@ -60,7 +60,7 @@ public class Controller implements Initializable {
         SKILLEDelA,
         SKILLV1,
 
-        GOOGLECAL, GOOGLECALDELETE, GOOGLECALFETCH, GOOGLECALINSERT
+        GOOGLECAL, GOOGLECALDELETE, GOOGLECALFETCH, GOOGLECALINSERT, GOOGLECALFETCHONDATE
 
     }
 
@@ -135,7 +135,7 @@ public class Controller implements Initializable {
 
     public void init() {
         skillopening = "Welcome to the Skills application! Do you wish to: \n1) Ask a question\n2) Add a new skill\n3) delete a skill\n4) edit a kill\n5) view a skill\nPlease type 'exit' if you want to exit this application.";
-        googleopening = "Welcome to the Google Calendar application! Do you wish to: \n1) Insert an event\n2) Delete an event\n3) Fetch next 10 events\n4) Fetch events on a specific date\n5) Find a specific event\nPlease type 'exit' if you want to exit this application.";
+        googleopening = "Welcome to the Google Calendar application! Do you wish to: \n1) Insert an event\n2) Delete an event\n3) Fetch next 10 events\n4) Find a specific event\n5) Fetch events on a specific date\nPlease type 'exit' if you want to exit this application.";
         try {
             sp = new SymSpell();
             skillEditor = new skillEditor();
@@ -618,8 +618,8 @@ public class Controller implements Initializable {
     
                                         case "5":
                                             cal =new CalendarConnection();
-                                            response ="What event are you looking for?";
-                                            STATE = USERSTATE.GOOGLECALFETCH;
+                                            response ="On what date?";
+                                            STATE = USERSTATE.GOOGLECALFETCHONDATE;
                                             break;
     
                                         default:
@@ -729,6 +729,24 @@ public class Controller implements Initializable {
     
     
                                 break;
+                            case GOOGLECALFETCHONDATE:
+                            if(message.equalsIgnoreCase("back")){
+                                response ="Do you wish to 1) Insert event, or 2) Delete event, 3) Fetch next 10 events, 4) Find a specific event or 5) Find events on a specific date?";
+                                STATE =USERSTATE.GOOGLECAL;
+                            }else{
+                                try {
+                                    ArrayList<String> events =cal.getEventsOnDate(message);
+                                    response ="Events list:";
+                                    for(String str : events){
+                                        response=response+"\n"+str;
+                                    }
+                                    response =response+"\nType 'back' to go back";
+                                } catch (IOException e) {
+                                    throw new RuntimeException(e);
+                                }
+                            }
+                            break;
+
                             }
                         
                         System.out.println(STATE);
