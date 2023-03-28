@@ -26,6 +26,13 @@ This project in the current version supports a number of features. They are list
     - Delete existing events
     - Get the next 10 upcoming events
     - Fetch a specific event
+
+## Connect with Google Account
+The API Google Calendar feature needs to connect with a Google account. Not every Google account will be to connect with this application because it is still under development. We have a free to use Google account which is white-listed and which you can use to log-in when Google asks you to after you make a request. The log-in details are:
+
+Address: jacktediore@gmail.com
+
+Password: Tetrahydro72$
 ## Run Locally
 
 Clone the project

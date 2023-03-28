@@ -729,8 +729,9 @@ public class Controller implements Initializable {
     
     
                                 break;
+                                
                             case GOOGLECALFETCHONDATE:
-                            if(message.equalsIgnoreCase("back")){
+                            if(message.equalsIgnoreCase("exit")){
                                 response ="Do you wish to 1) Insert event, or 2) Delete event, 3) Fetch next 10 events, 4) Find a specific event or 5) Find events on a specific date?";
                                 STATE =USERSTATE.GOOGLECAL;
                             }else{
@@ -740,7 +741,7 @@ public class Controller implements Initializable {
                                     for(String str : events){
                                         response=response+"\n"+str;
                                     }
-                                    response =response+"\nType 'back' to go back";
+                                    response =response+"\nType 'exit' to go back";
                                 } catch (IOException e) {
                                     throw new RuntimeException(e);
                                 }
