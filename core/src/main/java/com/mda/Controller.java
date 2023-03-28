@@ -607,6 +607,7 @@ public class Controller implements Initializable {
                                             for (int i =0; i< arr.size();i++){
                                                 response=response+"\n"+arr.get(i);
                                             }
+                                            response = response + "\n" + googleopening;
                                             break;
     
                                         case "4":

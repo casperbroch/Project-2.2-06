@@ -123,3 +123,4 @@ Thumbs.db
 /ios/IOSLauncher.app.dSYM
 *.class
 core/gradlew.bat
+*.class
