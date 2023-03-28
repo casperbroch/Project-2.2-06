@@ -58,12 +58,17 @@ public class Controller implements Initializable {
         SKILLEDelS,
         SKILLEDelA,
         SKILLV1,
+        
+        //GOOGLECAL, GOOGLECALINSERT, GOOGLECALDELETE, GOOGLECALFETCH, GOOGLECALFETCHONDATE,
     
     }
 
     // Important vars for the skill editor
     private skillScanner skillScanner;
     private skillEditor skillEditor;
+    
+    //For Google calendar
+    //CalendarConnection cal;
 
     private String prototype;
     private String addedslot;
@@ -143,6 +148,7 @@ public class Controller implements Initializable {
             e.printStackTrace();
         }
         skills.add("skills");
+        //skills.add("google calendar");
         suggestbox.setVisible(false);
         if(DARKMODE) {
             setDarkMode();
@@ -240,6 +246,14 @@ public class Controller implements Initializable {
                                     response = "Welcome to the Skill APP!\nDo you wish to 1) ask a question, or 2) add, 3) delete, 4) edit, 5) view a skill?";
                                     STATE = USERSTATE.SKILLHOME;
                                 }
+                                
+                                /*
+                                //GOOGLE CALENDAR
+                                if(message.equalsIgnoreCase("google calendar")) {
+                                    response = "Welcome to the Google calendar!\nDo you wish to 1) Insert event, or 2) Delete event, 3) Fetch next 10 events, 4) Find a specific event or 5) Find events on a specific day?";
+                                    STATE = USERSTATE.GOOGLECAL;
+                                }
+                                */
                                 break;
                             }
 
@@ -550,6 +564,159 @@ public class Controller implements Initializable {
                                 }
                         
                                 break;
+                            
+                            /*
+                            case GOOGLECAL:
+                            //int skillamountv = skillEditor.getSkillAmount();
+                            int choice = Integer.parseInt(message);
+
+                            try {
+                                cal =new CalendarConnection();
+                                //ArrayList<String> e =cal.getNext10Events();
+                                //System.out.println(e.toString());
+
+
+
+                                switch(message){
+                                    case "1":
+
+                                        response ="Please enter a name for the event";
+                                        STATE = USERSTATE.GOOGLECALINSERT;
+                                        //cal.insertEvent(name, desc, date, start, end);
+
+                                        break;
+                                    case "2":
+                                        response ="Which event do you want to delete?";
+                                        STATE = USERSTATE.GOOGLECALDELETE;
+                                        break;
+                                    case "3":
+                                        response ="Events list:";
+                                        ArrayList<String> arr =cal.getNext10Events();
+
+                                        for (int i =0; i< arr.size();i++){
+                                            response=response+"\n"+arr.get(i);
+                                        }
+                                        break;
+
+                                    case "4":
+                                        response ="What event are you looking for?";
+                                        STATE = USERSTATE.GOOGLECALFETCH;
+                                        break;
+
+                                    case "5":
+                                        response ="What event are you looking for?";
+                                        STATE = USERSTATE.GOOGLECALFETCH;
+                                        break;
+
+                                    default:
+                                        response ="That is not an option";
+                                        break;
+                                }
+
+                            } catch (GeneralSecurityException e) {
+                                System.out.println("Problem with Google connection");
+                                throw new RuntimeException(e);
+                            } catch (IOException e) {
+                                throw new RuntimeException(e);
+                            }
+                            break;
+
+                        case GOOGLECALINSERT:
+                            switch(cal.getCalInsertState()) {
+
+                                case 0:
+                                    if(cal.setInsert1(message)){
+                                        cal.incrementInsertCalState();
+                                        response = "Give a short summary of the event";
+                                    }else{
+                                        response = "Yikes, that's not gonna work - try again";
+                                    }
+                                    break;
+                                case 1:
+                                    if(cal.setInsert2(message)){
+                                        cal.incrementInsertCalState();
+                                        response = "What is the date? Use the format XXXX-XX-XX";
+                                    }else{
+                                        response = "Yikes, that's not gonna work - try again";
+                                    }
+                                    break;
+                                case 2:
+                                    if(cal.setInsert3(message)){
+                                        cal.incrementInsertCalState();
+                                        response = "What is the start time? Use the format XX:XX";
+                                    }else{
+                                        response = "Yikes, that's not gonna work - try again";
+                                    }
+                                    break;
+                                case 3:
+                                    if(cal.setInsert4(message)){
+                                        cal.incrementInsertCalState();
+                                        response = "What is the end time? Use the format XX:XX";
+                                    }else{
+                                        response = "Yikes, that's not gonna work - try again";
+                                    }
+                                    break;
+                                case 4:
+                                    if(cal.setInsert5(message)){
+                                        try {
+                                            response = cal.insertEvent()+"\n\nDo you wish to 1) Insert event, or 2) Delete event, 3) Fetch next 10 events, 4) Fetch events on a date, 5) or find a specific event?";
+
+                                            STATE =USERSTATE.GOOGLECAL;
+
+                                        } catch (IOException e) {
+                                            System.out.println("Problem with insert from Controller class");
+                                            throw new RuntimeException(e);
+                                        }
+                                        cal.incrementInsertCalState();
+
+                                    }else{
+                                        response = "Yikes, that's not gonna work - try again";
+                                    }
+                                    break;
+                            }
+
+                        case GOOGLECALFETCH:
+                            //if(cal.isCalFetchState()){
+                            //response ="You have no events matching that description... Try again or type 'back' to go back";
+                            if(message.equalsIgnoreCase("back")){
+                                response ="Do you wish to 1) Insert event, or 2) Delete event, 3) Fetch next 10 events, 4) Fetch events on a date, 5) or find a specific event?";
+                                STATE =USERSTATE.GOOGLECAL;
+                            }else{
+                                try {
+                                    response =cal.getEvent(message)+"\nType 'back' to go back";
+                                } catch (IOException e) {
+                                    throw new RuntimeException(e);
+                                }
+                            }
+
+
+
+                            //}else{
+
+                            //}
+                        break;
+
+                        case GOOGLECALDELETE:
+
+                            if(message.equalsIgnoreCase("back")) {
+                                response = "Do you wish to 1) Insert event, or 2) Delete event, 3) Fetch next 10 events, 4) Fetch events on a date, 5) or find a specific event?";
+                                STATE = USERSTATE.GOOGLECAL;
+                            }else{
+                                try {
+                                    if(cal.deleteEvent(message)){
+                                        response = "Event deleted!"+"\nType 'back' to go back";
+                                    }else{
+                                        response = "No event found";
+                                    }
+
+                                } catch (IOException e) {
+                                    throw new RuntimeException(e);
+                                }
+                            }
+
+
+                            break;
+                            */
                             }
                         
                         System.out.println(STATE);
