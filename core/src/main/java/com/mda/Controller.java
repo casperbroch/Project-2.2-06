@@ -634,62 +634,62 @@ public class Controller implements Initializable {
                                 break;
     
                             case GOOGLECALINSERT:
-                                // switch(cal.getCalInsertState()) {
+                                switch(cal.getCalInsertState()) {
 
-                                //     case 0:
-                                //         if(cal.setInsert1(message)){
-                                //             cal.incrementInsertCalState();
-                                //             response = "Give a short summary of the event";
-                                //         }else{
-                                //             response = "Yikes, that's not gonna work - try again";
-                                //         }
-                                //         break;
-                                //     case 1:
-                                //         if(cal.setInsert2(message)){
-                                //             cal.incrementInsertCalState();
-                                //             response = "What is the date? Use the format XXXX-XX-XX";
-                                //         }else{
-                                //             response = "Yikes, that's not gonna work - try again";
-                                //         }
-                                //         break;
-                                //     case 2:
-                                //         if(cal.setInsert3(message)){
-                                //             cal.incrementInsertCalState();
-                                //             response = "What is the start time? Use the format XX:XX";
-                                //         }else{
-                                //             response = "Yikes, that's not gonna work - try again";
-                                //         }
-                                //         break;
-                                //     case 3:
-                                //         if(cal.setInsert4(message)){
-                                //             cal.incrementInsertCalState();
-                                //             response = "What is the end time? Use the format XX:XX";
-                                //         }else{
-                                //             response = "Yikes, that's not gonna work - try again";
-                                //         }
-                                //         break;
-                                //     case 4:
-                                //         if(cal.setInsert5(message)){
-                                //             try {
-                                //                 response = cal.insertEvent()+"\n"+googleopening;
+                                    case 0:
+                                        if(cal.setInsert1(message)){
+                                            cal.incrementInsertCalState();
+                                            response = "Give a short summary of the event";
+                                        }else{
+                                            response = "Yikes, that's not gonna work - try again";
+                                        }
+                                        break;
+                                    case 1:
+                                        if(cal.setInsert2(message)){
+                                            cal.incrementInsertCalState();
+                                            response = "What is the date? Use the format yyyy-mm-dd";
+                                        }else{
+                                            response = "Yikes, that's not gonna work - try again";
+                                        }
+                                        break;
+                                    case 2:
+                                        if(cal.setInsert3(message)){
+                                            cal.incrementInsertCalState();
+                                            response = "What is the start time? Use the format XX:XX";
+                                        }else{
+                                            response = "Yikes, that's not gonna work - try again";
+                                        }
+                                        break;
+                                    case 3:
+                                        if(cal.setInsert4(message)){
+                                            cal.incrementInsertCalState();
+                                            response = "What is the end time? Use the format XX:XX";
+                                        }else{
+                                            response = "Yikes, that's not gonna work - try again";
+                                        }
+                                        break;
+                                    case 4:
+                                        if(cal.setInsert5(message)){
+                                            try {
+                                                response = cal.insertEvent()+"\n"+googleopening;
     
-                                //                 STATE =USERSTATE.GOOGLECAL;
+                                                STATE =USERSTATE.GOOGLECAL;
     
-                                //             } catch (IOException e) {
-                                //                 System.out.println("Problem with insert from Controller class");
-                                //                 throw new RuntimeException(e);
-                                //             }
-                                //             cal.incrementInsertCalState();
+                                            } catch (IOException e) {
+                                                System.out.println("Problem with insert from Controller class");
+                                                throw new RuntimeException(e);
+                                            }
+                                            cal.incrementInsertCalState();
     
-                                //         }else{
-                                //             response = "Yikes, that's not gonna work - try again";
-                                //         }
-                                //      break;
-                                //}
-                                response = "Inserting events is currently under development.\n"+googleopening;
-                                STATE = USERSTATE.GOOGLECAL;
-
+                                        }else{
+                                            response = "Yikes, that's not gonna work - try again";
+                                        }
+                                }
                                 break;
+
+                                //response = "Inserting events is currently under development.\n"+googleopening;
+                                //STATE = USERSTATE.GOOGLECAL;
+                                //break;
 
     
                             case GOOGLECALFETCH:
