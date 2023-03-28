@@ -825,7 +825,7 @@ public class skillEditor {
          }
     }
     
-    public void addDefaultAction(String skill, String data, ArrayList<String> slotLoc, ArrayList<String> slotVal){
+    public void addDefaultAction(String skill, String data){
        
         try {
             FileInputStream fs = new FileInputStream(file);
