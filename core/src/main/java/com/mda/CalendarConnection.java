@@ -204,7 +204,6 @@ public class CalendarConnection {
                     }
                     String datetime = String.valueOf(event.getStart().getDateTime());
 
-                                                                //2015-05-28T12:01:00-04:00
                     return event.getSummary()+" - " +description+", on "+ datetime.substring(0,10)+" @ "+datetime.substring(11,16);
                 }
                 System.out.printf("%s (%s)\n", event.getSummary(), start);
@@ -264,13 +263,13 @@ public class CalendarConnection {
                     .setDescription(insert2);
 
             ////NOTE: DATETIME USES ISO_8601 FORMAT, LEARN THAT HERE ---> https://en.wikipedia.org/wiki/ISO_8601
-            DateTime startDateTime = new DateTime(insert3+"T"+insert4+":00+00:00");
+            DateTime startDateTime = new DateTime(insert3+"T"+insert4+":00+02:00");
             EventDateTime start = new EventDateTime()
                     .setDateTime(startDateTime)
                     .setTimeZone("Europe/Amsterdam");
             event.setStart(start);
 
-            DateTime endDateTime = new DateTime(insert3+"T"+insert5+":00+00:00");
+            DateTime endDateTime = new DateTime(insert3+"T"+insert5+":00+02:00");
             EventDateTime end = new EventDateTime()
                     .setDateTime(endDateTime)
                     .setTimeZone("Europe/Amsterdam");
