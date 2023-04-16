@@ -14,7 +14,3 @@ Action  <DAY>  Saturday  There are no lectures on Saturday
 Action  <DAY>  Monday  <TIME>  9  We start the week with math
 Action  <DAY>  Monday  <TIME>  11  On Monday noon we have Theoretical Computer Science
 Action  I have no idea
-Question  how do i get from <A> to <B>?
-Slot  <A>  new york
-Slot  <B>  maastricht
-Action  <A>  new york  <B>  maastricht  boom
