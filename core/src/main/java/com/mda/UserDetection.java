@@ -53,7 +53,7 @@ public class UserDetection {
         webcam.open();
 
         try {
-            ImageIO.write(webcam.getImage(), "PNG", new File("core/src/main/java/com/mda/Images/test2.png"));
+            ImageIO.write(webcam.getImage(), "PNG", new File("core\\src\\main\\resources\\com\\mda\\Camera\\screenshot.png"));
         } catch (IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
