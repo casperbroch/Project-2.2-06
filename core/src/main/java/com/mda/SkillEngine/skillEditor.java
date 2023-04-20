@@ -1,4 +1,4 @@
-package com.mda.SkillEngine;
+package com.mda.Engine;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -7,7 +7,7 @@ import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.mda.GUI.App;
+import com.mda.App;
 
 
 public class skillEditor {

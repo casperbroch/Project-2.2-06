@@ -1,4 +1,4 @@
-package com.mda.GUI;
+package com.mda;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.lang.Thread.State;
@@ -9,13 +9,10 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.ResourceBundle;
-
-import com.mda.GoogleEngine.CalendarConnection;
-import com.mda.SkillEngine.Slot;
-import com.mda.SkillEngine.skillEditor;
-import com.mda.SkillEngine.skillScanner;
-import com.mda.SpellingEngines.wordsuggestion.SymSpell;
-
+import com.mda.Engine.Slot;
+import com.mda.Engine.skillEditor;
+import com.mda.Engine.skillScanner;
+import com.mda.wordsuggestion.SymSpell;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;

@@ -1,4 +1,4 @@
-package com.mda.SpellingEngines.wordsuggestion;
+package com.mda.wordsuggestion;
 
 import java.util.List;
 

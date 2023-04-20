@@ -1,4 +1,4 @@
-package com.mda.SkillEngine;
+package com.mda;
 
 public class Responder {
     int state = 0;

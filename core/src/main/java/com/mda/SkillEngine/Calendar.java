@@ -1,4 +1,4 @@
-package com.mda.SkillEngine;
+package com.mda.Engine;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
