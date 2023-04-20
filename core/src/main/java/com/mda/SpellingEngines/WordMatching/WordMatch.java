@@ -1,4 +1,4 @@
-package com.mda.WordMatching;
+package com.mda.SpellingEngines.WordMatching;
 
 // This is more robust with longer inputs (think: less susceptible to outliers)
 public class WordMatch {

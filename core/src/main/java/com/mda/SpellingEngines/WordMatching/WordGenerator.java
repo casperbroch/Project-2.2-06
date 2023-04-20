@@ -1,4 +1,4 @@
-package com.mda.WordMatching;
+package com.mda.SpellingEngines.WordMatching;
 
 import java.util.Random;
 

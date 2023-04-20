@@ -1,4 +1,4 @@
-package com.mda.wordsuggestion;
+package com.mda.SpellingEngines.wordsuggestion;
 
 import java.io.IOException;
 import java.util.*;

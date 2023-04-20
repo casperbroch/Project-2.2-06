@@ -1,4 +1,4 @@
-package com.mda.Engine;
+package com.mda.SkillEngine;
 
 public abstract class Node {
     String name;

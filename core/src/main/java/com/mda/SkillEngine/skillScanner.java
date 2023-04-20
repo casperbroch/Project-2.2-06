@@ -1,4 +1,4 @@
-package com.mda.Engine;
+package com.mda.SkillEngine;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -9,8 +9,8 @@ import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.mda.App;
-import com.mda.WordMatching.WordMatch;
+import com.mda.GUI.App;
+import com.mda.SpellingEngines.WordMatching.WordMatch;
 
 import java.io.BufferedReader;
 
