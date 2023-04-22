@@ -12,7 +12,7 @@ import com.github.sarxos.webcam.WebcamResolution;
 // Tutorial by Genuine Coder on YouTube
 
 public class UserDetection {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
         Webcam webcam = Webcam.getDefault();
 
         webcam.addWebcamListener(new WebcamListener() {
@@ -53,7 +53,11 @@ public class UserDetection {
         webcam.open();
 
         try {
-            ImageIO.write(webcam.getImage(), "PNG", new File("core/src/main/java/com/mda/Images/test2.png"));
+            while(true) {
+                // Takes an image every second
+                ImageIO.write(webcam.getImage(), "PNG", new File("core/src/main/java/com/mda/Images/input.png"));
+                Thread.sleep(1000);
+            }
         } catch (IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
