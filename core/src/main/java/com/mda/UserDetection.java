@@ -3,6 +3,7 @@ package com.mda;
 import java.io.File;
 import java.io.IOException;
 import java.awt.Dimension;
+import java.awt.image.BufferedImage;
 import javax.imageio.ImageIO;
 import com.github.sarxos.webcam.Webcam;
 import com.github.sarxos.webcam.WebcamEvent;
@@ -12,6 +13,8 @@ import com.github.sarxos.webcam.WebcamResolution;
 // Tutorial by Genuine Coder on YouTube
 
 public class UserDetection {
+    static int[][] img_old;
+    static int[][] img_new;
     public static void main(String[] args) throws InterruptedException {
         Webcam webcam = Webcam.getDefault();
 
@@ -55,8 +58,19 @@ public class UserDetection {
         try {
             while(true) {
                 // Takes an image every second
-                ImageIO.write(webcam.getImage(), "PNG", new File("core/src/main/java/com/mda/Images/input.png"));
-                Thread.sleep(1000);
+                ImageIO.write(webcam.getImage(), "PNG", new File("core/src/main/java/com/mda/Images/input_new.png"));
+                BufferedImage image = ImageIO.read(new File("core/src/main/java/com/mda/Images/input_new.png"));
+                // Replacing previous image with new image
+                if(img_new != null) {
+                    img_old = img_new;
+                }
+                img_new = new int[640][480];
+                for(int i = 0; i < img_new.length; i++) {
+                    for(int j = 0; j < img_new[0].length; j++) {
+                        img_new[i][j] = image.getRGB(i, j);
+                    }
+                }
+                Thread.sleep(1000); // Can remove depending on processing speed
             }
         } catch (IOException e) {
             // TODO Auto-generated catch block
