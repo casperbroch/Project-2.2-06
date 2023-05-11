@@ -22,6 +22,12 @@
             <artifactId>google-api-services-calendar</artifactId>
             <version>v3-rev20220715-2.0.0</version>
         </dependency>
+      
+        <dependency>
+            <groupId>com.theokanning.openai-gpt3-java</groupId>
+            <artifactId>service</artifactId>
+            <version>0.12.0</version>
+        </dependency>
 
         <dependency>
             <groupId>com.google.oauth-client</groupId>
