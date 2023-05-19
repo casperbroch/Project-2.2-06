@@ -3,7 +3,7 @@ import time
 import uuid
 import cv2
 
-IMAGES_PATH = 'mda/CNN/data/images/'
+IMAGES_PATH = 'mda/Faces/data/images/'
 number_images = 30
 
 cap = cv2.VideoCapture(0)

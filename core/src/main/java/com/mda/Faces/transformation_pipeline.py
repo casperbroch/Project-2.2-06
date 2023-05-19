@@ -1,5 +1,6 @@
 # https://www.youtube.com/watch?v=N_W4EYtsa10
 # https://github.com/nicknochnack/FaceDetection/blob/main/FaceDetection.ipynb
+# Changes 60, 14, 13 images in training, testing, validation sets (respectively) into 3600, 840, 780 images in each
 
 import numpy as np
 import os
