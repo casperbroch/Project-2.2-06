@@ -1,5 +1,8 @@
 package com.mda;
 
+import java.io.File;
+import java.util.Scanner;
+
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -12,9 +15,36 @@ public class App extends Application {
 
     private static Controller controller;
     public static final String TEXTPATH = "core\\src\\main\\java\\com\\mda\\skills.txt";
+    private String[] whitelist = {"Casper", "Marian", "Unknown"};
 
     @Override
     public void start(Stage stage) throws Exception {
+        long start = System.currentTimeMillis();
+        long end = System.currentTimeMillis();
+        boolean notfound=true;
+        while(notfound) {
+            end = System.currentTimeMillis();
+            if((end-start)>=1000) {
+                start = System.currentTimeMillis();
+
+                File file = new File("core/src/main/java/com/mda/Python/Connection.txt");
+                Scanner sc = new Scanner(file);
+                String data = "";
+                while (sc.hasNextLine()) {
+                    data = sc.nextLine();
+                }
+                if(checkName(data)) {
+                    System.out.println("Person found! Running GUI...");
+                    notfound=false;
+                } else if(data.equalsIgnoreCase("loading")){
+                    System.out.println("Hold on tight, Python is loading...");
+                } else {
+                    System.out.println("No person not found! Looking for a person...");
+                }
+                sc.close();
+            } 
+        }
+
         FXMLLoader loader = new FXMLLoader(getClass().getResource("App.fxml"));
         Parent root = loader.load();
         Scene scene = new Scene(root);        
@@ -30,6 +60,15 @@ public class App extends Application {
 
     public static Controller getController() {
         return controller;
+    }
+
+    public boolean checkName(String name) {
+        for(int i=0; i<whitelist.length; i++) {
+            if(whitelist[i].equalsIgnoreCase(name)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public static void main(String[] args) {
