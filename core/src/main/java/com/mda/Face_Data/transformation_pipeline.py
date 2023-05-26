@@ -8,14 +8,14 @@ import albumentations as alb
 
 # # Split into individual changes
 
-# index = 'brightness'
-# augmentor = alb.Compose([alb.RandomBrightnessContrast(brightness_limit=1, always_apply=True)])
+index = 'brightness'
+augmentor = alb.Compose([alb.RandomBrightnessContrast(brightness_limit=1, always_apply=True)])
 
 # index = 'contrast'
 # augmentor = alb.Compose([alb.RandomBrightnessContrast(contrast_limit=1, always_apply=True)])
 
-index = 'rgb'
-augmentor = alb.Compose([alb.RGBShift(r_shift_limit=50, g_shift_limit=50, b_shift_limit=50, always_apply=True)])
+# index = 'rgb'
+# augmentor = alb.Compose([alb.RGBShift(r_shift_limit=50, g_shift_limit=50, b_shift_limit=50, always_apply=True)])
 
 for partition in ['faces', 'rooms']:
     for image in os.listdir(os.path.join(partition)):
