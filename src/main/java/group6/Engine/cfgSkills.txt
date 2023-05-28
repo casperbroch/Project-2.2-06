@@ -31,7 +31,6 @@ Rule <19>
 Rule <20>
 <movse> - 1
 -------------------------------- Actions --------------------------------
-Action <movse> * <a> new york city <b> la - yay
-Action <movse> * <a> new yodasdasdsadadasdty <b> la - yay
+Action <movse> * <a> nyc <b> la - yay
 -------------------------------- Printing --------------------------------
 movse - a to b > a / b / 

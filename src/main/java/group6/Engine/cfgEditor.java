@@ -43,6 +43,32 @@ public class cfgEditor {
         }     
     }
 
+    public ArrayList<String> showSlots(String skill){
+        String[] parts = null;
+        try {
+            BufferedReader readerDel = new BufferedReader(new FileReader(file));
+            String current;
+            int counter = 1;
+            boolean print = false;
+            while((current = readerDel.readLine()) != null) {
+                if (current.startsWith("-------------------------------- Printing --------------------------------")) {
+                    print = true;
+                }
+                if(print && current.startsWith(skill)) {
+                    int parIndex = current.indexOf(">");
+                    parts = (current.substring(parIndex+2).trim().split("/"));
+                    System.out.println(Arrays.toString(parts));
+                }   
+                
+            }
+            readerDel.close();
+        } catch(IOException e) {
+            e.printStackTrace();
+        }
+        ArrayList<String> a = new ArrayList<>(Arrays.asList(parts));
+        return a;
+    } 
+
     public void deleteAction(String actions, int choice){
         String[] parts = actions.split("\n");
 
@@ -263,6 +289,84 @@ public class cfgEditor {
         // Add slots. 
         addSlot(skillName, slots, initial.length-slots.length, skillName);
     } 
+
+    public boolean duplicate(String skill, String actionToadd, ArrayList<String> holders, ArrayList<String> guess){
+        String action = "Action <" + skill + "> *";
+        ArrayList<String> halList = new ArrayList<>(guess.subList(guess.size()/2, guess.size()));
+        for (int index = 0; index < holders.size(); index++) {
+            action += " <" + holders.get(index) + "> " + halList.get(index);
+        }
+        String line = "";
+        try {
+            BufferedReader reader = new BufferedReader(new FileReader(file));
+            boolean actions = false;
+            while ((line = reader.readLine()) != null) {
+                
+                if (actions){
+                    int parIndex = line.indexOf("-");
+                    System.out.println(action);
+                    System.out.println(line.substring(0,parIndex));
+                    if (line.substring(0,parIndex-1).equals(action)) {
+                        return true;
+                    }
+                }
+                if(line.startsWith("-------------------------------- Actions")) {
+                    actions = true;
+                }
+            }
+            reader.close();
+        } catch (Exception e) {}
+        return false;
+    }   
+
+    public void addAction(String skill, String actionToadd, ArrayList<String> holders, ArrayList<String> guess){
+        String action = "Action <" + skill + "> * ";
+        ArrayList<String> halList = new ArrayList<>(guess.subList(guess.size()/2, guess.size()));
+        for (int index = 0; index < holders.size(); index++) {
+            action += "<" + holders.get(index) + "> " + halList.get(index) + " ";
+        }
+        action += "- " + actionToadd;
+        
+        try(FileInputStream fs = new FileInputStream(file)) {
+            BufferedReader br = new BufferedReader(new InputStreamReader(fs));
+            ArrayList<String> lines = new ArrayList<>();
+            String line = "";
+            BufferedReader reader = new BufferedReader(new FileReader(file));
+            while ((line = reader.readLine()) != null) {
+                if (line.startsWith("-------------------------------- Actions")) {
+                    lines.add(line);
+                    lines.add(action);
+                } else lines.add(line);
+                
+            }
+            reader.close();
+            br.close();
+            FileOutputStream fos = new FileOutputStream(file);
+            BufferedWriter bnew = new BufferedWriter(new OutputStreamWriter(fos));
+            for (String str : lines) {
+               bnew.write(str);
+               bnew.newLine();
+            }
+            bnew.close();
+        } catch (Exception e) {}
+    }   
+
+    public ArrayList<String> specificSlot(String placeholder){
+        ArrayList<String> slots = new ArrayList<>(); 
+        String line = "";
+        try {
+            BufferedReader reader;
+            reader = new BufferedReader(new FileReader(file));
+            while ((line = reader.readLine()) != null) {
+                if (line.contains("<"+ placeholder +"Print>")) {
+                    int parIndex = line.indexOf(">");
+                    slots.add(line.substring(parIndex+2)); 
+                }
+            }
+            reader.close();
+        } catch (Exception e) {}
+        return slots;
+    }  
 
     public void addSlot(String rule, String[][] slots, int counter, String skill){
         try {

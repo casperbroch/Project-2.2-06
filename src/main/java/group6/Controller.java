@@ -84,6 +84,7 @@ public class Controller implements Initializable {
     ArrayList<String> actionV;
     private ArrayList<String> actionValues1;
     int actionindex;
+    private ArrayList<String> slots2;
     private String valueSlots;
     private int choiceedit;
     private ArrayList<String> placeHolders;
@@ -136,7 +137,7 @@ public class Controller implements Initializable {
     }
 
     public void init() {
-        skillopening = "Welcome to the Skills application! Do you wish to: \n1) Ask a question\n2) Add a new skill\n3) delete a skill\n4) edit a kill\n5) view a skill\nPlease type 'exit' if you want to exit this application.";
+        skillopening = "Welcome to the Skills application! Do you wish to: \n1) Ask a question\n2) Add a new skill\n3) Delete a skill\n4) Edit a skill\n5) View a skill\nPlease type 'exit' if you want to exit this application.";
         googleopening = "Welcome to the Google Calendar application! Do you wish to: \n1) Insert an event\n2) Delete an event\n3) Fetch next 10 events\n4) Find a specific event\n5) Fetch events on a specific date\nPlease type 'exit' if you want to exit this application.";
         try {
             sp = new SymSpell();
@@ -299,7 +300,7 @@ public class Controller implements Initializable {
                             choiceedit = Integer.parseInt(message);
 
                             if(choiceedit <= skillamounte) {
-                                response = "What action would you like to take?\n1) Add an action\n 2) Delete an action";
+                                response = "What action would you like to take?\n1) Add an action\n2) Delete an action";
                                 STATE = USERSTATE.SKILLE2;
                                 break;
                             } else {
@@ -336,12 +337,17 @@ public class Controller implements Initializable {
                             actionindex=0;
                             addedaction = message;
                             ArrayList<String> questionA1 = cfgEditor.getSkillQuestions();
-                            actionT = skillEditor.showSlots(questionA1.get(choiceedit-1));
+                            String ab5 = questionA1.get(choiceedit-1);
+                            int parIndex5 = ab5.indexOf(")");
+                            String okay5 = ab5.substring(parIndex5+2, ab5.length()).trim();
+
+
+                            actionT = cfgEditor.showSlots(okay5);
                             response = "To which slot(s) does this action belong to? If the action belongs to multiple slots, type both numbers seperated by a ',' (e.g. 1,2,3).\nChoose from the available options below:\n";
 
                             String a2 = new String();
                             for(int i=0; i<actionT.size(); i++) {
-                                a2 = a2+(i+1)+") "+actionT.get(i)+"\n";
+                                a2 = a2+(i+1)+") "+actionT.get(i).trim()+"\n";
                             }
 
                             response = response + a2;
@@ -358,36 +364,44 @@ public class Controller implements Initializable {
                                 actionNumsOrdered.add(Integer.parseInt(string));
                             }
                             Collections.sort(actionNumsOrdered);
+
                             actionV = new ArrayList<>(); 
                             for (String string : actionNums) {
-                                actionValues1.add(actionT.get(actionNumsOrdered.get(cnt)-1));
+                                actionValues1.add(actionT.get(actionNumsOrdered.get(cnt)-1).trim());
                                 cnt++;
                             }
-                            response = "What is the value of slot " + actionValues1.get(actionindex) +"? \n"+skillEditor.printSlotsSpecasString(questionA3.get(choiceedit-1), actionValues1.get(actionindex));
+                            System.out.println(actionValues1.toString());
+                            slots2 = new ArrayList<>();
+
+                            response = "What is the value of slot " + actionValues1.get(actionindex) +"? \n" + cfgEditor.specificSlot(actionValues1.get(actionindex));
+                            slots2.add(message);
                             STATE = USERSTATE.SKILLEAddA3;
                             break;
 
                         case SKILLEAddA3:
                             ArrayList<String> questionA2 = cfgEditor.getSkillQuestions();
-                            ArrayList<String> slots2 = skillEditor.printSlotsSpec(questionA2.get(choiceedit-1), actionValues1.get(actionindex));
                             actionindex++;
-                            actionV.add(slots2.get(Integer.parseInt(message)-1));
-
+                            slots2.add(message);
+                            //actionV.add(slots2.get(Integer.parseInt(message)-1));
+                            ArrayList<String> questionA6 = cfgEditor.getSkillQuestions();
+                            String ab6 = questionA6.get(choiceedit-1);
+                            int parIndex6 = ab6.indexOf(")");
+                            String okay6 = ab6.substring(parIndex6+2, ab6.length()).trim();
                             if(actionindex>=actionValues1.size()) {
-                                if(skillEditor.duplicateAction(questionA2.get(choiceedit-1), addedaction, actionValues1, actionV)) {
+                                if(cfgEditor.duplicate(okay6, addedaction, actionValues1, slots2)) {
                                     response = "That action already exists, please retry.\nWhat do you want to add as an action?";
                                     STATE = USERSTATE.SKILLEAddA1;
                                 } else {
-                                    skillEditor.removeEmptyLines();
+                                    cfgEditor.removeEmptyLines();
                                     if(!editing){
                                         skillEditor.addActionNewSkill(questionA2.get(choiceedit-1), addedaction, actionValues1, actionV); 
-                                    } else skillEditor.addAction(questionA2.get(choiceedit-1), addedaction, actionValues1, actionV); 
+                                    } else cfgEditor.addAction(okay6, addedaction, actionValues1, slots2); 
                                     editing = false;
                                     response = skillopening;
                                     STATE = USERSTATE.SKILLHOME;
                                 }
                             } else {
-                                response = "What is the value of slot " + actionValues1.get(actionindex) +"? \n"+skillEditor.printSlotsSpecasString(questionA2.get(choiceedit-1), actionValues1.get(actionindex));
+                                response = "What is the value of slot " + actionValues1.get(actionindex) +"? \n"  + cfgEditor.specificSlot(actionValues1.get(actionindex));
                             }
                             break;
 
