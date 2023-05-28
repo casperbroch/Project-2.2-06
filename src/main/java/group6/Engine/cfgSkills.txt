@@ -1,9 +1,17 @@
 -------------------------------- Non-Terminals --------------------------------
-Rule <action> <movse> | <movse> |
+Rule <action> <movse> | <movse> | <movse> |
+Rule <movse>  <a1> <movse2> | <a> <movse2> | 
+Rule <movse2> <2> <b> | <2> <b1>
 -------------------------------- Terminals --------------------------------
-Rule <1>  a | a | e | a |
-Rule <2>  to | to | to | to |
-Rule <3>   b | b | v | b |
+Rule <a> <a1> <a1> | <a1> <a>
+movseRule <aPrint> nyc |  new york city |  la |  one |  one hand | 
+Rule <a1> nyc | new | york | city | la | one | one | hand | 
+Rule <b> <b1> <b1> | <b1> <b>
+movseRule <bPrint> nyc |  new york city |  la |  one |  one hand | 
+Rule <b1> nyc | new | york | city | la | one | one | hand | 
+Rule <1>  a | a | e | a | a |
+Rule <2>  to | to | to | to | to |
+Rule <3>   b | b | v | b | b |
 Rule <4> 
 Rule <5>
 Rule <6>
@@ -21,5 +29,8 @@ Rule <17>
 Rule <18>
 Rule <19>
 Rule <20>
+<movse> - 1
 -------------------------------- Actions --------------------------------
+Action <movse> * <a> new york city <b> la - yay
 -------------------------------- Printing --------------------------------
+movse - a to b > a / b / 

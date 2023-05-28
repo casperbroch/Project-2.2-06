@@ -22,8 +22,8 @@ public class cfgScanner {
     public cfgScanner() throws FileNotFoundException{
         String os = System.getProperty("os.name").toLowerCase();
         if (os.contains("win")){
-            file = new File("src/cfgSkills.txt");
-            fileName = ("src/cfgSkills.txt");
+            file = new File("src\\main\\java\\group6\\Engine\\cfgSkills.txt");
+            fileName = ("src\\main\\java\\group6\\Engine\\cfgSkills.txt");
         } else if (os.contains("os x")){
             file = new File("src/cfgSkills.txt");
             fileName = ("src/cfgSkills.txt");
