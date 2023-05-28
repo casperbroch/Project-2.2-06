@@ -37,7 +37,7 @@ public class App extends Application {
                     System.out.println("Person found! Running GUI...");
                     notfound=false;
                 } else if(data.equalsIgnoreCase("loading")){
-                    System.out.println("Hold on tight, Python is loading...");
+                    System.out.println("Hold on tight, Python is loading & looking for a person...");
                 } else {
                     System.out.println("No person not found! Looking for a person...");
                 }
