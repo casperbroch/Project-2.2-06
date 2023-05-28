@@ -16,11 +16,11 @@ import java.util.regex.Pattern;
 
 public class cykAlgorithm {
     public String output;
-    private File file = new File("src/cfgSkills.txt");
+    private File file = new File("src\\main\\java\\group6\\Engine\\cfgSkills.txt");
     private ArrayList<String> [][] cykTable;
     public static void main(String[] args) throws FileNotFoundException {
         cykAlgorithm test = new cykAlgorithm();
-        test.cykRun("new york city to one hand.");
+        test.cykRun("new york city to la.");
     }
 
     /*

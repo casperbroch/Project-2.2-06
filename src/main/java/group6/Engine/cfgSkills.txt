@@ -1,13 +1,9 @@
 -------------------------------- Non-Terminals --------------------------------
-Rule <action> <movse> |
+Rule <action> <movse> | <movse> |
 -------------------------------- Terminals --------------------------------
-Rule <a> <a1> <a1> | <a1> <a>
-Rule <a1> nyc | new | york | city | la | one | one | hand | 
-Rule <b> <b1> <b1> | <b1> <b>
-Rule <b1> nyc | new | york | city | la | one | one | hand | 
-Rule <1>  a |
-Rule <2>  to |
-Rule <3>   b |
+Rule <1>  a | a | e | a |
+Rule <2>  to | to | to | to |
+Rule <3>   b | b | v | b |
 Rule <4> 
 Rule <5>
 Rule <6>
