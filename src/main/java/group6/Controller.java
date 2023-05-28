@@ -448,8 +448,10 @@ public class Controller implements Initializable {
 
                             if(choicev <= skillamountv) {
                                 ArrayList<String> questions = cfgEditor.getSkillQuestions();
-                                System.out.println(questions.toString());
-                                response = questions.get(choicev-1) + "\n" + cfgEditor.getSlots(questions.get(choicev-1)) + "\n" + cfgEditor.getActions(questions.get(choicev-1));
+                                String ab = questions.get(choicev-1);
+                                int parIndex = ab.indexOf(")");
+                                String okay = ab.substring(parIndex+2, ab.length()).trim();
+                                response = "Skill: " + questions.get(choicev-1).substring(parIndex+2, ab.length()).trim() + "\n"+ "\n" + cfgEditor.getSlots(okay) + "\n" + cfgEditor.getActions(okay);
                                 response = response + "\n"+skillopening;
                                 STATE = USERSTATE.SKILLHOME;
                                 break;
@@ -472,8 +474,12 @@ public class Controller implements Initializable {
                             
                             if(choiced <= skillamountd) {
                                 ArrayList<String> questions = cfgEditor.getSkillQuestions();
-                                skillEditor.deleteSkill(questions.get(choiced-1));
-                                response = "Skill removed!+\n"+skillopening;
+                                String ab = questions.get(choiced-1);
+                                int parIndex = ab.indexOf(")");
+                                String okay = ab.substring(parIndex+2, ab.length()).trim();
+
+                                cfgEditor.deleteSkill(okay);
+                                response = "Skill removed! \n \n"+ skillopening;
                                 STATE = USERSTATE.SKILLHOME;
                                 break;
                             } else {

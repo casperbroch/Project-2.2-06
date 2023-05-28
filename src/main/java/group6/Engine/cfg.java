@@ -1,3 +1,5 @@
+package group6.Engine;
+
 /*
  * This class gets newly created skills and adds them into to the existing CFG. 
  * Also responsible for generating different ways of asking the same question. 

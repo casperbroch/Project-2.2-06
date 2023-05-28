@@ -32,8 +32,11 @@ public class cfgEditor {
         test.addAction("movse", "yay", slotsInput); 
         System.out.println(test.showskills()); 
         */
-        System.out.println(test.getSlots(test.getSkillQuestions().get(0)));
 
+        String a = test.getSkillQuestions().get(0);
+        int parIndex = a.indexOf(")");
+        String okay = a.substring(parIndex+2, a.length()).trim();
+        System.out.println(test.getSlots(okay));
     }
    
     public cfgEditor(){
@@ -92,7 +95,6 @@ public class cfgEditor {
                 if(print && !line.startsWith("-------------------------------- Printing")){
                     int dashIndex = line.indexOf("-");
                     String output = line.substring(0, dashIndex - 1).trim();
-                    System.out.println(output);
                     a = counter + ") " + output +"\n";
                     questions.add(a);
                     counter++;
@@ -105,26 +107,21 @@ public class cfgEditor {
     }
 
     public String getSlots(String skill){
-        String a = "";
-        int parIndex = skill.indexOf(")");
-        skill = skill.substring(parIndex+2, skill.length());
-        
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append(skill);
-        stringBuilder.append("Rule");
-        
-        String test = stringBuilder.toString();
-
-        ArrayList<String> slots = new ArrayList<>();
+        String a = new String(); 
         try {
             BufferedReader readerDel = new BufferedReader(new FileReader(file));
             String current;
             int counter = 1;
             while((current = readerDel.readLine()) != null) {
-                System.out.println(test);
-                if(current.startsWith(test)){
-                    a = a + counter+ ") " +  current + "\n";
-                    counter++;
+                if(current.startsWith(skill)){
+                    int startIndex = current.indexOf('<');
+                    if(startIndex != -1){
+                        a = a + "Slot: " +  current.substring(startIndex, current.length()) + "\n";
+                        counter++;
+                    }else {
+                        a = a + "Slot: " +  current + "\n";
+                        counter++;
+                    }
                    
                 }
             }
@@ -132,7 +129,6 @@ public class cfgEditor {
         } catch(IOException e) {
             e.printStackTrace();
         }
-        System.out.println(a);
         return a;
     }
 
@@ -146,7 +142,7 @@ public class cfgEditor {
             int counter = 1;
             while((current = readerDel.readLine()) != null) {
                 if(current.startsWith("Action <"+skill+">")){
-                    a = a + counter+ ") " +  current + "\n";
+                    a = a + "Action: " +  current.substring(11+skill.length(), current.length()) + "\n";
                     counter++;
                 }
             }
@@ -376,9 +372,11 @@ public class cfgEditor {
         } catch (IOException e) {}
     }
     
-    public List<String> showskills() {
+    public String showskills() {
         String line = "";
+        String a = "";
         List<String> skills = new ArrayList<>();
+        int counter = 1;
         try {
             BufferedReader reader;
             reader = new BufferedReader(new FileReader(file));
@@ -387,11 +385,37 @@ public class cfgEditor {
                 if (line.startsWith("-------------------------------- Printing --------------------------------")) {
                     print = true;
                 }
-                if(print && !line.startsWith("-------------------------------- Printing")) skills.add(line);
+                if(print && !line.startsWith("-------------------------------- Printing")) {
+                    a = (counter + ") "+ line + "\n");
+                    counter++;
+                }
             }
             reader.close();
         } catch (Exception e) {}
-        return skills;
+        return a;
+    }
+
+    public void deleteSkill(String skill){
+        try {
+            String current = "";
+            BufferedReader readerDel1 = new BufferedReader(new FileReader(file));
+            StringBuilder stringBuilder1 = new StringBuilder();
+            while((current = readerDel1.readLine()) != null) {
+                if(current.startsWith(skill) || current.startsWith("<"+skill+">") || current.startsWith("Action <"+skill+">") || current.startsWith("Rule <"+skill)){
+                   
+                } else{
+                    stringBuilder1.append(current);
+                    stringBuilder1.append(System.getProperty("line.separator"));
+                } 
+                
+            }
+            readerDel1.close();
+            FileWriter writerDel1 = new FileWriter(file);
+            writerDel1.write(stringBuilder1.toString());
+            writerDel1.close();
+        } catch(IOException e) {
+            e.printStackTrace();
+        }
     }
 
 
