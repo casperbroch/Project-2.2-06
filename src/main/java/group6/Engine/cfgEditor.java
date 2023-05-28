@@ -25,11 +25,15 @@ public class cfgEditor {
 
     public static void main(String[] args) throws FileNotFoundException {
         cfgEditor test = new cfgEditor();
+        /* and 
         String[][] slots = {{"a", "nyc", "new york city", "la", "one", "one hand"}, {"b", "nyc", "new york city", "la", "one", "one hand"}};
         test.inputSentence("a to b", "movse", slots);
-        //String[][] slotsInput = {{"a", "new york city"}, {"b", "la"}};
-        //test.addAction("movse", "yay", slotsInput); 
+        String[][] slotsInput = {{"a", "new york city"}, {"b", "la"}};
+        test.addAction("movse", "yay", slotsInput); 
         System.out.println(test.showskills()); 
+        */
+        System.out.println(test.getSlots(test.getSkillQuestions().get(0)));
+
     }
    
     public cfgEditor(){
@@ -86,8 +90,11 @@ public class cfgEditor {
                     print = true;
                 }
                 if(print && !line.startsWith("-------------------------------- Printing")){
-                    a = a + counter + ") " + line +"\n";
-                    questions.add(line);
+                    int dashIndex = line.indexOf("-");
+                    String output = line.substring(0, dashIndex - 1).trim();
+                    System.out.println(output);
+                    a = counter + ") " + output +"\n";
+                    questions.add(a);
                     counter++;
                 }
             }
@@ -99,16 +106,26 @@ public class cfgEditor {
 
     public String getSlots(String skill){
         String a = "";
+        int parIndex = skill.indexOf(")");
+        skill = skill.substring(parIndex+2, skill.length());
+        
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append(skill);
+        stringBuilder.append("Rule");
+        
+        String test = stringBuilder.toString();
+
         ArrayList<String> slots = new ArrayList<>();
         try {
             BufferedReader readerDel = new BufferedReader(new FileReader(file));
             String current;
             int counter = 1;
             while((current = readerDel.readLine()) != null) {
-                if(current.startsWith(skill)){
+                System.out.println(test);
+                if(current.startsWith(test)){
                     a = a + counter+ ") " +  current + "\n";
                     counter++;
-                    System.out.println(a);
+                   
                 }
             }
             readerDel.close();

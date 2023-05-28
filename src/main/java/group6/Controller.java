@@ -448,6 +448,7 @@ public class Controller implements Initializable {
 
                             if(choicev <= skillamountv) {
                                 ArrayList<String> questions = cfgEditor.getSkillQuestions();
+                                System.out.println(questions.toString());
                                 response = questions.get(choicev-1) + "\n" + cfgEditor.getSlots(questions.get(choicev-1)) + "\n" + cfgEditor.getActions(questions.get(choicev-1));
                                 response = response + "\n"+skillopening;
                                 STATE = USERSTATE.SKILLHOME;
