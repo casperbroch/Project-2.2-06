@@ -12,7 +12,10 @@ import java.util.List;
 import java.util.ResourceBundle;
 import group6.Engine.Slot;
 import group6.Engine.skillEditor;
+import group6.Engine.cfgEditor;
 import group6.Engine.skillScanner;
+import group6.Engine.cykAlgorithm;
+import group6.Engine.cfgScanner;
 import group6.wordsuggestion.SymSpell;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -69,7 +72,10 @@ public class Controller implements Initializable {
     private String skillopening;
     private String googleopening;
     private skillScanner skillScanner;
+    private cfgScanner cfgScanner;
     private skillEditor skillEditor;
+    private cykAlgorithm cykAlg = new cykAlgorithm();;
+    private cfgEditor cfgEditor = new cfgEditor();;
     private String prototype;
     private String addedslot;
     private String addedaction;
@@ -264,18 +270,18 @@ public class Controller implements Initializable {
                             } else if (message.equalsIgnoreCase("3")) {
                                 // ? input 3 leads the user to the deleting of a skill state
                                 try {
-                                    response = "Which skill would you like to delete?\n"+ skillEditor.showskills();
+                                    response = "Which skill would you like to delete?\n"+ cfgEditor.showskills();
                                 } catch (Exception e) {}
                                 STATE = USERSTATE.SKILLD1;
                             } else if (message.equalsIgnoreCase("4")) {
                                 // ? input 4 leads the user to the editing of a skill state
-                                response = "Which skill would you like to edit?\n"+ skillEditor.showskills();
+                                response = "Which skill would you like to edit?\n"+ cfgEditor.showskills();
                                 STATE = USERSTATE.SKILLE1;
 
                             } else if (message.equalsIgnoreCase("5")) {
                                 // ? input 5 leads the user to the viewing of a skill state
                                 try {
-                                    response = "Which skill would you like to view?\n"+ skillEditor.showskills();
+                                    response = "Which skill would you like to view?\n"+ cfgEditor.showskills();
                                 } catch (Exception e) {}
                                 STATE = USERSTATE.SKILLV1;
                             } else if(message.equalsIgnoreCase("exit")) {
@@ -289,7 +295,7 @@ public class Controller implements Initializable {
                                 STATE = USERSTATE.SKILLHOME;
                                 break;
                             }
-                            int skillamounte = skillEditor.getSkillAmount();
+                            int skillamounte = cfgEditor.getSkillAmount();
                             choiceedit = Integer.parseInt(message);
 
                             if(choiceedit <= skillamounte) {
@@ -316,11 +322,11 @@ public class Controller implements Initializable {
                                 editing = true;
                                 STATE = USERSTATE.SKILLEAddA1;
                             } else if (message.equalsIgnoreCase("3")) {
-                                ArrayList<String> questions = skillEditor.getSkillQuestions();
+                                ArrayList<String> questions = cfgEditor.getSkillQuestions();
                                 response = "Which slot would you like to delete ?\n"+skillEditor.getSlots(questions.get(choiceedit-1));
                                 STATE = USERSTATE.SKILLEDelS;
                             } else if (message.equalsIgnoreCase("4")) {
-                                ArrayList<String> questions = skillEditor.getSkillQuestions();
+                                ArrayList<String> questions = cfgEditor.getSkillQuestions();
                                 response = "Which action would you like to delete ?\n"+skillEditor.getActions(questions.get(choiceedit-1));
                                 STATE = USERSTATE.SKILLEDelA;
                             }
@@ -331,7 +337,7 @@ public class Controller implements Initializable {
                             actionValues1 = new ArrayList<>();
                             actionindex=0;
                             addedaction = message;
-                            ArrayList<String> questionA1 = skillEditor.getSkillQuestions();
+                            ArrayList<String> questionA1 = cfgEditor.getSkillQuestions();
                             actionT = skillEditor.showSlots(questionA1.get(choiceedit-1));
                             response = "To which slot(s) does this action belong to? If the action belongs to multiple slots, type both numbers seperated by a ',' (e.g. 1,2,3).\nChoose from the available options below:\n";
 
@@ -345,7 +351,7 @@ public class Controller implements Initializable {
                             break;
 
                         case SKILLEAddA2:
-                            ArrayList<String> questionA3 = skillEditor.getSkillQuestions();
+                            ArrayList<String> questionA3 = cfgEditor.getSkillQuestions();
                             int cnt = 0;
                             
                             ArrayList<String> actionNums = new ArrayList<>(Arrays.asList(message.split("[^a-zA-Z0-9]+")));
@@ -364,7 +370,7 @@ public class Controller implements Initializable {
                             break;
 
                         case SKILLEAddA3:
-                            ArrayList<String> questionA2 = skillEditor.getSkillQuestions();
+                            ArrayList<String> questionA2 = cfgEditor.getSkillQuestions();
                             ArrayList<String> slots2 = skillEditor.printSlotsSpec(questionA2.get(choiceedit-1), actionValues1.get(actionindex));
                             actionindex++;
                             actionV.add(slots2.get(Integer.parseInt(message)-1));
@@ -389,7 +395,7 @@ public class Controller implements Initializable {
 
                         case SKILLEAddS1:
                             addedslot = message;
-                            ArrayList<String> questionsas = skillEditor.getSkillQuestions();
+                            ArrayList<String> questionsas = cfgEditor.getSkillQuestions();
                             ArrayList<String> slotslist = skillEditor.showSlots(questionsas.get(choiceedit-1));
                             String a = new String();
                             for(int i=0; i<slotslist.size(); i++) {
@@ -402,7 +408,7 @@ public class Controller implements Initializable {
 
                         case SKILLEAddS2:
                             int choiceadds = Integer.parseInt(message);
-                            ArrayList<String> questionsas2 = skillEditor.getSkillQuestions();
+                            ArrayList<String> questionsas2 = cfgEditor.getSkillQuestions();
                             ArrayList<String> slots = skillEditor.showSlots(questionsas2.get(choiceedit-1));
                             if(skillEditor.duplicateSlot(questionsas2.get(choiceedit-1), addedslot, slots.get(choiceadds-1))) {
                                 response = "That slot already exists, please retry.";
@@ -414,7 +420,7 @@ public class Controller implements Initializable {
                             break;
 
                         case SKILLEDelA:
-                            ArrayList<String> questionsdela = skillEditor.getSkillQuestions();
+                            ArrayList<String> questionsdela = cfgEditor.getSkillQuestions();
                             ArrayList<String> actionsdela = skillEditor.printActions(questionsdela.get(choiceedit-1));
                             int choicedela = Integer.parseInt(message);
                             skillEditor.deleteAction(questionsdela.get(choiceedit-1), actionsdela.get(choicedela-1));
@@ -423,7 +429,7 @@ public class Controller implements Initializable {
                             break;
 
                         case SKILLEDelS:
-                            ArrayList<String> questionsdels = skillEditor.getSkillQuestions();
+                            ArrayList<String> questionsdels = cfgEditor.getSkillQuestions();
                             ArrayList<String> slotsdels = skillEditor.printSlots(questionsdels.get(choiceedit-1));
                             int choicedels = Integer.parseInt(message);
                             skillEditor.deleteSlot(questionsdels.get(choiceedit-1), slotsdels.get(choicedels-1));
@@ -437,12 +443,12 @@ public class Controller implements Initializable {
                                 STATE = USERSTATE.SKILLHOME;
                                 break;
                             }
-                            int skillamountv = skillEditor.getSkillAmount();
+                            int skillamountv = cfgEditor.getSkillAmount();
                             int choicev = Integer.parseInt(message);
 
                             if(choicev <= skillamountv) {
-                                ArrayList<String> questions = skillEditor.getSkillQuestions();
-                                response = questions.get(choicev-1) + "\n" + skillEditor.getSlots(questions.get(choicev-1)) + "\n" + skillEditor.getActions(questions.get(choicev-1));
+                                ArrayList<String> questions = cfgEditor.getSkillQuestions();
+                                response = questions.get(choicev-1) + "\n" + cfgEditor.getSlots(questions.get(choicev-1)) + "\n" + cfgEditor.getActions(questions.get(choicev-1));
                                 response = response + "\n"+skillopening;
                                 STATE = USERSTATE.SKILLHOME;
                                 break;
@@ -460,11 +466,11 @@ public class Controller implements Initializable {
                                 break;
                             }
 
-                            int skillamountd = skillEditor.getSkillAmount();
+                            int skillamountd = cfgEditor.getSkillAmount();
                             int choiced = Integer.parseInt(message);
                             
                             if(choiced <= skillamountd) {
-                                ArrayList<String> questions = skillEditor.getSkillQuestions();
+                                ArrayList<String> questions = cfgEditor.getSkillQuestions();
                                 skillEditor.deleteSkill(questions.get(choiced-1));
                                 response = "Skill removed!+\n"+skillopening;
                                 STATE = USERSTATE.SKILLHOME;
@@ -538,7 +544,7 @@ public class Controller implements Initializable {
                                 STATE = USERSTATE.SKILLA6;
                             } else if (message.equalsIgnoreCase("2")){
                                 response = "Please type an action you would like to add";
-                                ArrayList<String> questions = skillEditor.getSkillQuestions();
+                                ArrayList<String> questions = cfgEditor.getSkillQuestions();
                                 choiceedit = questions.size();
                                 STATE = USERSTATE.SKILLEAddA1;
                             } else {
@@ -556,7 +562,7 @@ public class Controller implements Initializable {
                                 e.printStackTrace();
                             }
                             response = "Please type an action you would like to add.\n(e.g. The distance is 101 km.)";
-                            ArrayList<String> questions2 = skillEditor.getSkillQuestions();
+                            ArrayList<String> questions2 = cfgEditor.getSkillQuestions();
                             choiceedit = questions2.size();
                             STATE = USERSTATE.SKILLEAddA1;
                             break;
@@ -567,8 +573,14 @@ public class Controller implements Initializable {
                                 response = skillopening;
                                 STATE = USERSTATE.SKILLHOME;
                             } else {
-                                String sentence = "Question  " + message;
-                                response = skillScanner.scanSkill(sentence)+ "\n\nYou can now ask another question, want to go back to the skill application menu? Type 'exit'.";
+                                String sentence = message;
+                                try {
+                                    cykAlg.cykRun(sentence);
+                                } catch (FileNotFoundException e) {
+                                    // TODO Auto-generated catch block
+                                    e.printStackTrace();
+                                }
+                                response = cykAlg.output + "\n\nYou can now ask another question, want to go back to the skill application menu? Type 'exit'.";
                                 STATE = USERSTATE.SKILLQ1;
                             }
                         
