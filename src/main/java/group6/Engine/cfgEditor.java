@@ -301,11 +301,9 @@ public class cfgEditor {
             BufferedReader reader = new BufferedReader(new FileReader(file));
             boolean actions = false;
             while ((line = reader.readLine()) != null) {
-                
+
                 if (actions){
                     int parIndex = line.indexOf("-");
-                    System.out.println(action);
-                    System.out.println(line.substring(0,parIndex));
                     if (line.substring(0,parIndex-1).equals(action)) {
                         return true;
                     }
