@@ -17,7 +17,7 @@ def face_detection_opencv(img):
 xml_file = "lbpcascade_frontalface.xml"
 classifier = cv2.CascadeClassifier(xml_file)
 
-for partition in ['faces', 'rooms']:
+for partition in ['animals', 'faces', 'rooms']:
     for category in ['brightness', 'contrast', 'rgb']:
         counter = 0
         start_time = time.time()

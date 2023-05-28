@@ -6,8 +6,6 @@ import time
 
 
 def face_detection_nn(img):
-    mtcnn = MTCNN(image_size=640, margin=480)
-    resnet = InceptionResnetV1(pretrained='vggface2').eval()
     img = Image.fromarray(cv2.cvtColor(img, cv2.COLOR_BGR2RGB))
     boxes, _ = mtcnn.detect(img)
     if boxes is not None:
@@ -16,7 +14,10 @@ def face_detection_nn(img):
         return False
 
 
-for partition in ['faces', 'rooms']:
+mtcnn = MTCNN(image_size=640, margin=480)
+resnet = InceptionResnetV1(pretrained='vggface2').eval()
+
+for partition in ['animals', 'faces', 'rooms']:
     for category in ['brightness', 'contrast', 'rgb']:
         counter = 0
         start_time = time.time()
@@ -33,6 +34,6 @@ for partition in ['faces', 'rooms']:
             # 45 pictures of faces per category
             accuracy = counter / 45
         else:
-            # 15 pictures of rooms per category
+            # 15 pictures of rooms/animals per category
             accuracy = (15-counter)/15
         print('The accuracy for', partition, 'in category', category, 'is', accuracy, 'after', duration, 'seconds.')
