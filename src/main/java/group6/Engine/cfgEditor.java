@@ -43,6 +43,40 @@ public class cfgEditor {
         }     
     }
 
+    public void deleteAction(String actions, int choice){
+        String[] parts = actions.split("\n");
+
+        try {
+            FileInputStream fs = new FileInputStream(file);
+            BufferedReader br = new BufferedReader(new InputStreamReader(fs));
+            ArrayList<String> lines = new ArrayList<>();
+            String current;
+            boolean print = true;
+            while((current = br.readLine()) != null) {
+                boolean copy = true;
+                int dashIndex = current.indexOf("*");
+                if(dashIndex != -1){
+                    if(parts[choice-1].substring(9).trim().equalsIgnoreCase(current.trim().substring(dashIndex+2, current.length()))){
+                        System.out.println("yay");
+                        copy = false;
+                    } 
+                }
+                if(copy) lines.add(current);
+                
+            }
+            br.close();
+            FileOutputStream fos = new FileOutputStream(file);
+            BufferedWriter bnew = new BufferedWriter(new OutputStreamWriter(fos));
+            for (String str : lines) {
+               bnew.write(str);
+               bnew.newLine();
+            }
+            bnew.close();
+        } catch(IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     public void arrangePrint(String input, String skillName, String[][] slots){
         try {
             FileInputStream fs = new FileInputStream(file);

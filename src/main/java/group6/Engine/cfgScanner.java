@@ -8,8 +8,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import java.io.BufferedReader;
 
 public class cfgScanner {
@@ -31,7 +29,6 @@ public class cfgScanner {
     }
 
     public void getAction(String action, String question) {
-        System.out.println(action);
         int skillSize = 0;
         List<List<String>> FinalList = new ArrayList<>();
         List<String> responses = new ArrayList<>();
@@ -43,7 +40,6 @@ public class cfgScanner {
                 String keep = line;
                 line = line.toLowerCase();
                 if (line.startsWith("action " + action + " *")) {
-                    System.out.println();
                     int dashIndex = line.indexOf("-");
                     int starIndex = line.indexOf("*");
                     String input = keep.substring(starIndex+2, dashIndex).trim();
@@ -84,8 +80,6 @@ public class cfgScanner {
             FinalList.sort(Comparator.comparingInt(list -> ((List<List<String>>) list).size()).reversed());
             question = question.replaceAll("[^a-zA-Z0-9\\s]", "");
             String[] words = question.split("\\W+");
-            System.out.println(FinalList.toString());
-            System.out.println(Arrays.toString(words));
             for (List<String> listToCheck : FinalList) {
                 int cnt = 0;
                 for (String string : words) {

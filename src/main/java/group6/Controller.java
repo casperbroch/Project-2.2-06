@@ -299,7 +299,7 @@ public class Controller implements Initializable {
                             choiceedit = Integer.parseInt(message);
 
                             if(choiceedit <= skillamounte) {
-                                response = "What action would you like to take?\n1) Add a slot\n2) Add an action\n3) Delete a slot\n4) Delete an action";
+                                response = "What action would you like to take?\n1) Add an action\n 2) Delete an action";
                                 STATE = USERSTATE.SKILLE2;
                                 break;
                             } else {
@@ -314,20 +314,18 @@ public class Controller implements Initializable {
                                 STATE = USERSTATE.SKILLHOME;
                                 break;
                             }
-                            if(message.equalsIgnoreCase("1")) {
-                                response = "What do you want to add as a slot?";
-                                STATE = USERSTATE.SKILLEAddS1;
-                            } else if (message.equalsIgnoreCase("2")) {
+                            if (message.equalsIgnoreCase("1")) {
                                 response = "What do you want to add as an action?";
                                 editing = true;
                                 STATE = USERSTATE.SKILLEAddA1;
-                            } else if (message.equalsIgnoreCase("3")) {
+                            } else if (message.equalsIgnoreCase("2")) {
                                 ArrayList<String> questions = cfgEditor.getSkillQuestions();
-                                response = "Which slot would you like to delete ?\n"+skillEditor.getSlots(questions.get(choiceedit-1));
-                                STATE = USERSTATE.SKILLEDelS;
-                            } else if (message.equalsIgnoreCase("4")) {
-                                ArrayList<String> questions = cfgEditor.getSkillQuestions();
-                                response = "Which action would you like to delete ?\n"+skillEditor.getActions(questions.get(choiceedit-1));
+
+                                String ab = questions.get(choiceedit-1);
+                                int parIndex = ab.indexOf(")");
+                                String okay = ab.substring(parIndex+2, ab.length()).trim();
+
+                                response = "Which action would you like to delete ?\n"+ cfgEditor.getActions(okay);
                                 STATE = USERSTATE.SKILLEDelA;
                             }
                             break;
@@ -420,10 +418,13 @@ public class Controller implements Initializable {
                             break;
 
                         case SKILLEDelA:
-                            ArrayList<String> questionsdela = cfgEditor.getSkillQuestions();
-                            ArrayList<String> actionsdela = skillEditor.printActions(questionsdela.get(choiceedit-1));
+                            ArrayList<String> questions = cfgEditor.getSkillQuestions();
+                            String ab = questions.get(choiceedit-1);
+                            int parIndex = ab.indexOf(")");
+                            String okay = ab.substring(parIndex+2, ab.length()).trim();
                             int choicedela = Integer.parseInt(message);
-                            skillEditor.deleteAction(questionsdela.get(choiceedit-1), actionsdela.get(choicedela-1));
+
+                            cfgEditor.deleteAction(cfgEditor.getActions(okay), choicedela);
                             response = "Action deleted!\n"+skillopening;
                             STATE = USERSTATE.SKILLHOME;
                             break;
@@ -447,11 +448,11 @@ public class Controller implements Initializable {
                             int choicev = Integer.parseInt(message);
 
                             if(choicev <= skillamountv) {
-                                ArrayList<String> questions = cfgEditor.getSkillQuestions();
-                                String ab = questions.get(choicev-1);
-                                int parIndex = ab.indexOf(")");
-                                String okay = ab.substring(parIndex+2, ab.length()).trim();
-                                response = "Skill: " + questions.get(choicev-1).substring(parIndex+2, ab.length()).trim() + "\n"+ "\n" + cfgEditor.getSlots(okay) + "\n" + cfgEditor.getActions(okay);
+                                ArrayList<String> questions2 = cfgEditor.getSkillQuestions();
+                                String ab2 = questions2.get(choicev-1);
+                                int parIndex2 = ab2.indexOf(")");
+                                String okay2 = ab2.substring(parIndex2+2, ab2.length()).trim();
+                                response = "Skill: " + questions2.get(choicev-1).substring(parIndex2+2, ab2.length()).trim() + "\n"+ "\n" + cfgEditor.getSlots(okay2) + "\n" + cfgEditor.getActions(okay2);
                                 response = response + "\n"+skillopening;
                                 STATE = USERSTATE.SKILLHOME;
                                 break;
@@ -473,12 +474,12 @@ public class Controller implements Initializable {
                             int choiced = Integer.parseInt(message);
                             
                             if(choiced <= skillamountd) {
-                                ArrayList<String> questions = cfgEditor.getSkillQuestions();
-                                String ab = questions.get(choiced-1);
-                                int parIndex = ab.indexOf(")");
-                                String okay = ab.substring(parIndex+2, ab.length()).trim();
+                                ArrayList<String> questions1 = cfgEditor.getSkillQuestions();
+                                String ab1 = questions1.get(choiced-1);
+                                int parIndex1 = ab1.indexOf(")");
+                                String okay1 = ab1.substring(parIndex1+2, ab1.length()).trim();
 
-                                cfgEditor.deleteSkill(okay);
+                                cfgEditor.deleteSkill(okay1);
                                 response = "Skill removed! \n \n"+ skillopening;
                                 STATE = USERSTATE.SKILLHOME;
                                 break;
@@ -551,8 +552,8 @@ public class Controller implements Initializable {
                                 STATE = USERSTATE.SKILLA6;
                             } else if (message.equalsIgnoreCase("2")){
                                 response = "Please type an action you would like to add";
-                                ArrayList<String> questions = cfgEditor.getSkillQuestions();
-                                choiceedit = questions.size();
+                                ArrayList<String> questions3 = cfgEditor.getSkillQuestions();
+                                choiceedit = questions3.size();
                                 STATE = USERSTATE.SKILLEAddA1;
                             } else {
                                 response = "Please choose a valid option.";

@@ -51,7 +51,6 @@ public class cykAlgorithm {
         cfgScanner testScan = new cfgScanner();
         if(!cykTable[0][0].isEmpty()){
             testScan.getAction(cykTable[0][0].get(0).toString(), question);
-            System.out.println(testScan.getOutput());
             output = testScan.getOutput();
             
         } else output = ("Sorry, I am not able to give you an answer for that!");
