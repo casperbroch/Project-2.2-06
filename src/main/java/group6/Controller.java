@@ -55,7 +55,7 @@ public class Controller implements Initializable {
         APPC,
         SKILLHOME,
         SKILLQ1,
-        SKILLA1, SKILLA2, SKILLA3, SKILLA4, SKILLA5, SKILLA6, SKILLA7,
+        SKILLA1, SKILLA11, SKILLA2, SKILLA3, SKILLA4, SKILLA5, SKILLA6, SKILLA7,
         SKILLD1,
         SKILLE1, SKILLE2,
         SKILLEAddS1, SKILLEAddS2, SKILLEAddS3,
@@ -87,6 +87,7 @@ public class Controller implements Initializable {
     private ArrayList<String> slots2;
     private String valueSlots;
     private int choiceedit;
+    private String skillTitle;
     private ArrayList<String> placeHolders;
     private ArrayList<ArrayList<String>> values;
     private ArrayList<Slot> slotVals;
@@ -509,6 +510,13 @@ public class Controller implements Initializable {
                         case SKILLA1:
                             prototype = message;
                             slotIndex=0;
+                            response = "Please type the name of your skill.\n(e.g. Holiday, Travel)";
+                            STATE = USERSTATE.SKILLA11;
+                            break;
+
+                        case SKILLA11:
+                            skillTitle = message;
+                            slotIndex=0;
                             response = "Please type the slots you wish to set as placeholders (separated by a coma).\n(e.g. A, B)";
                             STATE = USERSTATE.SKILLA2;
                             break;
@@ -548,12 +556,33 @@ public class Controller implements Initializable {
                                 // ? create the question and the slots
                                 System.out.println(values.toString());
                                 System.out.println(placeHolders.toString());
-
+                                int larger = 0;
+                                for (ArrayList<String> element : values) {
+                                    if(element.size()>larger){
+                                        larger = element.size();
+                                    }  
+                                }   
+                                String[][] slots5 = new String[placeHolders.size()][larger+1];
+                                
+                                for (int index = 0; index < slots5.length; index++) {
+                                    for (int j = 0; j < slots5[0].length; j++) {
+                                        
+                                        if(j == 0) slots5[index][j] = placeHolders.get(index);
+                                        else if(values.get(j).size() > j){
+                                            System.out.println(index + " " + j);
+                                            System.out.println();
+                                            slots5[index][j] = values.get(j).get(index);
+                                        }  else slots5[index][j] = "";
+                                    }
+                                }
+                                System.out.println(Arrays.deepToString(slots5));
+                                System.out.println("----------------");
                                 String[][] slots4 = {{"a", "nyc", "new york city", "la", "one", "one hand"}, {"b", "nyc", "new york city", "la", "one", "one hand"}};
-                                cfgEditor.inputSentence(prototype, "test", slots4);
+
+                                cfgEditor.inputSentence(prototype, skillTitle, slots5);
                                 cfgEditor.removeEmptyLines();
                                 //skillEditor.closeUp();
-                                    // ? prompt the user to select the holder values
+                                // ? prompt the user to select the holder values
                                 response = "New skill added sucessfully!";
                                 STATE = USERSTATE.HOME;
                             }
