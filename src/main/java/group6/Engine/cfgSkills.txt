@@ -1,29 +1,20 @@
 -------------------------------- Non-Terminals --------------------------------
-Rule <action>  <travel> | <movse> |
+Rule <action>   <travel> |
 Rule <travel>  <1> <travel2> 
-Rule <travel2> <2> <travel3>
-Rule <travel3> <a> <travel4> | <a1> <travel4>
-Rule <travel4> <4> <b> | <4> <b1>
-Rule <movse>  <a1> <movse2> | <a> <movse2> | 
-Rule <movse2> <2> <b> | <2> <b1>
+Rule <travel2> <a> <travel3> | <a1> <travel3>
+Rule <travel3> <3> <b> | <3> <b1>
 -------------------------------- Terminals --------------------------------
 Rule <a> <a1> <a1> | <a1> <a>
-travelRule <aPrint> maas |  nyc | 
-Rule <a1> maas | nyc | 
+travelRule <aPrint> nyc |  maas | 
+Rule <a1> nyc | maas | 
 Rule <b> <b1> <b1> | <b1> <b>
 travelRule <bPrint> ams |   | 
-Rule <b1> ams | 
-Rule <a> <a1> <a1> | <a1> <a>
-movseRule <aPrint> nyc |  new york city |  la |  one |  one hand | 
-Rule <a1> nyc | new | york | city | la | one | one | hand | 
-Rule <b> <b1> <b1> | <b1> <b>
-movseRule <bPrint> nyc |  new york city |  la |  one |  one hand | 
-Rule <b1> nyc | new | york | city | la | one | one | hand | 
-Rule <1> go | a |
-Rule <2> from | to |
-Rule <3> a | b |
-Rule <4> to |
-Rule <5> b |
+Rule <b1> ams | la |
+Rule <1> from |
+Rule <2> a |
+Rule <3> to |
+Rule <4> b |
+Rule <5>
 Rule <6>
 Rule <7>
 Rule <8>
@@ -39,12 +30,10 @@ Rule <17>
 Rule <18>
 Rule <19>
 Rule <20>
-<travel> - 3
-<movse> - 1
+<travel> - 2
 -------------------------------- Actions --------------------------------
-Action <movse> * <a> new york city <b> la - yay
-Action <movse> * <a> new york city - yayo
-
+Action <travel> * <a> nyc <b> ams - Yay!
+Action <travel> * <a> nyc <b> la - Have fun!
+Action <travel> * <a> nyc - Buy a ticket!
 -------------------------------- Printing -------------------------------- 
-movse - a to b > a / b / 
-travel - go from a to b > a / b / 
+travel - from a to b > a / b / 

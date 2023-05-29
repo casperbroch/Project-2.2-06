@@ -572,7 +572,6 @@ public class cfgEditor {
             while ((line = reader.readLine()) != null) {
                 if (line.startsWith("Rule <action>")){
                     if(line.contains(skill)){
-                        System.out.println("yay");
                         return true;
                     }
                 }

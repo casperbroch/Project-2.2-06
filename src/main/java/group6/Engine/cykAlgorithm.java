@@ -47,7 +47,7 @@ public class cykAlgorithm {
             increment++;
             iterator--;
         }
-        printTable(cykTable);
+        //printTable(cykTable);
         cfgScanner testScan = new cfgScanner();
         cfgEditor testEditor = new cfgEditor();
         if(!cykTable[0][0].isEmpty()){

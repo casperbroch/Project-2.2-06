@@ -33,6 +33,7 @@ public class cfgScanner {
     public void getAction(String action, String question) {
         int skillSize = 0;
         List<List<String>> FinalList = new ArrayList<>();
+        List<List<String>> FinalListRec = new ArrayList<>();
         List<String> responses = new ArrayList<>();
         String responseRecord = "";
         try (BufferedReader reader = new BufferedReader(new FileReader(fileName))){
@@ -65,7 +66,9 @@ public class cfgScanner {
                         }
                     }
                     outputList.add(current.toString().trim());
+                    FinalListRec.add(outputList);
                     List<String> outputListNew = new ArrayList<>();
+
                     for (String str : outputList) {
                         String[] words = str.split("\\s+");
                         outputListNew.addAll(Arrays.asList(words));
@@ -78,14 +81,11 @@ public class cfgScanner {
                     skillSize = Integer.parseInt(line.substring(action.length()+3));
                 }
             }
-            List<List<String>> FinalListKeep = new ArrayList<>(FinalList);
+            List<List<String>> FinalListKeep = new ArrayList<>(FinalListRec);
             FinalList.sort(Comparator.comparingInt(list -> ((List<List<String>>) list).size()).reversed());
             question = question.replaceAll("[^a-zA-Z0-9\\s]", "");
             String[] words = question.split("\\W+");
-            System.out.println(Arrays.toString(words));
-            System.out.println(FinalList.toString());
             cfgEditor cfgEditor = new cfgEditor();
-
             Pattern pattern2 = Pattern.compile("<(.*?)>");
             Matcher matcher2 = pattern2.matcher(action);
             String[] stringArray = null;
@@ -98,35 +98,47 @@ public class cfgScanner {
             List<String> tempList = new ArrayList<>();
             boolean adding = false;
             int cntC = 0;
+            String[] tempArr = stringArray.clone();
+            stringArray = words.clone();
+            words = tempArr.clone();
+
             for (int i = 0; i < words.length; i++) {
-                if(!words[i].equalsIgnoreCase(stringArray[cntC])){
-                    while (!words[i].equalsIgnoreCase(stringArray[cntC])) {
-                        tempStr += stringArray[i] + " ";
+                if(cntC < stringArray.length){
+                    if(!words[i].equalsIgnoreCase(stringArray[cntC])){
+                        tempStr += stringArray[cntC] + " ";
                         cntC++;
-                    }
-                    tempList.add(tempStr.trim()); 
-                    tempStr = "";
-                } else cntC++;
-            }
-            System.out.println("sssssss");
-            System.out.println(tempList.toString());
-
-        
-            
-
-            for (List<String> listToCheck : FinalList) {
-                int cnt = 0;
-                for (String string : words) {
-                    if(cnt >=listToCheck.size()) break;
-                    if(string.equalsIgnoreCase(listToCheck.get(cnt))){
-                        cnt++;
-                    }
-                    if(cnt == (words.length-skillSize)){
-                        responseRecord = (listToCheck.toString());
-                        break;
-                    }
+                        while (i+1 < words.length && !words[i+1].equalsIgnoreCase(stringArray[cntC])) {
+                            tempStr += stringArray[cntC] + " ";
+                            cntC++;
+                        } 
+                        if(i+1 >= words.length){
+                            while (cntC < stringArray.length) {
+                                tempStr += stringArray[cntC] + " ";
+                                cntC++;
+                            }
+                        } 
+                        tempList.add(tempStr.trim()); 
+                        tempStr = "";
+                    } else cntC++;
                 }
             }
+            String[] tempArr1 = words.clone();
+            words = stringArray.clone();
+            stringArray = tempArr1.clone();
+            boolean found = false;
+            int cnt = 0;
+            while (!found || tempList.size() == 0) {
+                if(cnt != 0) tempList.remove(tempList.size()-1);
+                for (List<String> listToCheck : FinalListRec) {
+                    if(listToCheck.equals(tempList) && !found){
+                        responseRecord = (listToCheck.toString());
+                        found = true;
+                        break;
+                    }
+                }   
+                cnt++;
+            }
+
 
             for (int i = 0; i < FinalListKeep.size(); i++) {
                 if(FinalListKeep.get(i).toString().equals(responseRecord)){
