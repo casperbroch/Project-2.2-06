@@ -545,6 +545,24 @@ public class cfgEditor {
 
     } 
 
+    public boolean skillExists(String skill){
+        String line = "";
+        boolean print = false;
+        try {
+            BufferedReader reader = new BufferedReader(new FileReader(file));
+            while ((line = reader.readLine()) != null) {
+                if (line.startsWith("Rule <action>")){
+                    if(line.contains(skill)){
+                        System.out.println("yay");
+                        return true;
+                    }
+                }
+            }
+            reader.close();
+        } catch (Exception e) {}
+        return print;
+    } 
+
     public boolean titleExists(String skill){
         String line = "";
         boolean print = false;
@@ -571,6 +589,7 @@ public class cfgEditor {
                 reader = new BufferedReader(new FileReader(file));
                 while ((line = reader.readLine()) != null) {
                     if (line.startsWith("Rule <"+ slot+ ">")){
+                        reader.close();
                         return true;
                     }
                 }

@@ -49,9 +49,16 @@ public class cykAlgorithm {
         }
         printTable(cykTable);
         cfgScanner testScan = new cfgScanner();
+        cfgEditor testEditor = new cfgEditor();
         if(!cykTable[0][0].isEmpty()){
-            testScan.getAction(cykTable[0][0].get(0).toString(), question);
-            output = testScan.getOutput();
+            
+            for(int i = 0; i < cykTable[0][0].size(); i++){
+                if(testEditor.skillExists(cykTable[0][0].get(i).toString())){
+                    testScan.getAction(cykTable[0][0].get(i).toString(), question);
+                    output = testScan.getOutput();
+                    break;
+                }
+            }
             
         } else output = ("Sorry, I am not able to give you an answer for that!");
     }
