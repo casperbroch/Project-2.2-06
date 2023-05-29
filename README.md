@@ -33,6 +33,12 @@ The API Google Calendar feature needs to connect with a Google account. Not ever
 Address: jacktediore@gmail.com
 
 Password: Tetrahydro72$
+
+## Ask ChatGPT something
+You can now ask ChatGPT a question using the "Ask me something" skill. It will send a request to the OpenAI servers and if the request iss valid, an answer wil be returned using ChatGPT 3.5 - Turbo model.
+
+Please note, the secret token has to be replaced in the class as it cannot be uploaded to GitHub. Please contact Tomas Schreuder to retrieve the latest one.
+
 ## Run Locally
 
 Clone the project
