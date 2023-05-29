@@ -25,7 +25,9 @@ public class cfgEditor {
 
     public static void main(String[] args) throws FileNotFoundException {
         cfgEditor test = new cfgEditor();
-        String[][] slots = {{"a", "nyc", "new york city", "la", "one", "one hand"}, {"b", "nyc", "new york city", "la", "one", "one hand"}};
+        String[][] slots = {{"a", "nyc", "new york city", "la", "one", "one hand"}, 
+                            {"b", "nyc", "new york city", "la", "one", "one hand"}};
+
         test.inputSentence("a to b", "movse", slots);
         String[][] slotsInput = {{"a", "new york city"}, {"b", "la"}};
         test.addAction("movse", "yay", slotsInput); 
@@ -520,7 +522,7 @@ public class cfgEditor {
                 }
                 if(print && !line.startsWith("-------------------------------- Printing")) {
                     int parIndex = line.indexOf(">");
-                    a = (counter + ") "+ line.substring(0, parIndex) + "\n");
+                    a += (counter + ") "+ line.substring(0, parIndex) + "\n");
                     counter++;
                 }
             }

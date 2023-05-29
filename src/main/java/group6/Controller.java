@@ -568,10 +568,9 @@ public class Controller implements Initializable {
                                     for (int j = 0; j < slots5[0].length; j++) {
                                         
                                         if(j == 0) slots5[index][j] = placeHolders.get(index);
-                                        else if(values.get(j).size() > j){
-                                            System.out.println(index + " " + j);
-                                            System.out.println();
-                                            slots5[index][j] = values.get(j).get(index);
+                                        else if(values.get(index).size()+1 > j){
+                                            System.out.println(values.get(index).get(j-1));
+                                            slots5[index][j] = values.get(index).get(j-1);
                                         }  else slots5[index][j] = "";
                                     }
                                 }

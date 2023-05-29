@@ -5,17 +5,17 @@ import cv2
 import time
 
 
-def face_detection_nn(img):
-    img = Image.fromarray(cv2.cvtColor(img, cv2.COLOR_BGR2RGB))
-    boxes, _ = mtcnn.detect(img)
-    if boxes is not None:
+def face_detection_opencv(img):
+    face_detections = classifier.detectMultiScale(img)
+    if len(face_detections) > 0:
         return True
     else:
         return False
 
 
-mtcnn = MTCNN(image_size=640, margin=480)
-resnet = InceptionResnetV1(pretrained='vggface2').eval()
+# Initializing detector
+xml_file = "lbpcascade_frontalface.xml"
+classifier = cv2.CascadeClassifier(xml_file)
 
 for partition in ['animals', 'faces', 'rooms']:
     for category in ['brightness', 'contrast', 'rgb']:
@@ -26,7 +26,7 @@ for partition in ['animals', 'faces', 'rooms']:
         for image in os.listdir(path):
             img_path = path + '\\' + image
             img = cv2.imread(img_path)
-            if face_detection_nn(img):
+            if face_detection_opencv(img):
                 # Increments number of faces detected
                 counter += 1
         duration = time.time() - start_time
@@ -34,6 +34,6 @@ for partition in ['animals', 'faces', 'rooms']:
             # 45 pictures of faces per category
             accuracy = counter / 45
         else:
-            # 15 pictures of rooms/animals per category
+            # 15 pictures of rooms per category
             accuracy = (15-counter)/15
         print('The accuracy for', partition, 'in category', category, 'is', accuracy, 'after', duration, 'seconds.')

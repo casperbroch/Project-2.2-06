@@ -1,4 +1,4 @@
-# Taken from https://github.com/nicknochnack/FaceDetection/blob/main/FaceDetection.ipynb
+# Inspired by https://github.com/nicknochnack/FaceDetection/blob/main/FaceDetection.ipynb
 
 import os
 import cv2
@@ -17,7 +17,7 @@ augmentor = alb.Compose([alb.RandomBrightnessContrast(brightness_limit=1, always
 # index = 'rgb'
 # augmentor = alb.Compose([alb.RGBShift(r_shift_limit=50, g_shift_limit=50, b_shift_limit=50, always_apply=True)])
 
-for partition in ['faces', 'rooms']:
+for partition in ['animals', 'faces', 'rooms']:
     for image in os.listdir(os.path.join(partition)):
         img = cv2.imread(os.path.join(partition, image))
         n1, n2, _ = img.shape
