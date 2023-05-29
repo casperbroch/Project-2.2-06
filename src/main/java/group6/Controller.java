@@ -64,13 +64,19 @@ public class Controller implements Initializable {
         SKILLEDelA,
         SKILLV1,
 
-        GOOGLECAL, GOOGLECALDELETE, GOOGLECALFETCH, GOOGLECALINSERT, GOOGLECALFETCHONDATE
+        GOOGLECAL, GOOGLECALDELETE, GOOGLECALFETCH, GOOGLECALINSERT, GOOGLECALFETCHONDATE,
+        
+        CHATGPT
 
     }
 
     // Important vars for the skill editor
     private String skillopening;
     private String googleopening;
+    private String chatgptopening;
+   
+    private ChatGPTAPI gpt;
+   
     private skillScanner skillScanner;
     private cfgScanner cfgScanner;
     private skillEditor skillEditor;
@@ -140,6 +146,7 @@ public class Controller implements Initializable {
 
     public void init() {
         skillopening = "Welcome to the Skills application! Do you wish to: \n1) Ask a question\n2) Add a new skill\n3) Delete a skill\n4) Edit a skill\n5) View a skill\nPlease type 'exit' if you want to exit this application.";
+        chatgptopening = "Ask me anything and I will try my best to answer it. I am very smart you know ;)";
         googleopening = "Welcome to the Google Calendar application! Do you wish to: \n1) Insert an event\n2) Delete an event\n3) Fetch next 10 events\n4) Find a specific event\n5) Fetch events on a specific date\nPlease type 'exit' if you want to exit this application.";
         try {
             sp = new SymSpell();
@@ -150,6 +157,7 @@ public class Controller implements Initializable {
         }
         skills.add("Skills");
         skills.add("Google Calendar");
+        skills.add("Ask me anything");
         suggestbox.setVisible(false);
         if(DARKMODE) {
             setDarkMode();
@@ -249,6 +257,10 @@ public class Controller implements Initializable {
                                 } else if(message.equalsIgnoreCase("Google Calendar")) {
                                     response = googleopening;
                                     STATE = USERSTATE.GOOGLECAL;
+                                } else if(message.equalsIgnoreCase("Ask Me Anything")) {
+                                response = chatgptopening;
+                                gpt =new ChatGPTAPI();
+                                STATE = USERSTATE.CHATGPT;
                                 }
                                 break;
                             }
@@ -817,6 +829,20 @@ public class Controller implements Initializable {
                                 }
                             }
                             break;
+                            case CHATGPT:
+                                if(message.equalsIgnoreCase("exit")) {
+                                    //response = "Do you wish to 1) Insert event, or 2) Delete event, 3) Fetch next 10 events, 4) Find a specific event or 5) Find events on a specific date?";
+                                    // Close service
+                                    gpt.shutDown();
+                                    STATE = USERSTATE.HOME;
+
+
+                                }else{
+
+
+                                    response =gpt.askGod(message);
+                                }
+                                break;
 
                             }
                         
