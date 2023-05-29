@@ -59,7 +59,6 @@ public class cfgEditor {
                 if(print && current.startsWith(skill)) {
                     int parIndex = current.indexOf(">");
                     parts = (current.substring(parIndex+2).trim().split("/"));
-                    System.out.println(Arrays.toString(parts));
                 }   
                 
             }
@@ -85,7 +84,6 @@ public class cfgEditor {
                 int dashIndex = current.indexOf("*");
                 if(dashIndex != -1){
                     if(parts[choice-1].substring(9).trim().equalsIgnoreCase(current.trim().substring(dashIndex+2, current.length()))){
-                        System.out.println("yay");
                         copy = false;
                     } 
                 }
@@ -209,16 +207,13 @@ public class cfgEditor {
         } catch(IOException e) {
             e.printStackTrace();
         }
-        System.out.println(a);
         return a;
     }
 
 
     public void inputSentence(String input, String skillName, String[][] slots){
-        System.out.println(input);
         arrangePrint(input, skillName, slots);
         String[] initial = input.split("[^\\p{L}0-9']+");
-        System.out.println(Arrays.toString(initial));
         int cnt = 1;
         addSkill("Rule <action>", "<" + skillName + ">", slots, initial.length, false);
         for (String string : initial) {
@@ -438,12 +433,9 @@ public class cfgEditor {
                 if(line.startsWith(rule) && !newRule){
                     line = line + " " + info + " |";
                     found = true;
-                    System.out.println(rule);
                 }
                 if(newRule && line.equals("-------------------------------- Terminals --------------------------------")){
                     lines.add(rule+ " " + info);
-                    System.out.println("w");
-                    System.out.println(linecnt);
                 }
                 
                 lines.add(line);
@@ -544,7 +536,6 @@ public class cfgEditor {
                 }
                 if(print && line.startsWith(skill)) {
                     int parIndex = line.indexOf(">");
-                    System.out.println(line.substring(parIndex+2));
                     parts = (line.substring(parIndex+2).trim().split("/"));
                 }   
             }
@@ -552,6 +543,41 @@ public class cfgEditor {
         } catch (Exception e) {}
         return parts;
 
+    } 
+
+    public boolean titleExists(String skill){
+        String line = "";
+        boolean print = false;
+        try {
+            BufferedReader reader;
+            reader = new BufferedReader(new FileReader(file));
+            while ((line = reader.readLine()) != null) {
+                if (line.startsWith("Rule <"+ skill+ ">")){
+                    print = true;
+                }
+            }
+            reader.close();
+        } catch (Exception e) {}
+        return print;
+    } 
+
+    public boolean slotsExists(ArrayList<String> slots){
+        String line = "";
+        boolean print = false;
+        try {
+            for (String slot : slots) {
+
+                BufferedReader reader;
+                reader = new BufferedReader(new FileReader(file));
+                while ((line = reader.readLine()) != null) {
+                    if (line.startsWith("Rule <"+ slot+ ">")){
+                        return true;
+                    }
+                }
+                reader.close();
+            }
+        } catch (Exception e) {}
+        return print;
     } 
 
     public void deleteSkill(String skill){

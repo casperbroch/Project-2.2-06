@@ -55,7 +55,7 @@ public class Controller implements Initializable {
         APPC,
         SKILLHOME,
         SKILLQ1,
-        SKILLA1, SKILLA11, SKILLA2, SKILLA3, SKILLA4, SKILLA5, SKILLA6, SKILLA7,
+        SKILLA1, SKILLA11, SKILLA2, SKILLA3, SKILLA33, SKILLA4, SKILLA5, SKILLA6, SKILLA7,
         SKILLD1,
         SKILLE1, SKILLE2,
         SKILLEAddS1, SKILLEAddS2, SKILLEAddS3,
@@ -78,6 +78,7 @@ public class Controller implements Initializable {
     private cfgEditor cfgEditor = new cfgEditor();;
     private String prototype;
     private String addedslot;
+    private boolean fail = false;
     private String addedaction;
     ArrayList<Integer> actionNumsOrdered;
     ArrayList<String> actionT;
@@ -524,6 +525,7 @@ public class Controller implements Initializable {
                         // ! state description: skilla2 is the second of the skill adding sequence
                         case SKILLA2:
                             placeHolders = new ArrayList<>(Arrays.asList(message.split("[^a-zA-Z0-9]+"))); 
+                            // check place holders
                             values = new ArrayList<ArrayList<String>>(); 
                             slotVals = new ArrayList<>();
                             STATE = USERSTATE.SKILLA4;
@@ -554,38 +556,52 @@ public class Controller implements Initializable {
                                 break;
                             } else {                            
                                 // ? create the question and the slots
-                                System.out.println(values.toString());
                                 System.out.println(placeHolders.toString());
-                                int larger = 0;
-                                for (ArrayList<String> element : values) {
-                                    if(element.size()>larger){
-                                        larger = element.size();
-                                    }  
-                                }   
-                                String[][] slots5 = new String[placeHolders.size()][larger+1];
-                                
-                                for (int index = 0; index < slots5.length; index++) {
-                                    for (int j = 0; j < slots5[0].length; j++) {
-                                        
-                                        if(j == 0) slots5[index][j] = placeHolders.get(index);
-                                        else if(values.get(index).size()+1 > j){
-                                            System.out.println(values.get(index).get(j-1));
-                                            slots5[index][j] = values.get(index).get(j-1);
-                                        }  else slots5[index][j] = "";
+                                if(cfgEditor.titleExists(skillTitle)){
+                                    response = "Sorry, a skill with that name already exists, please restart the process and choose a new name! \nPress ENTER to continue.";
+                                    fail = true;
+                                    STATE = USERSTATE.SKILLA33;
+                                }  else if(cfgEditor.slotsExists(placeHolders)){
+                                    response = "Sorry, a skill with those slot names already exists, please restart the process and choose new names! \nPress ENTER to continue.";
+                                    fail = true;
+                                    STATE = USERSTATE.SKILLA33;
+                                }else {
+                                    int larger = 0;
+                                    for (ArrayList<String> element : values) {
+                                        if(element.size()>larger){
+                                            larger = element.size();
+                                        }  
+                                    }   
+                                    String[][] slots5 = new String[placeHolders.size()][larger+1];
+                                    
+                                    for (int index = 0; index < slots5.length; index++) {
+                                        for (int j = 0; j < slots5[0].length; j++) {
+                                            
+                                            if(j == 0) slots5[index][j] = placeHolders.get(index);
+                                            else if(values.get(index).size()+1 > j){
+                                                System.out.println(values.get(index).get(j-1));
+                                                slots5[index][j] = values.get(index).get(j-1);
+                                            }  else slots5[index][j] = "";
+                                        }
                                     }
-                                }
-                                System.out.println(Arrays.deepToString(slots5));
-                                System.out.println("----------------");
-                                String[][] slots4 = {{"a", "nyc", "new york city", "la", "one", "one hand"}, {"b", "nyc", "new york city", "la", "one", "one hand"}};
+                                    System.out.println(Arrays.deepToString(slots5));
+                                    System.out.println("----------------");
+                                    String[][] slots4 = {{"a", "nyc", "new york city", "la", "one", "one hand"}, {"b", "nyc", "new york city", "la", "one", "one hand"}};
 
-                                cfgEditor.inputSentence(prototype, skillTitle, slots5);
-                                cfgEditor.removeEmptyLines();
-                                //skillEditor.closeUp();
-                                // ? prompt the user to select the holder values
-                                response = "New skill added sucessfully!";
-                                STATE = USERSTATE.HOME;
+                                    cfgEditor.inputSentence(prototype, skillTitle, slots5);
+                                    cfgEditor.removeEmptyLines();
+                                    //skillEditor.closeUp();
+                                    // ? prompt the user to select the holder values
+                                    response = "New skill added sucessfully!";
+                                    STATE = USERSTATE.HOME;
+                                }
                             }
                             break;
+
+                        case SKILLA33:
+                            STATE = USERSTATE.HOME;
+                            break;
+                    
 
                         // ! state description: skilla5 is the fifth of the skill adding sequence
                         case SKILLA5:
