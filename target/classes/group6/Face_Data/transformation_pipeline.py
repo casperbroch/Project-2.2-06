@@ -4,9 +4,7 @@ import os
 import cv2
 import albumentations as alb
 
-# augmentor = alb.Compose([alb.RandomBrightnessContrast(p=0.2), alb.RandomGamma(p=0.2), alb.RGBShift(p=0.2)])
-
-# # Split into individual changes
+# Split into individual changes
 
 index = 'brightness'
 augmentor = alb.Compose([alb.RandomBrightnessContrast(brightness_limit=1, always_apply=True)])

@@ -1,10 +1,19 @@
 -------------------------------- Non-Terminals --------------------------------
-Rule <action>
+Rule <action>   <travel> |
+Rule <travel>  <1> <travel2> 
+Rule <travel2> <a> <travel3> | <a1> <travel3>
+Rule <travel3> <3> <b> | <3> <b1>
 -------------------------------- Terminals --------------------------------
-Rule <1>
-Rule <2>
-Rule <3>
-Rule <4>
+Rule <a> <a1> <a1> | <a1> <a>
+travelRule <aPrint> nyc |  maas | 
+Rule <a1> nyc | maas | 
+Rule <b> <b1> <b1> | <b1> <b>
+travelRule <bPrint> ams |   | 
+Rule <b1> ams | la |
+Rule <1> from |
+Rule <2> a |
+Rule <3> to |
+Rule <4> b |
 Rule <5>
 Rule <6>
 Rule <7>
@@ -21,5 +30,10 @@ Rule <17>
 Rule <18>
 Rule <19>
 Rule <20>
+<travel> - 2
 -------------------------------- Actions --------------------------------
+Action <travel> * <a> nyc <b> ams - Yay!
+Action <travel> * <a> nyc <b> la - Have fun!
+Action <travel> * <a> nyc - Buy a ticket!
 -------------------------------- Printing -------------------------------- 
+travel - from a to b > a / b / 

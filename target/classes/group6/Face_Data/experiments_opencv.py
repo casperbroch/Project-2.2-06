@@ -1,6 +1,4 @@
 import os
-from facenet_pytorch import MTCNN, InceptionResnetV1
-from PIL import Image
 import cv2
 import time
 
@@ -14,6 +12,7 @@ def face_detection_opencv(img):
 
 
 # Initializing detector
+# Taken from https://github.com/opencv-java/face-detection/blob/master/resources/lbpcascades/lbpcascade_frontalface.xml
 xml_file = "lbpcascade_frontalface.xml"
 classifier = cv2.CascadeClassifier(xml_file)
 
