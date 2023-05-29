@@ -43,6 +43,8 @@ Rule <20>
 <movse> - 1
 -------------------------------- Actions --------------------------------
 Action <movse> * <a> new york city <b> la - yay
+Action <movse> * <a> new york city - yayo
+
 -------------------------------- Printing -------------------------------- 
 movse - a to b > a / b / 
 travel - go from a to b > a / b / 

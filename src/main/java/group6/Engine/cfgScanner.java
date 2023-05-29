@@ -8,6 +8,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.io.BufferedReader;
 
 public class cfgScanner {
@@ -80,6 +82,38 @@ public class cfgScanner {
             FinalList.sort(Comparator.comparingInt(list -> ((List<List<String>>) list).size()).reversed());
             question = question.replaceAll("[^a-zA-Z0-9\\s]", "");
             String[] words = question.split("\\W+");
+            System.out.println(Arrays.toString(words));
+            System.out.println(FinalList.toString());
+            cfgEditor cfgEditor = new cfgEditor();
+
+            Pattern pattern2 = Pattern.compile("<(.*?)>");
+            Matcher matcher2 = pattern2.matcher(action);
+            String[] stringArray = null;
+            if (matcher2.find()){
+                String extracted = matcher2.group(1);
+                int ind = cfgEditor.getSlotsScanner(extracted).toString().indexOf(">");
+                stringArray = cfgEditor.getSlotsScanner(extracted).toString().substring(extracted.length()+3,ind).trim().split("\\s+");
+            }
+            String tempStr = "";
+            List<String> tempList = new ArrayList<>();
+            boolean adding = false;
+            int cntC = 0;
+            for (int i = 0; i < words.length; i++) {
+                if(!words[i].equalsIgnoreCase(stringArray[cntC])){
+                    while (!words[i].equalsIgnoreCase(stringArray[cntC])) {
+                        tempStr += stringArray[i] + " ";
+                        cntC++;
+                    }
+                    tempList.add(tempStr.trim()); 
+                    tempStr = "";
+                } else cntC++;
+            }
+            System.out.println("sssssss");
+            System.out.println(tempList.toString());
+
+        
+            
+
             for (List<String> listToCheck : FinalList) {
                 int cnt = 0;
                 for (String string : words) {
@@ -93,6 +127,7 @@ public class cfgScanner {
                     }
                 }
             }
+
             for (int i = 0; i < FinalListKeep.size(); i++) {
                 if(FinalListKeep.get(i).toString().equals(responseRecord)){
                     this.output = responses.get(i).toString();

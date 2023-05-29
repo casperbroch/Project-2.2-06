@@ -189,6 +189,25 @@ public class cfgEditor {
         return a;
     }
 
+    public String getSlotsScanner(String skill){
+        String a = new String(); 
+        try {
+            BufferedReader readerDel = new BufferedReader(new FileReader(file));
+            String current;
+            int counter = 1;
+            while((current = readerDel.readLine()) != null) {
+                if(current.startsWith(skill+ " - ")){
+                    int startIndex = current.indexOf('<');
+                    a = current;
+                }
+            }
+            readerDel.close();
+        } catch(IOException e) {
+            e.printStackTrace();
+        }
+        return a;
+    }
+
     public String getActions(String skill){
         String a = "";
         ArrayList<String> slots = new ArrayList<>();
