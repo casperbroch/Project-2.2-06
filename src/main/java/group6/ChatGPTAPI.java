@@ -21,6 +21,10 @@ import java.util.List;
 // 	~ GPT 3.5-TURBO = $0.002 / 1K tokens
 //  ~ Other models may cost more so please stick to this model
 
+
+// PLEASE NOTE, THE TOKEN ON LINE 30 IS INVALID, THEY CANNOT BE UPLOADED TO GITHUB WITHOUT AUTOMATICALLY BEING INVALIDATED. PLEASE CONTACT ME FOR THE FRESH ONE.
+// THIS CAUSES THE INVALID TOKEN ERROR
+
 public class ChatGPTAPI {
         static String result ="";
 
