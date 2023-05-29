@@ -545,17 +545,17 @@ public class Controller implements Initializable {
                                 STATE = USERSTATE.SKILLA4;
                                 break;
                             } else {                            
-                                try {
-                                    // ? create the question and the slots
-                                    skillEditor.setUp();
-                                    skillEditor.addQuestion(prototype, placeHolders);
-                                    skillEditor.addSlot(values, placeHolders);
-                                    skillEditor.removeEmptyLines();
-                                    skillEditor.closeUp();
-                                } catch (IOException e) {e.printStackTrace();}
+                                // ? create the question and the slots
+                                System.out.println(values.toString());
+                                System.out.println(placeHolders.toString());
+
+                                String[][] slots4 = {{"a", "nyc", "new york city", "la", "one", "one hand"}, {"b", "nyc", "new york city", "la", "one", "one hand"}};
+                                cfgEditor.inputSentence(prototype, "test", slots4);
+                                cfgEditor.removeEmptyLines();
+                                //skillEditor.closeUp();
                                     // ? prompt the user to select the holder values
-                                    response = "Do you wish to add a default action (this is the default answer when a specefic action has not been provided)?\n1) Yes\n2) No";
-                                    STATE = USERSTATE.SKILLA5;
+                                response = "New skill added sucessfully!";
+                                STATE = USERSTATE.HOME;
                             }
                             break;
 
