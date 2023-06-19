@@ -1,6 +1,8 @@
 package group6;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 import javafx.application.Application;
@@ -15,12 +17,17 @@ public class App extends Application {
 
     private static Controller controller;
     public static final String TEXTPATH = "src/main/java/group6/Python/Connection.txt";
-    private String[] whitelist = {"Casper", "Marian", "Unknown"};
+    
+    public static String name = "";
 
     @Override
     public void start(Stage stage) throws Exception {
         long start = System.currentTimeMillis();
         long end = System.currentTimeMillis();
+
+        String directoryPath = "src/main/java/group6/Python/faces";
+        String[] whitelist = getImageNames(directoryPath);
+
         boolean notfound=true;
         while(notfound) {
             end = System.currentTimeMillis();
@@ -33,8 +40,9 @@ public class App extends Application {
                 while (sc.hasNextLine()) {
                     data = sc.nextLine();
                 }
-                if(checkName(data)) {
+                if(checkName(whitelist, data)) {
                     System.out.println("Person found! Running GUI...");
+                    name = data;
                     notfound=false;
                 } else if(data.equalsIgnoreCase("loading")){
                     System.out.println("Hold on tight, Python is loading & looking for a person...");
@@ -62,7 +70,7 @@ public class App extends Application {
         return controller;
     }
 
-    public boolean checkName(String name) {
+    public boolean checkName(String[] whitelist, String name) {
         for(int i=0; i<whitelist.length; i++) {
             if(whitelist[i].equalsIgnoreCase(name)) {
                 return true;
@@ -73,5 +81,40 @@ public class App extends Application {
 
     public static void main(String[] args) {
         launch(args);
+    }
+
+    public static String[] getImageNames(String directoryPath) {
+        File directory = new File(directoryPath);
+        File[] files = directory.listFiles();
+        
+        List<String> whitelist = new ArrayList<>();
+        
+        if (files != null) {
+            for (File file : files) {
+                if (file.isFile()) {
+                    String fileName = file.getName();
+                    if (isImageFile(fileName)) {
+                        String imageName = getFileNameWithoutExtension(fileName);
+                        whitelist.add(imageName);
+                    }
+                }
+            }
+        }
+
+        whitelist.add("unknown");
+        
+        return whitelist.toArray(new String[0]);
+    }
+    
+    private static boolean isImageFile(String fileName) {
+        return fileName.endsWith(".jpg") || fileName.endsWith(".png") || fileName.endsWith(".jpeg");
+    }
+    
+    private static String getFileNameWithoutExtension(String fileName) {
+        int dotIndex = fileName.lastIndexOf('.');
+        if (dotIndex > 0) {
+            return fileName.substring(0, dotIndex);
+        }
+        return fileName;
     }
 }

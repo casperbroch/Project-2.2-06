@@ -1,8 +1,0 @@
-Animal (dogs and cats) data set retrieved from:
-https://www.kaggle.com/datasets/chetankv/dogs-cats-images?resource=download
-
-Faces data set retrieved from:
-https://www.kaggle.com/datasets/ashwingupta3012/human-faces
-
-Rooms data set retrieved from:
-https://www.kaggle.com/datasets/robinreni/house-rooms-image-dataset

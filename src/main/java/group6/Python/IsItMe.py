@@ -22,15 +22,20 @@ class IsItMe:
         # self.my_photo_path = "IMG_F9AF022DB5A8-1.jpeg"
         #
         # self.my_photo_embedding = self.get_face_embedding(self.my_photo_path)
-        self.person_names = [
-            "Marian",
-            "Casper"
-        ]
+        
+        facedir = 'src/main/java/group6/Python/faces'
+        self.person_names = []
+        self.my_photo_paths = []
+        for filename in os.listdir(facedir):
+            name = os.path.splitext(filename)[0]
+            path = os.path.join(facedir, filename)
+
+            tmp = [path]
+
+            self.person_names.append(name)
+            self.my_photo_paths.append(tmp)
+
         self.last_recognized_person_idx = -1
-        self.my_photo_paths = [
-            ["src/main/java/group6/Python/faces/1.jpeg"],
-            ["src/main/java/group6/Python/faces/2.jpeg"]
-        ]
         self.load_embeddings()
         self.last_photo_taken = {name: datetime.datetime.min for name in self.person_names}
         self.my_photo_embeddings = [list(map(self.get_face_embedding, person_photos)) for person_photos in
@@ -138,6 +143,7 @@ class IsItMe:
                 f = open("src/main/java/group6/Python/Connection.txt", "w")
                 f.write("unknown")
                 f.close()
+                sys.exit()
                 return -1
 
         return -1
@@ -177,21 +183,7 @@ class IsItMe:
                         f.write(person_name)
                         f.close()
                         sys.exit()
-                        # # Check if a minute has passed since the last photo was taken
-                        # time_elapsed = datetime.datetime.now() - self.last_photo_taken[person_name]
-                        # if time_elapsed > datetime.timedelta(minutes=1):
-                        #     photo_path = f"People/{person_name}_{datetime.datetime.now().strftime('%Y%m%d_%H%M%S')}.jpg"
-                        #     cv2.imwrite(photo_path, frame)
-                        #     if cv2.imwrite(photo_path, frame):
-                        #         print(f"Image saved successfully to {photo_path}")
-                        #     else:
-                        #         print(f"Error: Unable to save image to {photo_path}")
-                        #     self.my_photo_paths[person_idx].append(photo_path)
-                        #     # Update the embeddings list
-                        #     new_embedding = self.get_face_embedding(photo_path)
-                        #     if new_embedding is not None:
-                        #         self.my_photo_embeddings[person_idx].append(new_embedding)
-                        #     self.last_photo_taken[person_name] = datetime.datetime.now()
+
                     else:
                         print("Unknown person has been detected")
                         f = open("src/main/java/group6/Python/Connection.txt", "w")

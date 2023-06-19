@@ -40,6 +40,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
+import okhttp3.Response;
 
 public class Controller implements Initializable {
 
@@ -66,7 +67,10 @@ public class Controller implements Initializable {
 
         GOOGLECAL, GOOGLECALDELETE, GOOGLECALFETCH, GOOGLECALINSERT, GOOGLECALFETCHONDATE,
         
-        CHATGPT
+        CHATGPT,
+
+        REGISTER1,
+        REGISTER2
 
     }
 
@@ -247,6 +251,31 @@ public class Controller implements Initializable {
 
                     // ! state description: appc is the state of the user inputting the app they want to choose 
                     // ! state type: USER CHOOSING 
+                        case REGISTER1:
+                            if(message.isEmpty()) {
+                                response = "This name is invalid.";
+                                break;
+                            } 
+
+                            App.name = message;
+                            response = "Look at the camera so we can take a picture. Type 'next' if you're ready.";
+                            STATE = USERSTATE.REGISTER2;
+
+                            break;
+
+                        case REGISTER2:
+                            if(!message.equalsIgnoreCase("next")) {
+                                response = "Look at the camera so we can take a picture. Type 'next' if you're ready.";
+                                break;
+                            }
+
+                            Camera cam = new Camera();
+                            cam.takePicture(App.name);
+                            response = String.join(" app, ", skills);
+                            response = "Picture taken and saved to database.\n"+("Hello " + App.name + "! How can I assist you? Would you like to access your " + response + " application, or quit? Please type the name of the desired application you would like to access.");
+                            STATE = USERSTATE.APPC;
+                            break;
+
                         case APPC:
                         for (int i = 0; i < skills.size(); i++) {
                             if(message.compareToIgnoreCase(skills.get(i)) == 0) {                                
@@ -905,11 +934,19 @@ public class Controller implements Initializable {
 
     public boolean homegreeting() {
         if(STATE == USERSTATE.HOME) {
-            String greeting = String.join(" app, ", skills);
-            greeting = ("Hello! How can I assist you? Would you like to access your " + greeting + " application, or quit? Please type the name of the desired application you would like to access.");
-            STATE = USERSTATE.APPC;
-            addBMessage(greeting, vbox_message);
-            return true;
+            if(App.name.equalsIgnoreCase("Unknown")) {
+                String greeting = "I have detected an unknown person.\nWhat is your name? This way we can register you to our database.";
+                STATE = USERSTATE.REGISTER1;
+                addBMessage(greeting, vbox_message);
+                return true;
+            } else {
+                String greeting = String.join(" app, ", skills);
+                greeting = ("Hello " + App.name + "! How can I assist you? Would you like to access your " + greeting + " application, or quit? Please type the name of the desired application you would like to access.");
+                STATE = USERSTATE.APPC;
+                addBMessage(greeting, vbox_message);
+                return true;
+            }
+
         } else return false;
     }
 
