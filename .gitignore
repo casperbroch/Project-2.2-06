@@ -127,3 +127,5 @@ Thumbs.db
 /ios/IOSLauncher.app.dSYM
 *.class
 core/gradlew.bat
+
+/src/main/java/group6/Python/data/
