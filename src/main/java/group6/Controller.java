@@ -1,15 +1,25 @@
 package group6;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.lang.Thread.State;
 import java.net.URL;
+import java.nio.file.FileSystems;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardWatchEventKinds;
+import java.nio.file.WatchEvent;
+import java.nio.file.WatchKey;
+import java.nio.file.WatchService;
 import java.security.GeneralSecurityException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.Scanner;
+
 import group6.Engine.Slot;
 import group6.Engine.skillEditor;
 import group6.Engine.cfgEditor;
@@ -41,6 +51,9 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 import okhttp3.Response;
+import com.sun.jna.Native;
+import com.sun.jna.platform.win32.WinDef;
+import com.sun.jna.win32.StdCallLibrary;
 
 public class Controller implements Initializable {
 
@@ -116,6 +129,9 @@ public class Controller implements Initializable {
     private static ArrayList<Text> textlist = new ArrayList<>();
     private CalendarConnection cal;
     private int wordlength=0;
+    private static final String FILE_PATH = "src\\main\\java\\group6\\Python\\ConnectionHand.txt";
+    private static final long READ_INTERVAL_MS = 1000;
+    private volatile boolean stopRequested = false;
     private SymSpell sp;
     @FXML
     private Button button_send;
@@ -175,6 +191,7 @@ public class Controller implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         init();
+        Watcher();
 
         vbox_message.heightProperty().addListener(new ChangeListener<Number>() {
             public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
@@ -1054,6 +1071,40 @@ public class Controller implements Initializable {
         dm_button.setGraphic(iv);
         dm_button.setStyle("-fx-background-color: rgb(255,255,255)");
 
+    }
+    
+
+    public void Watcher() {
+        // Start a separate thread to read the file
+        Thread fileReaderThread = new Thread(() -> {
+            while (!stopRequested) {
+                try {
+                    String fileContent = readFileContent();
+                    System.out.println(fileContent);
+                    if(fileContent.equalsIgnoreCase("bad")) {
+                        System.exit(0);
+                    } 
+                    Thread.sleep(READ_INTERVAL_MS);
+                } catch (InterruptedException e) {
+                    return; 
+                }
+            }
+        });
+        fileReaderThread.setDaemon(true);
+        fileReaderThread.start();
+    }
+
+    private String readFileContent() {
+        try (Scanner scanner = new Scanner(new File(FILE_PATH))) {
+            StringBuilder sb = new StringBuilder();
+            while (scanner.hasNextLine()) {
+                sb.append(scanner.nextLine());
+            }
+            return sb.toString();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
 }

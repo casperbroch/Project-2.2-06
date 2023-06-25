@@ -11,8 +11,11 @@ public class Start {
     public static void main(String[] args) throws GeneralSecurityException, IOException {
 
         // Execute python file
-        String command = "python src/main/java/group6/Python/IsItMe.py";
-        Process p = Runtime.getRuntime().exec(command);
+        String commandIsItMe = "python src/main/java/group6/Python/IsItMe.py";
+        Process pIsItMe = Runtime.getRuntime().exec(commandIsItMe);
+
+        String commandSign = "python src/main/java/group6/Python/Sign.py";
+        Process pSign = Runtime.getRuntime().exec(commandSign);
 
         App.main(args);
     }
