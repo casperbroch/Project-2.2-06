@@ -5,6 +5,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -60,7 +62,48 @@ public class cykAlgorithm {
                 }
             }
             
-        } else output = ("Sorry, I am not able to give you an answer for that!");
+        } else {
+            String similarityScore = "";
+            try {
+                // Arg2 = existing skills
+
+                ProcessBuilder pb = new ProcessBuilder("python", "src\\main\\java\\group6\\NLPUpgrades\\TransformerBERT.py", question, "arg2");
+                Process process = pb.start();
+                // Get the output from the Python script
+                InputStream inputStream = process.getInputStream();
+                BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    similarityScore = line;
+                }
+                int exitCode = process.waitFor();
+
+            } catch (IOException | InterruptedException e) {
+                e.printStackTrace();
+            }
+            double numericValue = Double.parseDouble(similarityScore);
+            if (numericValue >= 0.955) {
+                try {
+                    // Arg1 = List of classes + documents
+
+                    ProcessBuilder pb = new ProcessBuilder("python", "src\\main\\java\\group6\\NLPUpgrades\\NaiveBayesClassifier.py","arg1", question);
+                    Process process = pb.start();
+                    // Get the output from the Python script
+                    InputStream inputStream = process.getInputStream();
+                    BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+                    String line;
+                    while ((line = reader.readLine()) != null) {
+                        similarityScore = line;
+                    }
+                    int exitCode = process.waitFor();
+
+                } catch (IOException | InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+            output = ("Sorry, I am not able to give you an answer for that!");
+        }
     }
 
     public ArrayList<String> getFromCYKTable(ArrayList<String> transformedList){
