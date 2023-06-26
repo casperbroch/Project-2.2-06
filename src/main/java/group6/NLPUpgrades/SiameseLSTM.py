@@ -39,8 +39,6 @@ X_valid_q2 = pad_sequences(X_valid_q2, maxlen=max_len)
 # Siamese LSTM
 input_dim = len(tokenizer.word_index) + 1
 output_dim = 64
-
-# Define the shared LSTM layer
 lstm_layer = LSTM(output_dim, dropout=0.2)
 
 # Question 1 branch
@@ -53,18 +51,12 @@ input_lstm = lstm_layer(input_embed)
 
 # Combine the outputs of the two branches
 combined = concatenate([skill_lstm, input_lstm])
-
-# Apply a Dense layer and then the final sigmoid activation layer
 dense = Dense(16, activation='relu')(combined)
 output = Dense(1, activation='sigmoid')(dense)
-
-# Connect the inputs and the output
 model = Model(inputs=[skill, input], outputs=output)
 
 # --------------- Training ---------------
-# Compile the model
 model.compile(loss='binary_crossentropy', optimizer=Adam(), metrics=['accuracy'])
-# Fit the model
 model.fit([X_train_q1, X_train_q2], y_train, epochs=10, validation_data=([X_valid_q1, X_valid_q2], y_valid),
           callbacks=[EarlyStopping(patience=5)], batch_size=32)
 
