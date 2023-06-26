@@ -128,7 +128,17 @@ Thumbs.db
 *.class
 core/gradlew.bat
 
-/src/main/java/group6/Python/data/
+/src/main/java/group6/Python/data/0
+/src/main/java/group6/Python/data/1
+/src/main/java/group6/Python/data/2
+/src/main/java/group6/Python/data/3
+/src/main/java/group6/Python/data/4
+/src/main/java/group6/Python/data/5
+/src/main/java/group6/Python/data/6
+/src/main/java/group6/Python/data/7
+/src/main/java/group6/Python/data/8
+/src/main/java/group6/Python/data/9
+
 /src/main/java/group6/Face_Data/animals/
 /src/main/java/group6/Face_Data/aug_data/
 /src/main/java/group6/Face_Data/faces/
