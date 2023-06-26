@@ -151,7 +151,7 @@ class IsItMe:
 
     def run(self):
 
-        people = ['Casper', 'Marian', 'Others']
+        people = ['Casper', 'Gui', 'Marian', 'Others']
 
         for person in people:
 
