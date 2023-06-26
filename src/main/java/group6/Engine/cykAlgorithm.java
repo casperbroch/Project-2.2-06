@@ -93,7 +93,7 @@ public class cykAlgorithm {
                 e.printStackTrace();
             }
             double numericValue = Double.parseDouble(similarityScore);
-            if (numericValue >= 0.972) {
+            if (numericValue >= 0.973) {
                 try {
                     // Arg1 = List of classes + documents
                     String documents = "";
@@ -118,7 +118,7 @@ public class cykAlgorithm {
                 } catch (IOException | InterruptedException e) {
                     e.printStackTrace();
                 }
-            }
+            } else output = ("Sorry, I am not able to give you an answer for that!");
             
         }
         if(output.isEmpty()){
