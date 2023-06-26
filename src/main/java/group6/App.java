@@ -46,10 +46,6 @@ public class App extends Application {
                     name = data;
                     notfound=false;
 
-                    String commandSign = "python src/main/java/group6/Python/Sign.py";
-                    Process pSign = Runtime.getRuntime().exec(commandSign);
-                    Thread.sleep(1000);
-
                 } else if(data.equalsIgnoreCase("loading")){
                     System.out.println("Hold on tight, Python is loading & looking for a person...");
                 } else {
