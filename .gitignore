@@ -143,3 +143,5 @@ core/gradlew.bat
 /src/main/java/group6/Face_Data/aug_data/
 /src/main/java/group6/Face_Data/faces/
 /src/main/java/group6/Face_Data/rooms/
+
+/src/main/java/group6/experiments/
