@@ -11,6 +11,8 @@ import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.nd4j.common.loader.SourceFactory;
+
 /*
  * Parsing algorithm for skills CFG.
  */
@@ -53,11 +55,13 @@ public class cykAlgorithm {
         cfgScanner testScan = new cfgScanner();
         cfgEditor testEditor = new cfgEditor();
         if(!cykTable[0][0].isEmpty()){
+            System.out.println("s");
             
             for(int i = 0; i < cykTable[0][0].size(); i++){
                 if(testEditor.skillExists(cykTable[0][0].get(i).toString())){
                     testScan.getAction(cykTable[0][0].get(i).toString(), question);
                     output = testScan.getOutput();
+                    System.out.println("This is the out" + output);
                     break;
                 }
             }
@@ -65,9 +69,14 @@ public class cykAlgorithm {
         } else {
             String similarityScore = "";
             try {
+                System.out.println("Load python script");
                 // Arg2 = existing skills
-
-                ProcessBuilder pb = new ProcessBuilder("python", "src\\main\\java\\group6\\NLPUpgrades\\TransformerBERT.py", question, "arg2");
+                String paramString = "";
+                for (String element : testEditor.getClassesNaive()) {
+                    paramString += element + ",";
+                }
+                paramString = paramString.substring(0, paramString.length() - 1);
+                ProcessBuilder pb = new ProcessBuilder("python", "src\\main\\java\\group6\\NLPUpgrades\\TransformerBERT.py", question, paramString);
                 Process process = pb.start();
                 // Get the output from the Python script
                 InputStream inputStream = process.getInputStream();
@@ -76,6 +85,7 @@ public class cykAlgorithm {
                 String line;
                 while ((line = reader.readLine()) != null) {
                     similarityScore = line;
+                    System.out.println(similarityScore);
                 }
                 int exitCode = process.waitFor();
 
@@ -83,18 +93,25 @@ public class cykAlgorithm {
                 e.printStackTrace();
             }
             double numericValue = Double.parseDouble(similarityScore);
-            if (numericValue >= 0.955) {
+            if (numericValue >= 0.972) {
                 try {
                     // Arg1 = List of classes + documents
-
-                    ProcessBuilder pb = new ProcessBuilder("python", "src\\main\\java\\group6\\NLPUpgrades\\NaiveBayesClassifier.py","arg1", question);
+                    String documents = "";
+                    ArrayList<String> docs =  testEditor.getDocumentsNaive();
+                    ArrayList<String> classes = testEditor.getClassesNaive();
+                    for (int i = 0; i < docs.size(); i++) {
+                        documents += docs.get(i) + " | " + classes.get(i) + ",";
+                    }
+                    documents = documents.substring(0, documents.length() - 1);
+                    System.out.println(documents);
+                    ProcessBuilder pb = new ProcessBuilder("python", "src\\main\\java\\group6\\NLPUpgrades\\NaiveBayesClassifier.py",documents, question);
                     Process process = pb.start();
                     // Get the output from the Python script
                     InputStream inputStream = process.getInputStream();
                     BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
                     String line;
                     while ((line = reader.readLine()) != null) {
-                        similarityScore = line;
+                        output = line;
                     }
                     int exitCode = process.waitFor();
 
@@ -102,7 +119,10 @@ public class cykAlgorithm {
                     e.printStackTrace();
                 }
             }
-            output = ("Sorry, I am not able to give you an answer for that!");
+            
+        }
+        if(output.isEmpty()){
+                output = ("Sorry, I am not able to give you an answer for that!");
         }
     }
 

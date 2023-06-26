@@ -5,7 +5,7 @@ import sys
 import numpy as np
 from collections import Counter
 
-class_action = [
+class_action_test = [
     "The sun is shining | what lecture do we have on monday at 8?",
     "I love eating ice cream | what lecture do we have on monday at 6?",
     "Python is a powerful programming language | How are earth you?",
@@ -20,6 +20,7 @@ def train(class_action, input):
     counter = 0
     all_sentences = []
     all_actions = []
+    class_action = class_action.split(",")
 
     for class_id in class_action:
         n_doc = len(class_action)
@@ -63,9 +64,6 @@ def train(class_action, input):
                     log_likelihood[counter_x][i] = math.log10((count + 1) / (final_count + 1))
                 counter_x = counter_x + 1
 
-    print(log_likelihood)
-    print(logprior)
-    print(full_vocab_t)
 
     test(full_vocab_t, logprior, log_likelihood, input, all_actions)
 

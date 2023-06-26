@@ -128,6 +128,7 @@ public class cfgScanner {
             boolean found = false;
             int cnt = 0;
             while (!found || tempList.size() == 0) {
+                if(tempList.size() == 0) break;
                 if(cnt != 0) tempList.remove(tempList.size()-1);
                 for (List<String> listToCheck : FinalListRec) {
                     if(listToCheck.equals(tempList) && !found){
@@ -147,7 +148,6 @@ public class cfgScanner {
             }
             reader.close();
         } catch (IOException e) {
-            e.printStackTrace();
         }
     }
     public String getOutput(){
