@@ -16,6 +16,7 @@ import java.util.regex.Pattern;
 
 public class cykAlgorithm {
     public String output;
+    public ChatGPTAPI gpt;
     private File file = new File("src\\main\\java\\group6\\Engine\\cfgSkills.txt");
     private ArrayList<String> [][] cykTable;
     public static void main(String[] args) throws FileNotFoundException {
@@ -60,7 +61,11 @@ public class cykAlgorithm {
                 }
             }
             
-        } else output = ("Sorry, I am not able to give you an answer for that!");
+        } else{
+                gpt = new ChatGPTAPI();
+                String answer =gpt.askGod(question);
+                output = ("Sorry, I am not able to give you an answer for that from my native skills!\n\nI asked ChatGPT for you: \n"+answer);
+            }
     }
 
     public ArrayList<String> getFromCYKTable(ArrayList<String> transformedList){
