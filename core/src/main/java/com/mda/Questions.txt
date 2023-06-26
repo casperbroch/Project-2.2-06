@@ -1,1 +1,0 @@
-Which packages are we allowed to use (OpenCV)?
