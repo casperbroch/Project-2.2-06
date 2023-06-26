@@ -94,10 +94,6 @@ class Sign:
 
     @staticmethod
     def main():
-        f = open(connectionpath, "w")
-        f.write("loading")
-        f.close()
-
         # Two lines of code below are used when training the model and saving it to the file
         # X, y = Sign.prepare_dataset()
         # np.savetxt('data/data.csv', np.column_stack((X, y)), delimiter=',')
@@ -147,4 +143,7 @@ class Sign:
 
 
 if __name__ == "__main__":
+    f = open(connectionpath, "w")
+    f.write("loading")
+    f.close()
     Sign.main()
