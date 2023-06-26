@@ -8,16 +8,11 @@ This project is currently at an early point of development, more features will b
 ## Screenshots
 ### GUI (chat interface)
 ![](https://cdn.discordapp.com/attachments/1072880041194692639/1090241892685447178/image.png)
-### Face Recognition
-![](https://cdn.discordapp.com/attachments/1072880041194692639/1122874704785588324/facerecognition.PNG)
-### Hand Sign Recognition
-![](https://cdn.discordapp.com/attachments/1072880041194692639/1122872687006601246/goodrecognition.PNG)
 
 ## Features
 This project in the current version supports a number of features. They are listed below.
 
-- Face detection & recognition 
-- Hand sign detection
+- Face detection when launching the software, GUI launches if face is detected
 - Light/dark mode toggle for the chat interface
 - Scrollable chat box
 - Asking questions in form of added skills
@@ -55,15 +50,8 @@ Go to the projectory directory where the main class is located
 Finally, go to the Start.java file and run its main method located at the bottom.
 
 
-## Face detection & recognition
+## Face detection
 This project contains a python project which is responsible for the face detection feature. This python project is opened simultaneously when the java project is launched (see section "Run Locally"). The python project will open a window which will contain the users' webcam, once a face on the webcam is found (indicated by a red box), the screen (and thus python script) terminates itself and launches the JavaFX GUI, from which the user can utilize the other features of this project. The face detection algorithm is made using OpenCV.
-
-The latest update of the digital assistant now also contains person recognition. When a person is recognized, he/she is greeted by their name. If the person is unknown to the assistant, it will ask for the user to take a picture. This picture is then saved in the asistant's database which will be utilized to recognize the person when they try to log in the next time.
-
-## Hand Sign Recognition
-The latest version of the assistant contains hand sign recognition software. This software is still being tested but has many posiblities for future uses. It is launched after a person is recognized and when the user has entered the GUI. It is visualized by a webcam screen which shows the sign the user is making with their hand. 
-
-This software can be utilized to further enhance the user's experience with the assistant. To demonstrate its capabilities a single example action has been made. This action is the 'bad' hand signal (thumbs down). When the user makes this handsignal in front of the webcam, the digital assistant closes. 
 
 ## Connect with Google Account
 The API Google Calendar feature needs to connect with a Google account. Not every Google account will be to connect with this application because it is still under development. We have a free to use Google account which is white-listed and which you can use to log-in when Google asks you to after you make a request. The log-in details are:

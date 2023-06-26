@@ -2,7 +2,6 @@ package group6;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.Thread.State;
 import java.net.URL;
@@ -292,16 +291,6 @@ public class Controller implements Initializable {
                             response = String.join(" app, ", skills);
                             response = "Picture taken and saved to database.\n"+("Hello " + App.name + "! How can I assist you? Would you like to access your " + response + " application, or quit? Please type the name of the desired application you would like to access.");
                             STATE = USERSTATE.APPC;
-
-                            try {
-                                
-                                String commandSign = "python src/main/java/group6/Python/Sign.py";
-                                Process pSign = Runtime.getRuntime().exec(commandSign);
-
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-
                             break;
 
                         case APPC:
@@ -972,15 +961,6 @@ public class Controller implements Initializable {
                 greeting = ("Hello " + App.name + "! How can I assist you? Would you like to access your " + greeting + " application, or quit? Please type the name of the desired application you would like to access.");
                 STATE = USERSTATE.APPC;
                 addBMessage(greeting, vbox_message);
-
-                try {
-                    String commandSign = "python src/main/java/group6/Python/Sign.py";
-                    Process pSign = Runtime.getRuntime().exec(commandSign);
-                    
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-
                 return true;
             }
 
@@ -1102,13 +1082,6 @@ public class Controller implements Initializable {
                     String fileContent = readFileContent();
                     System.out.println(fileContent);
                     if(fileContent.equalsIgnoreCase("bad")) {
-                        try {
-                            FileWriter fileWriter = new FileWriter(FILE_PATH);
-                            fileWriter.write("");
-                            fileWriter.close();
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
                         System.exit(0);
                     } 
                     Thread.sleep(READ_INTERVAL_MS);

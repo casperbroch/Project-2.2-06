@@ -31,7 +31,6 @@ public class App extends Application {
         boolean notfound=true;
         while(notfound) {
             end = System.currentTimeMillis();
-   
             if((end-start)>=1000) {
                 start = System.currentTimeMillis();
 
@@ -45,7 +44,6 @@ public class App extends Application {
                     System.out.println("Person found! Running GUI...");
                     name = data;
                     notfound=false;
-
                 } else if(data.equalsIgnoreCase("loading")){
                     System.out.println("Hold on tight, Python is loading & looking for a person...");
                 } else {
