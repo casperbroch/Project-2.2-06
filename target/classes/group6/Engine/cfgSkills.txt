@@ -1,8 +1,16 @@
 -------------------------------- Non-Terminals --------------------------------
-Rule <action>   <travel> |
+Rule <action>   <travel> | <timetable> |
 Rule <travel>  <1> <travel2> 
 Rule <travel2> <a> <travel3> | <a1> <travel3>
 Rule <travel3> <3> <b> | <3> <b1>
+Rule <timetable>  <1> <timetable2> 
+Rule <timetable2> <2> <timetable3>
+Rule <timetable3> <3> <timetable4>
+Rule <timetable4> <4> <timetable5>
+Rule <timetable5> <5> <timetable6>
+Rule <timetable6> <6> <timetable7>
+Rule <timetable7> <day> <timetable8> | <day1> <timetable8>
+Rule <timetable8> <8> <time> | <8> <time1>
 -------------------------------- Terminals --------------------------------
 Rule <a> <a1> <a1> | <a1> <a>
 travelRule <aPrint> nyc |  maas | 
@@ -10,15 +18,21 @@ Rule <a1> nyc | maas |
 Rule <b> <b1> <b1> | <b1> <b>
 travelRule <bPrint> ams |   | 
 Rule <b1> ams | la |
-Rule <1> from |
-Rule <2> a |
-Rule <3> to |
-Rule <4> b |
-Rule <5>
-Rule <6>
-Rule <7>
-Rule <8>
-Rule <9>
+Rule <day> <day1> <day1> | <day1> <day>
+timetableRule <dayPrint> monday |  tuesday |  wednesday |   | 
+Rule <day1> monday | tuesday | wednesday | 
+Rule <time> <time1> <time1> | <time1> <time>
+timetableRule <timePrint> 9 |  8 |  12 |  14 | 
+Rule <time1> 9 | 8 | 12 | 14 | 
+Rule <1> from | what |
+Rule <2> a | lectures |
+Rule <3> to | do |
+Rule <4> b | we |
+Rule <5> have |
+Rule <6> on |
+Rule <7> day |
+Rule <8> at |
+Rule <9> time |
 Rule <10>
 Rule <11>
 Rule <12>
@@ -31,9 +45,12 @@ Rule <18>
 Rule <19>
 Rule <20>
 <travel> - 2
+<timetable> - 7
 -------------------------------- Actions --------------------------------
+Action <timetable> * <day> monday <time> 9 - this is working
 Action <travel> * <a> nyc <b> ams - Yay!
 Action <travel> * <a> nyc <b> la - Have fun!
 Action <travel> * <a> nyc - Buy a ticket!
 -------------------------------- Printing -------------------------------- 
+timetable - what lectures do we have on day at time > day / time / 
 travel - from a to b > a / b / 

@@ -17,6 +17,8 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.checkerframework.checker.units.qual.Length;
+
 public class cfgEditor {
 
     File file; 
@@ -228,6 +230,87 @@ public class cfgEditor {
         }
         return a;
     }
+
+    public ArrayList<String> getDocumentsNaive(){
+        ArrayList<String> slots = new ArrayList<>();
+        try {
+            BufferedReader readerDel = new BufferedReader(new FileReader(file));
+            String current;
+            while((current = readerDel.readLine()) != null) {
+                if(current.startsWith("Action <")){
+                    String[] parts = current.split("-");
+                    slots.add(parts[1].strip());
+                }
+            }
+            readerDel.close();
+        } catch(IOException e) {
+            e.printStackTrace();
+        }
+        return slots;
+    }
+
+    public ArrayList<String> getClassesNaive(){
+        ArrayList<String> classI = new ArrayList<>();
+        try {
+            BufferedReader readerDel = new BufferedReader(new FileReader(file));
+            String pattern = "Action <(.*?)>";
+            String pattern2 = "\\*\\s*(.*?)\\s*-";
+            Pattern regexPattern = Pattern.compile(pattern);
+            Pattern regexPattern2 = Pattern.compile(pattern2);
+            String current;
+            while((current = readerDel.readLine()) != null) {
+                if(current.startsWith("Action <")){
+                    Matcher matcher = regexPattern.matcher(current);
+                    Matcher matcher2 = regexPattern2.matcher(current);
+                    matcher.find();
+                    matcher2.find();
+                    String[] parts = null;
+                    String value = matcher.group(1);
+                    String value2 = matcher2.group(1);
+
+                    // Get question
+                    List<String> preDefSkills = showskillsBERT();
+                    String question = "";
+                    for (String element : preDefSkills) {
+                        if(element.startsWith(value.strip())){
+                            parts = element.split("-");
+                            question = parts[1].strip();
+                        }
+                    }
+                    // Slots
+                    String[][] vals = getvals(value2);
+
+                    // outer loop
+                    String input = question;
+                    for (int i = 0; i < vals.length; i++) {
+                        String replacement = vals[i][1];
+                        input = input.replace(vals[i][0], replacement);
+                    }
+                    classI.add(input);
+                    
+                }
+            }
+            readerDel.close();
+        } catch(IOException e) {
+            e.printStackTrace();
+        }
+        return classI;
+    }
+
+    public String[][] getvals(String input){
+
+        String[] parts = input.split("[<>]");
+        int numElements = (parts.length - 1) / 2;
+        String[][] array = new String[numElements][2];
+
+        int index = 1;
+        for (int i = 0; i < numElements; i++) {
+            array[i][0] = parts[index++].trim();
+            array[i][1] = parts[index++].trim();
+        }
+        return array;
+    }
+
 
 
     public void inputSentence(String input, String skillName, String[][] slots){
@@ -540,6 +623,27 @@ public class cfgEditor {
             reader.close();
         } catch (Exception e) {}
         return a;
+    }
+
+        public List<String> showskillsBERT() {
+        String line = "";
+        List<String> skills = new ArrayList<>();
+        try {
+            BufferedReader reader;
+            reader = new BufferedReader(new FileReader(file));
+            boolean print = false;
+            while ((line = reader.readLine()) != null) {
+                if (line.startsWith("-------------------------------- Printing --------------------------------")) {
+                    print = true;
+                }
+                if(print && !line.startsWith("-------------------------------- Printing")) {
+                    int parIndex = line.indexOf(">");
+                    skills.add(line.substring(0, parIndex));
+                }
+            }
+            reader.close();
+        } catch (Exception e) {}
+        return skills;
     }
 
     public String[] getSlotsSpec(String skill){

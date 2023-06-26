@@ -5,9 +5,13 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import org.nd4j.common.loader.SourceFactory;
 
 /*
  * Parsing algorithm for skills CFG.
@@ -51,16 +55,75 @@ public class cykAlgorithm {
         cfgScanner testScan = new cfgScanner();
         cfgEditor testEditor = new cfgEditor();
         if(!cykTable[0][0].isEmpty()){
+            System.out.println("s");
             
             for(int i = 0; i < cykTable[0][0].size(); i++){
                 if(testEditor.skillExists(cykTable[0][0].get(i).toString())){
                     testScan.getAction(cykTable[0][0].get(i).toString(), question);
                     output = testScan.getOutput();
+                    System.out.println("This is the out" + output);
                     break;
                 }
             }
             
-        } else output = ("Sorry, I am not able to give you an answer for that!");
+        } else {
+            String similarityScore = "";
+            try {
+                System.out.println("Load python script");
+                // Arg2 = existing skills
+                String paramString = "";
+                for (String element : testEditor.getClassesNaive()) {
+                    paramString += element + ",";
+                }
+                paramString = paramString.substring(0, paramString.length() - 1);
+                ProcessBuilder pb = new ProcessBuilder("python", "src\\main\\java\\group6\\NLPUpgrades\\TransformerBERT.py", question, paramString);
+                Process process = pb.start();
+                // Get the output from the Python script
+                InputStream inputStream = process.getInputStream();
+                BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    similarityScore = line;
+                    System.out.println(similarityScore);
+                }
+                int exitCode = process.waitFor();
+
+            } catch (IOException | InterruptedException e) {
+                e.printStackTrace();
+            }
+            double numericValue = Double.parseDouble(similarityScore);
+            if (numericValue >= 0.973) {
+                try {
+                    // Arg1 = List of classes + documents
+                    String documents = "";
+                    ArrayList<String> docs =  testEditor.getDocumentsNaive();
+                    ArrayList<String> classes = testEditor.getClassesNaive();
+                    for (int i = 0; i < docs.size(); i++) {
+                        documents += docs.get(i) + " | " + classes.get(i) + ",";
+                    }
+                    documents = documents.substring(0, documents.length() - 1);
+                    System.out.println(documents);
+                    ProcessBuilder pb = new ProcessBuilder("python", "src\\main\\java\\group6\\NLPUpgrades\\NaiveBayesClassifier.py",documents, question);
+                    Process process = pb.start();
+                    // Get the output from the Python script
+                    InputStream inputStream = process.getInputStream();
+                    BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+                    String line;
+                    while ((line = reader.readLine()) != null) {
+                        output = line;
+                    }
+                    int exitCode = process.waitFor();
+
+                } catch (IOException | InterruptedException e) {
+                    e.printStackTrace();
+                }
+            } else output = ("Sorry, I am not able to give you an answer for that!");
+            
+        }
+        if(output.isEmpty()){
+                output = ("Sorry, I am not able to give you an answer for that!");
+        }
     }
 
     public ArrayList<String> getFromCYKTable(ArrayList<String> transformedList){

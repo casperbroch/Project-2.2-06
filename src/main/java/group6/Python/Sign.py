@@ -7,6 +7,7 @@ import os
 import numpy as np
 from sklearn.neighbors import KNeighborsClassifier
 
+connectionpath = 'src/main/java/group6/Python/ConnectionHand.txt'
 
 class Sign:
     mpHands = mp.solutions.hands
@@ -50,7 +51,7 @@ class Sign:
         label = None
 
         for i in range(10):
-            folder_path = os.path.join("src/main/java/group6/Python/data", str(i))
+            folder_path = os.path.join("src/main/java/group6/Python/data/", str(i))
             for file in os.listdir(folder_path):
                 img_path = os.path.join(folder_path, file)
                 img = cv2.imread(img_path)
@@ -72,12 +73,13 @@ class Sign:
         y = []
 
         for i in range(10):
-            f = open("src/main/java/group6/Python/ConnectionHand.txt", "w")
-            towrite = "Iteration number "+ str(i+1) + "/10 of launching hand signals"
+            f = open(connectionpath, "w")
+            towrite = "Iteration no. " + str(i+1) + "/10 ... waiting to launch hand signal recognition"
+            print(towrite)
             f.write(towrite)
             f.close()
 
-            folder_path = os.path.join("src/main/java/group6/Python/data", str(i))
+            folder_path = os.path.join("src/main/java/group6/Python/data/", str(i))
             for file in os.listdir(folder_path):
                 img_path = os.path.join(folder_path, file)
                 img = cv2.imread(img_path)
@@ -92,11 +94,15 @@ class Sign:
 
     @staticmethod
     def main():
-        f = open("src/main/java/group6/Python/ConnectionHand.txt", "w")
-        f.write("loading")
-        f.close()
+        # Two lines of code below are used when training the model and saving it to the file
+        # X, y = Sign.prepare_dataset()
+        # np.savetxt('data/data.csv', np.column_stack((X, y)), delimiter=',')
 
-        X, y = Sign.prepare_dataset()
+        # Data is for hand recognition is retrieved below
+        data = np.genfromtxt('src/main/java/group6/Python/data/data.csv', delimiter=',')
+        X = data[:, :-1]
+        y = data[:, -1]
+
         knn = KNeighborsClassifier(n_neighbors=3)
         knn.fit(X, y)
 
@@ -122,7 +128,7 @@ class Sign:
                     label_last = label
                     print("Detected position:", label)
 
-                f = open("src/main/java/group6/Python/ConnectionHand.txt", "w")
+                f = open(connectionpath, "w")
                 f.write(label)
                 f.close()
                 if label == "bad":
@@ -137,4 +143,7 @@ class Sign:
 
 
 if __name__ == "__main__":
+    f = open(connectionpath, "w")
+    f.write("loading")
+    f.close()
     Sign.main()
