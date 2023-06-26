@@ -258,6 +258,14 @@ public class Controller implements Initializable {
 
                     // * shuts the program off when quit is typed
                     if(message.toLowerCase().contains("quit")) {
+                            FileWriter fileWriter;
+                            try {
+                                fileWriter = new FileWriter(FILE_PATH);
+                                fileWriter.write("");
+                                fileWriter.close();
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
                         System.exit(0);
                     }
 
