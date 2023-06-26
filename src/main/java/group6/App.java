@@ -32,14 +32,28 @@ public class App extends Application {
         while(notfound) {
             end = System.currentTimeMillis();
    
-            start = System.currentTimeMillis();
-            File file = new File("src/main/java/group6/Python/Connection.txt");
-            Scanner sc = new Scanner(file);
-            String data = "";
-            System.out.println("Person found! Running GUI...");
-            name = data;
-            notfound=false;
-            sc.close();
+            if((end-start)>=1000) {
+                start = System.currentTimeMillis();
+
+                File file = new File("src/main/java/group6/Python/Connection.txt");
+                Scanner sc = new Scanner(file);
+                String data = "";
+                while (sc.hasNextLine()) {
+                    data = sc.nextLine();
+                }
+                if(checkName(whitelist, data)) {
+                    System.out.println("Person found! Running GUI...");
+                    name = data;
+                    notfound=false;
+                    String commandSign = "python src/main/java/group6/Python/Sign.py";
+                    Process pSign = Runtime.getRuntime().exec(commandSign);
+                } else if(data.equalsIgnoreCase("loading")){
+                    System.out.println("Hold on tight, Python is loading & looking for a person...");
+                } else {
+                    System.out.println("No person not found! Looking for a person...");
+                }
+                sc.close();
+            } 
         }
 
         FXMLLoader loader = new FXMLLoader(getClass().getResource("App.fxml"));
