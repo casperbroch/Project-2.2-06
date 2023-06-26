@@ -20,6 +20,7 @@ import org.nd4j.common.loader.SourceFactory;
 
 public class cykAlgorithm {
     public String output;
+    public ChatGPTAPI gpt;
     private File file = new File("src\\main\\java\\group6\\Engine\\cfgSkills.txt");
     private ArrayList<String> [][] cykTable;
     public static void main(String[] args) throws FileNotFoundException {
@@ -118,11 +119,17 @@ public class cykAlgorithm {
                 } catch (IOException | InterruptedException e) {
                     e.printStackTrace();
                 }
-            } else output = ("Sorry, I am not able to give you an answer for that!");
+            } else{
+                gpt = new ChatGPTAPI();
+                String answer =gpt.askGod(question);
+                output = ("Sorry, I am not able to give you an answer for that from my native skills!\n\nI asked ChatGPT for you: \n"+answer);
+            }
             
         }
-        if(output.isEmpty()){
-                output = ("Sorry, I am not able to give you an answer for that!");
+        if(output == "s"){
+            gpt = new ChatGPTAPI();
+            String answer =gpt.askGod(question);
+            output = ("Sorry, I am not able to give you an answer for that from my native skills!\n\nI asked ChatGPT for you: \n"+answer);
         }
     }
 
