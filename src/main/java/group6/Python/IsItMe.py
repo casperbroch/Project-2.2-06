@@ -16,12 +16,6 @@ class IsItMe:
         self.predictor = dlib.shape_predictor("src/main/java/group6/Python/models/shape_predictor_68_face_landmarks.dat")
         self.facerec = dlib.face_recognition_model_v1("src/main/java/group6/Python/models/dlib_face_recognition_resnet_model_v1.dat")
         self.capture = cv2.VideoCapture(0)
-
-        # Replace this with the path to your photo
-        # self.my_photo_path = "Photo on 2-5-23 at 22.01.jpg"
-        # self.my_photo_path = "IMG_F9AF022DB5A8-1.jpeg"
-        #
-        # self.my_photo_embedding = self.get_face_embedding(self.my_photo_path)
         
         facedir = 'src/main/java/group6/Python/faces'
         self.person_names = []
@@ -100,14 +94,6 @@ class IsItMe:
             return np.array(face_embedding)
 
         return None
-
-    # def ask_for_password(self):
-    #     while True:
-    #         password = input("Enter the password to continue: ")
-    #         if password == "1234":
-    #             break
-    #         else:
-    #             print("Incorrect password. Please try again.")
 
     def is_person_me(self, detected_face):
         if detected_face is None or detected_face.size == 0:
