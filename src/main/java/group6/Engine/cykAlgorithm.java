@@ -13,6 +13,8 @@ import java.util.regex.Pattern;
 
 import org.nd4j.common.loader.SourceFactory;
 
+import group6.ChatGPTAPI;
+
 /*
  * Parsing algorithm for skills CFG.
  */
@@ -126,7 +128,7 @@ public class cykAlgorithm {
             }
             
         }
-        if(output.isEmpty(){
+        if(output.isEmpty()) {
             gpt = new ChatGPTAPI();
             String answer =gpt.askGod(question);
             output = ("Sorry, I am not able to give you an answer for that from my native skills!\n\nI asked ChatGPT for you: \n"+answer);
